@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/navigation_exercises"
+        android:icon="@drawable/baseline_sports_martial_arts_24"
+        android:title="@string/title_exercises" />
+
+    <item
+        android:id="@+id/navigation_workouts"
+        android:icon="@drawable/baseline_fitness_center_24"
+        android:title="@string/title_workouts" />
+
+    <item
+        android:id="@+id/navigation_statistics"
+        android:icon="@drawable/baseline_trending_up_24"
+        android:title="@string/title_statistics" />
+
+    <item
+        android:id="@+id/navigation_settings"
+        android:icon="@drawable/baseline_settings_24"
+        android:title="@string/title_settings" />
+
+</menu>
