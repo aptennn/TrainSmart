@@ -29,8 +29,13 @@ class WorkoutsFragment : Fragment() {
         )
 
         rV.layoutManager = LinearLayoutManager(requireContext())
-        rV.adapter = WorkoutsAdapter(items) {
-            findNavController().navigate(R.id.navigation_workout_details)
+        rV.adapter = WorkoutsAdapter(items) { workout ->
+            val bundle = Bundle().apply {
+                putString("detail_title", workout.title)
+                putInt("detail_image", workout.image)
+                putString("detail_description", workout.description)
+            }
+            findNavController().navigate(R.id.navigation_workout_details, bundle)
         }
 
         return view

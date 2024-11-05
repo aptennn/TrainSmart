@@ -11,7 +11,7 @@ import com.example.rainsmart.R
 
 class WorkoutsAdapter(
     private var workouts: List<Workout>,
-    private val onItemClickListener: (Int) -> Unit
+    private val onItemClickListener: (Workout) -> Unit
 ) : RecyclerView.Adapter<WorkoutsAdapter.WorkoutViewHolder>() {
 
     inner class WorkoutViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -30,7 +30,7 @@ class WorkoutsAdapter(
         holder.title.text = workout.title
         holder.image.setImageResource(workout.image)
         holder.button.setOnClickListener {
-            onItemClickListener(position)
+            onItemClickListener(workout)
         }
     }
 

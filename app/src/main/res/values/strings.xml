@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">ТrainSmart</string>
-    <string name="title_workouts">Workout</string>
+    <string name="title_workouts">Workouts</string>
     <string name="title_exercises">Exercises</string>
     <string name="title_statistics">Statistics</string>
     <string name="title_settings">Settings</string>

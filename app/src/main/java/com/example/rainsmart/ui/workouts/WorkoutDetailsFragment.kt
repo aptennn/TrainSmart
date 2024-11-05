@@ -20,6 +20,14 @@ class WorkoutsDetailsFragment : Fragment() {
         _binding = FragmentWorkoutDetailsBinding.inflate(inflater, container, false)
         val view = binding.root
 
+        val title = arguments?.getString("detail_title")
+        val imageResId = arguments?.getInt("detail_image")
+        val description = arguments?.getString("detail_description")
+
+        binding.detailTitle.text = title
+        binding.detailDescription.text = description
+        imageResId?.let { binding.detailImage.setImageResource(it) }
+
         return view
     }
 
