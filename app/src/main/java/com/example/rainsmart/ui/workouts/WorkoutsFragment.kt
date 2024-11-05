@@ -4,39 +4,35 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
-import com.example.rainsmart.databinding.FragmentWorkoutsBinding
+import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.example.rainsmart.R
 
 class WorkoutsFragment : Fragment() {
-
-    private var _binding: FragmentWorkoutsBinding? = null
-
-    // This property is only valid between onCreateView and
-    // onDestroyView.
-    private val binding get() = _binding!!
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View {
-        val workoutsViewModel =
-            ViewModelProvider(this).get(WorkoutsViewModel::class.java)
+    ): View? {
+        val view = inflater.inflate(R.layout.fragment_workouts, container, false)
+        val rV: RecyclerView = view.findViewById(R.id.workoutsRV)
 
-        _binding = FragmentWorkoutsBinding.inflate(inflater, container, false)
-        val root: View = binding.root
+        val items = listOf(
+            Workout("Пресс", R.drawable.workout_abs, "Какое-то описание тренировки..."),
+            Workout("Штанга", R.drawable.workout_barbell, "Какое-то описание тренировки..."),
+            Workout("Беговые упражнения", R.drawable.workout_run, "Какое-то описание тренировки..."),
+            Workout("Гимнастика", R.drawable.workout_gymnastic, "Какое-то описание тренировки..."),
+            Workout("Разминка", R.drawable.workout_warmup, "Какое-то описание тренировки..."),
+        )
 
-        val textView: TextView = binding.textHome
-        workoutsViewModel.text.observe(viewLifecycleOwner) {
-            textView.text = it
+        rV.layoutManager = LinearLayoutManager(requireContext())
+        rV.adapter = WorkoutsAdapter(items) {
+            findNavController().navigate(R.id.navigation_workout_details)
         }
-        return root
-    }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
+        return view
     }
 }

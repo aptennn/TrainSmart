@@ -3,13 +3,32 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mobile_navigation"
-    app:startDestination="@+id/navigation_workouts">
+    app:startDestination="@id/navigation_workouts">
 
     <fragment
         android:id="@+id/navigation_workouts"
         android:name="com.example.rainsmart.ui.workouts.WorkoutsFragment"
         android:label="@string/title_workouts"
-        tools:layout="@layout/fragment_workouts" />
+        tools:layout="@layout/fragment_workouts">
+        <action
+            android:id="@+id/action_navigationWorkouts_to_navigationWorkoutDetails"
+            app:destination="@id/navigation_workout_details" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_workout_details"
+        android:name="com.example.rainsmart.ui.workouts.WorkoutsDetailsFragment"
+        android:label="Workout Description">
+        <argument
+            android:name="imageResId"
+            app:argType="integer" />
+        <argument
+            android:name="title"
+            app:argType="string" />
+        <argument
+            android:name="description"
+            app:argType="string" />
+    </fragment>
 
     <fragment
         android:id="@+id/navigation_exercises"
@@ -28,4 +47,5 @@
         android:name="com.example.rainsmart.ui.settings.SettingsFragment"
         android:label="@string/title_settings"
         tools:layout="@layout/fragment_settings" />
+
 </navigation>
