@@ -5,16 +5,83 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#2569ED"
     tools:context=".LoginActivity">
 
-    <Button
-        android:id="@+id/button_login"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Войти"
-        app:layout_constraintBottom_toBottomOf="parent"
+    <LinearLayout
+        android:layout_width="358dp"
+        android:layout_height="300dp"
+        android:orientation="vertical"
+        android:layout_marginTop="79dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        android:id="@+id/loginView">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_gravity="center_horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="60dp"
+                android:fontFamily="@font/unbounded"
+                android:text="Train"
+                android:textColor="#000614"
+                android:textSize="48sp"
+                android:textStyle="bold"
+                android:id="@+id/LabelLeft"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="60dp"
+                android:fontFamily="@font/unbounded"
+                android:text="Smart"
+                android:textColor="#FAFBFF"
+                android:textSize="48sp"
+                android:textStyle="bold"
+                android:id="@+id/LabelRight"/>
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="309dp"
+            android:layout_height="44dp"
+            android:layout_gravity="center_horizontal"
+            android:fontFamily="@font/unbounded"
+            android:text="Ваш путь к спортивному телу!"
+            android:textAlignment="center"
+            android:textColor="#FAFBFF"
+            android:textSize="18sp"
+            android:id="@+id/Slogan"/>
+
+        <Space
+            android:layout_width="wrap_content"
+            android:layout_height="60dp"/>
+
+        <Button
+            android:id="@+id/SignUpButton"
+            android:layout_width="320dp"
+            android:layout_height="60dp"
+            android:layout_gravity="center_horizontal"
+            android:backgroundTint="#FAFBFF"
+            android:text="РЕГИСТРАЦИЯ"
+            android:textColor="#2569ED"
+            android:textSize="18sp"
+            app:cornerRadius="15dp" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:text="Уже есть аккаунт?"
+            android:textColor="#FAFBFF"
+            android:textSize="18sp"
+            android:fontFamily="@font/montserrat"
+            android:textAllCaps="false"
+            style="@style/Widget.AppCompat.Button.Borderless"
+            android:id="@+id/SignInButton"/>
+    </LinearLayout>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

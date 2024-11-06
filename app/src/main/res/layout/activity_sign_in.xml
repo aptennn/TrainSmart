@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#2569ED"
+    tools:context=".SignInActivity">
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="375dp"
+        android:layout_height="545dp"
+        android:layout_margin="0dp"
+        android:layout_marginTop="71dp"
+        app:cardCornerRadius="15dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <LinearLayout
+            android:id="@+id/loginView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="0dp"
+            android:background="#00000066"
+            android:orientation="vertical"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/SILabelLeft"
+                    android:layout_width="wrap_content"
+                    android:layout_height="45dp"
+                    android:layout_marginTop="33px"
+                    android:fontFamily="@font/unbounded"
+                    android:text="Train"
+                    android:textColor="#000614"
+                    android:textSize="36sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/SILabelRight"
+                    android:layout_width="wrap_content"
+                    android:layout_height="45dp"
+                    android:layout_marginTop="33px"
+                    android:fontFamily="@font/unbounded"
+                    android:text="Smart"
+                    android:textColor="#2569ED"
+                    android:textSize="36sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="75dp"
+                android:layout_marginStart="27.5px"
+                android:layout_marginTop="42dp"
+                android:orientation="horizontal">
+
+                <androidx.cardview.widget.CardView
+                    android:layout_width="75dp"
+                    android:layout_height="75dp"
+                    app:cardCornerRadius="37.5dp">
+
+                    <ImageView
+                        android:id="@+id/ProfileImage"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent" />
+                </androidx.cardview.widget.CardView>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/email"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:text="email@example.com"
+                        android:textColor="@color/black"
+                        android:fontFamily="@font/montserrat"
+                        android:textSize="16sp" />
+
+                    <Button
+                        android:id="@+id/UserChange"
+                        style="@style/Widget.AppCompat.Button.Borderless"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:backgroundTint="#FAFBFF"
+                        android:fontFamily="@font/montserrat"
+                        android:minWidth="0dp"
+                        android:minHeight="0dp"
+                        android:text="Другой пользователь?"
+                        android:textAllCaps="false"
+                        android:textColor="#000000"
+                        android:textSize="16sp"
+                        android:paddingStart="0dp"
+                        android:layout_gravity="center_vertical"/>
+                </LinearLayout>
+            </LinearLayout>
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="320dp"
+                android:layout_height="60dp"
+                android:layout_marginTop="28dp"
+                app:cardCornerRadius="15dp">
+
+                <EditText
+                    android:id="@+id/SIPassword"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:hint="Пароль"
+                    android:inputType="textPassword"
+                    android:textAlignment="viewStart"
+                    android:textColor="@color/black"
+                    android:background="#D8D8D8"
+                    android:paddingStart="23dp"
+                    android:fontFamily="@font/montserrat"
+                    android:textSize="18sp"/>
+
+            </androidx.cardview.widget.CardView>
+
+            <Button
+                android:id="@+id/ForgotPassword"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingStart="0dp"
+                android:textSize="18sp"
+                android:textAllCaps="false"
+                android:textColor="#2569ED"
+                android:text="Забыли пароль?"
+                android:textAlignment="viewStart"
+                android:fontFamily="@font/montserrat"
+                style="@style/Widget.AppCompat.Button.Borderless"/>
+
+
+            <Button
+                android:id="@+id/SIScreenSignIn"
+                android:layout_width="320dp"
+                android:layout_height="60dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="52dp"
+                android:backgroundTint="#2569ED"
+                android:text="ВОЙТИ"
+                android:textColor="#FAFBFF"
+                android:textSize="18sp"
+                app:cornerRadius="15dp"
+                android:fontFamily="@font/montserrat"/>
+
+            <Button
+                android:id="@+id/SITrouble"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="18sp"
+                android:textAllCaps="false"
+                android:textColor="#000000"
+                android:text="Не удается войти?"
+                android:textAlignment="center"
+                android:paddingTop="48dp"
+                android:fontFamily="@font/montserrat"
+                style="@style/Widget.AppCompat.Button.Borderless"/>
+        </LinearLayout>
+
+    </androidx.cardview.widget.CardView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
