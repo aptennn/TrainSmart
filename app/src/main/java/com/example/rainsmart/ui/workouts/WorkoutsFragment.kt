@@ -21,22 +21,47 @@ class WorkoutsFragment : Fragment() {
         val rV: RecyclerView = view.findViewById(R.id.workoutsRV)
 
         val items = listOf(
-            Workout("Пресс", R.drawable.workout_abs, "Какое-то описание тренировки..."),
-            Workout("Штанга", R.drawable.workout_barbell, "Какое-то описание тренировки..."),
-            Workout("Беговые упражнения", R.drawable.workout_run, "Какое-то описание тренировки..."),
-            Workout("Гимнастика", R.drawable.workout_gymnastic, "Какое-то описание тренировки..."),
-            Workout("Разминка", R.drawable.workout_warmup, "Какое-то описание тренировки..."),
+            Workout("Грудь/Бицепс", 1.5, 25, 5),
+            Workout("Спина/Трицепс", 1.5, 33, 15),
+            Workout("Ноги/Плечи", 1.5, 19, 3),
+            Workout("Верх тела", 2.0, 151, 55),
+            Workout("Низ тела", 1.5, 4, 44),
         )
 
         rV.layoutManager = LinearLayoutManager(requireContext())
-        rV.adapter = WorkoutsAdapter(items) { workout ->
-            val bundle = Bundle().apply {
-                putString("detail_title", workout.title)
-                putInt("detail_image", workout.image)
-                putString("detail_description", workout.description)
+        rV.adapter = WorkoutsAdapter(
+            items,
+            onItemClickListener = { workout ->
+                val bundle = Bundle().apply {
+                    /*
+                    putString("workoutTitle", workout.title)
+                    putDouble("workoutTime", workout.time)
+                    putInt("workoutLikes", workout.likes)
+                    putInt("workoutDislikes", workout.dislikes)
+                    */
+                }
+                findNavController().navigate(R.id.navigation_workout_details, bundle)
+            },
+            onSettingsClickListener = { workout ->
+                val bundle = Bundle().apply {
+                    /*
+                    putString("workoutTitle", workout.title)
+                    putDouble("workoutTime", workout.time)
+                    putInt("workoutLikes", workout.likes)
+                    putInt("workoutDislikes", workout.dislikes)
+                    */
+                }
+                findNavController().navigate(R.id.navigation_workout_settings, bundle)
+            },
+            onLikeClickListener = { workout ->
+                //workout.likes += 1 // Увеличиваем счётчик лайков
+                //rV.adapter?.notifyItemChanged(items.indexOf(workout))
+            },
+            onDislikeClickListener = { workout ->
+                //workout.dislikes += 1 // Увеличиваем счётчик дизлайков
+                //rV.adapter?.notifyItemChanged(items.indexOf(workout))
             }
-            findNavController().navigate(R.id.navigation_workout_details, bundle)
-        }
+        )
 
         return view
     }

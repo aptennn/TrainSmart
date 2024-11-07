@@ -11,13 +11,31 @@ import com.example.rainsmart.R
 
 class WorkoutsAdapter(
     private var workouts: List<Workout>,
-    private val onItemClickListener: (Workout) -> Unit
+    private val onItemClickListener: (Workout) -> Unit,
+    private val onSettingsClickListener: (Workout) -> Unit,
+    private val onLikeClickListener: (Workout) -> Unit,
+    private val onDislikeClickListener: (Workout) -> Unit
 ) : RecyclerView.Adapter<WorkoutsAdapter.WorkoutViewHolder>() {
 
     inner class WorkoutViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val title: TextView = itemView.findViewById(R.id.workoutsTV)
-        val image: ImageView = itemView.findViewById(R.id.workoutsIV)
-        val button: Button = itemView.findViewById(R.id.workoutsB)
+        val time: TextView = itemView.findViewById(R.id.workoutTimeTV)
+        val title: TextView = itemView.findViewById(R.id.workoutTitleTV)
+        val likes: TextView = itemView.findViewById(R.id.workoutLikeTV)
+        val dislikes: TextView = itemView.findViewById(R.id.workoutDislikeTV)
+        val button: Button = itemView.findViewById(R.id.workoutSettingsB)
+        private val likeIcon: ImageView = itemView.findViewById(R.id.workoutLikeIV)
+        private val dislikeIcon: ImageView = itemView.findViewById(R.id.workoutDislikeIV)
+        init {
+            itemView.setOnClickListener {
+                onItemClickListener(workouts[adapterPosition])
+            }
+            likeIcon.setOnClickListener {
+                onLikeClickListener(workouts[adapterPosition])
+            }
+            dislikeIcon.setOnClickListener {
+                onDislikeClickListener(workouts[adapterPosition])
+            }
+        }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): WorkoutViewHolder {
@@ -27,10 +45,12 @@ class WorkoutsAdapter(
 
     override fun onBindViewHolder(holder: WorkoutViewHolder, position: Int) {
         val workout = workouts[position]
+        holder.time.text = workout.time.toString()
         holder.title.text = workout.title
-        holder.image.setImageResource(workout.image)
+        holder.likes.text = workout.likes.toString()
+        holder.dislikes.text = workout.dislikes.toString()
         holder.button.setOnClickListener {
-            onItemClickListener(workout)
+            onSettingsClickListener(workout)
         }
     }
 
