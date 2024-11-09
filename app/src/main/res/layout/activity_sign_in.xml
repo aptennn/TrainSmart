@@ -8,6 +8,13 @@
     android:background="#2569ED"
     tools:context=".SignInActivity">
 
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/dumbbell_login_screen"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
     <androidx.cardview.widget.CardView
         android:layout_width="375dp"
         android:layout_height="545dp"
@@ -20,7 +27,6 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <LinearLayout
-            android:id="@+id/loginView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
@@ -38,7 +44,7 @@
                 android:orientation="horizontal">
 
                 <TextView
-                    android:id="@+id/SILabelLeft"
+                    android:id="@+id/SignInLabelLeft"
                     android:layout_width="wrap_content"
                     android:layout_height="45dp"
                     android:layout_marginTop="33px"
@@ -49,7 +55,7 @@
                     android:textStyle="bold" />
 
                 <TextView
-                    android:id="@+id/SILabelRight"
+                    android:id="@+id/SignInLabelRight"
                     android:layout_width="wrap_content"
                     android:layout_height="45dp"
                     android:layout_marginTop="33px"
@@ -85,7 +91,7 @@
                     android:orientation="vertical">
 
                     <TextView
-                        android:id="@+id/email"
+                        android:id="@+id/UserEmail"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
@@ -119,7 +125,7 @@
                 app:cardCornerRadius="15dp">
 
                 <EditText
-                    android:id="@+id/SIPassword"
+                    android:id="@+id/SignInPassword"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:hint="Пароль"
@@ -148,7 +154,7 @@
 
 
             <Button
-                android:id="@+id/SIScreenSignIn"
+                android:id="@+id/SignInButton"
                 android:layout_width="320dp"
                 android:layout_height="60dp"
                 android:layout_gravity="center_horizontal"
@@ -161,7 +167,7 @@
                 android:fontFamily="@font/montserrat"/>
 
             <Button
-                android:id="@+id/SITrouble"
+                android:id="@+id/SignInTroubleButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textSize="18sp"

@@ -22,9 +22,9 @@ class SignInActivity : AppCompatActivity() {
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO) // NIGHT MODE ALWAYS OFF
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
 
-            val SIScreenSignIN: Button = findViewById(R.id.SIScreenSignIn)
+            val signInButton: Button = findViewById(R.id.SignInButton)
 
-            SIScreenSignIN.setOnClickListener {
+            signInButton.setOnClickListener {
                 val intent = Intent(this@SignInActivity, MainActivity::class.java)
                 startActivity(intent)
             }

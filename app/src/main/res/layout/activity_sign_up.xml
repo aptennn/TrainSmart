@@ -8,6 +8,13 @@
     android:background="#2569ED"
     tools:context=".SignUpActivity">
 
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/dumbbell_login_screen"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
     <androidx.cardview.widget.CardView
         android:layout_width="375dp"
         android:layout_height="545dp"
@@ -44,11 +51,11 @@
                     android:textColor="#000614"
                     android:textSize="36sp"
                     android:textStyle="bold"
-                    android:id="@+id/SULabelLeft"
+                    android:id="@+id/SignUpLabelLeft"
                     android:layout_marginTop="33px"/>
 
                 <TextView
-                    android:id="@+id/SULabelRight"
+                    android:id="@+id/SignUpLabelRight"
                     android:layout_width="wrap_content"
                     android:layout_height="45dp"
                     android:layout_marginTop="33px"
@@ -66,7 +73,7 @@
                 app:cardCornerRadius="15dp">
 
                 <EditText
-                    android:id="@+id/SULogin"
+                    android:id="@+id/SignUpLogin"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:hint="Логин"
@@ -86,7 +93,7 @@
                 app:cardCornerRadius="15dp">
 
                 <EditText
-                    android:id="@+id/SUemail"
+                    android:id="@+id/SignUpEmail"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:hint="Почта"
@@ -106,7 +113,7 @@
                 app:cardCornerRadius="15dp">
 
                 <EditText
-                    android:id="@+id/SUPassword"
+                    android:id="@+id/SignUpPassword"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:hint="Пароль"
@@ -127,7 +134,7 @@
                 app:cardCornerRadius="15dp">
 
                 <EditText
-                    android:id="@+id/SUPasswordConfirm"
+                    android:id="@+id/SignUpPasswordConfirm"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:hint="Повторите пароль"
@@ -142,7 +149,7 @@
             </androidx.cardview.widget.CardView>
 
             <Button
-                android:id="@+id/SIScreenSignIn"
+                android:id="@+id/SignInButton"
                 android:layout_width="320dp"
                 android:layout_height="60dp"
                 android:layout_gravity="center_horizontal"

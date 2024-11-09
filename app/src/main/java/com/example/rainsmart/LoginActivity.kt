@@ -23,15 +23,15 @@ class LoginActivity : AppCompatActivity() {
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO) // NIGHT MODE ALWAYS OFF
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
 
-            val SignInButton: Button = findViewById(R.id.SignInButton)
-            val SignUpButton: Button = findViewById(R.id.SignUpButton)
+            val toSignInScreenButton: Button = findViewById(R.id.ToSignInScreenButton)
+            val toSignUpScreenButton: Button = findViewById(R.id.ToSignUpScreenButton)
 
-            SignInButton.setOnClickListener {
+            toSignInScreenButton.setOnClickListener {
                 val intent = Intent(this@LoginActivity, SignInActivity::class.java)
                 startActivity(intent)
             }
 
-            SignUpButton.setOnClickListener {
+            toSignUpScreenButton.setOnClickListener {
                 val intent = Intent(this@LoginActivity, SignUpActivity::class.java)
                 startActivity(intent)
             }
