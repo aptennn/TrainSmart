@@ -1,10 +1,14 @@
 <resources>
     <string name="app_name">ТrainSmart</string>
-    <string name="title_workouts">Workout</string>
+    <string name="title_workouts">Workouts</string>
     <string name="title_exercises">Exercises</string>
     <string name="title_statistics">Statistics</string>
     <string name="title_settings">Settings</string>
     <string name="title_activity_login">LoginActivity</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="wrktSettingsButton">Настроить</string>
+    <string name="dislike">Dislike</string>
+    <string name="like">Like</string>
+    <string name="watchBtnWrkt">Смотреть</string>
 </resources>
