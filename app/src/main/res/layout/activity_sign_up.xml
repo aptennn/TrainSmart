@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#2569ED"
+    tools:context=".SignUpActivity">
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/dumbbell_login_screen"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="375dp"
+        android:layout_height="545dp"
+        android:layout_margin="0dp"
+        android:layout_marginTop="71dp"
+        app:cardCornerRadius="15dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginTop="0dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_gravity="center_horizontal"
+            android:id="@+id/loginView">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_gravity="center_horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="45dp"
+                    android:fontFamily="@font/unbounded"
+                    android:text="Train"
+                    android:textColor="#000614"
+                    android:textSize="36sp"
+                    android:textStyle="bold"
+                    android:id="@+id/SignUpLabelLeft"
+                    android:layout_marginTop="33px"/>
+
+                <TextView
+                    android:id="@+id/SignUpLabelRight"
+                    android:layout_width="wrap_content"
+                    android:layout_height="45dp"
+                    android:layout_marginTop="33px"
+                    android:fontFamily="@font/unbounded"
+                    android:text="Smart"
+                    android:textColor="#2569ED"
+                    android:textSize="36sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="320dp"
+                android:layout_height="60dp"
+                android:layout_marginTop="55dp"
+                app:cardCornerRadius="15dp">
+
+                <EditText
+                    android:id="@+id/SignUpLogin"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:hint="Логин"
+                    android:textAlignment="viewStart"
+                    android:textColor="@color/black"
+                    android:background="#D8D8D8"
+                    android:paddingStart="23dp"
+                    android:fontFamily="@font/montserrat"
+                    android:textSize="18sp"/>
+
+            </androidx.cardview.widget.CardView>
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="320dp"
+                android:layout_height="60dp"
+                android:layout_marginTop="20dp"
+                app:cardCornerRadius="15dp">
+
+                <EditText
+                    android:id="@+id/SignUpEmail"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:hint="Почта"
+                    android:textAlignment="viewStart"
+                    android:textColor="@color/black"
+                    android:background="#D8D8D8"
+                    android:paddingStart="23dp"
+                    android:fontFamily="@font/montserrat"
+                    android:textSize="18sp"/>
+
+            </androidx.cardview.widget.CardView>
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="320dp"
+                android:layout_height="60dp"
+                android:layout_marginTop="20dp"
+                app:cardCornerRadius="15dp">
+
+                <EditText
+                    android:id="@+id/SignUpPassword"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:hint="Пароль"
+                    android:inputType="textPassword"
+                    android:textAlignment="viewStart"
+                    android:textColor="@color/black"
+                    android:background="#D8D8D8"
+                    android:paddingStart="23dp"
+                    android:fontFamily="@font/montserrat"
+                    android:textSize="18sp"/>
+
+            </androidx.cardview.widget.CardView>
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="320dp"
+                android:layout_height="60dp"
+                android:layout_marginTop="20dp"
+                app:cardCornerRadius="15dp">
+
+                <EditText
+                    android:id="@+id/SignUpPasswordConfirm"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:hint="Повторите пароль"
+                    android:inputType="textPassword"
+                    android:textAlignment="viewStart"
+                    android:textColor="@color/black"
+                    android:background="#D8D8D8"
+                    android:paddingStart="23dp"
+                    android:fontFamily="@font/montserrat"
+                    android:textSize="18sp"/>
+
+            </androidx.cardview.widget.CardView>
+
+            <Button
+                android:id="@+id/SignInButton"
+                android:layout_width="320dp"
+                android:layout_height="60dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="30dp"
+                android:backgroundTint="#2569ED"
+                android:fontFamily="More Fonts..."
+                android:text="ЗарегИстрироваться"
+                android:textColor="#FAFBFF"
+                android:textSize="18sp"
+                app:cornerRadius="15dp" />
+
+        </LinearLayout>
+
+    </androidx.cardview.widget.CardView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

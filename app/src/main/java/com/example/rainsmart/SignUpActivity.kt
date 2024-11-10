@@ -9,30 +9,23 @@ import androidx.activity.addCallback
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
-import androidx.appcompat.app.AppCompatDialog
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 
-class LoginActivity : AppCompatActivity() {
+class SignUpActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        setContentView(R.layout.activity_login)
+        setContentView(R.layout.activity_sign_up)
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO) // NIGHT MODE ALWAYS OFF
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
 
-            val toSignInScreenButton: Button = findViewById(R.id.ToSignInScreenButton)
-            val toSignUpScreenButton: Button = findViewById(R.id.ToSignUpScreenButton)
+            val signInButton: Button = findViewById(R.id.SignInButton)
 
-            toSignInScreenButton.setOnClickListener {
-                val intent = Intent(this@LoginActivity, SignInActivity::class.java)
-                startActivity(intent)
-            }
-
-            toSignUpScreenButton.setOnClickListener {
-                val intent = Intent(this@LoginActivity, SignUpActivity::class.java)
+            signInButton.setOnClickListener {
+                val intent = Intent(this@SignUpActivity, MainActivity::class.java)
                 startActivity(intent)
             }
 
