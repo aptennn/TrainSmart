@@ -11,4 +11,6 @@
     <string name="dislike">Dislike</string>
     <string name="like">Like</string>
     <string name="watchBtnWrkt">Смотреть</string>
+    <string name="exercise_technique">Техника выполнения</string>
+    <string name="title_exercise_details">Упражнение</string>
 </resources>

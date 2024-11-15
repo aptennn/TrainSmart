@@ -1,5 +1,5 @@
 package com.example.rainsmart.ui.exercises
 
-class ExerciseListItemModel(val name: String, val icon: Int, val description: String) {
+data class ExerciseListItemModel(val name: String, val photo: Int, val description: String, val technique: String) {
 
 }

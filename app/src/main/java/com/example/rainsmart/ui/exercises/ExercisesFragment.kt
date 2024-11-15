@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.rainsmart.R
@@ -38,10 +39,19 @@ class ExercisesFragment : Fragment() {
 
         val exerciseList: RecyclerView = root.findViewById(R.id.exercise_list)
         val exerciseModels = ArrayList<ExerciseListItemModel>()
-        exerciseModels.add(ExerciseListItemModel("БЕГИТ", R.drawable.ic_dashboard_black_24dp, "ноги большой сильный"))
-        exerciseModels.add(ExerciseListItemModel("ПРЕСС КАЧАТ", 0, "кубики выпирающи"))
-        exerciseModels.add(ExerciseListItemModel("АНЖУМАНЯ", R.drawable.ic_home_black_24dp, "мощнейщи руки"))
-        exerciseList.setAdapter(ExerciseListAdapter(requireContext(), exerciseModels))
+        exerciseModels.add(ExerciseListItemModel(
+            "Жим лёжа", R.drawable.exercise1,
+            "Базовое упражнение, которое помогает развить мышцы груди, плеч и рук.",
+            "1. хихи-хаха\n2. мяу мяу\n3. гав гав\n4. чик чирик"))
+        exerciseList.setAdapter(ExerciseListAdapter(requireContext(), exerciseModels, { exercise ->
+            val arguments = Bundle().apply {
+                putString("exerciseName", exercise.name)
+                putInt("exercisePhoto", exercise.photo)
+                putString("exerciseDescription", exercise.description)
+                putString("exerciseTechnique", exercise.technique)
+            }
+            findNavController().navigate(R.id.navigation_exercise_details, arguments)
+        }))
         exerciseList.layoutManager = LinearLayoutManager(context)
         return root
     }
