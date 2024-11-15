@@ -1,4 +1,4 @@
-package com.example.rainsmart
+package com.example.trainsmart
 
 import org.junit.Test
 

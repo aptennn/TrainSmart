@@ -1,4 +1,4 @@
-package com.example.rainsmart.ui.workouts
+package com.example.trainsmart.ui.workouts
 
 import android.view.LayoutInflater
 import android.view.View
@@ -7,7 +7,7 @@ import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.example.rainsmart.R
+import com.example.trainsmart.R
 
 class WorkoutsAdapter(
     private var workouts: List<Workout>,

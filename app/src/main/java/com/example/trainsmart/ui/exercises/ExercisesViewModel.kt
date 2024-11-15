@@ -1,13 +1,13 @@
-package com.example.rainsmart.ui.statistics
+package com.example.trainsmart.ui.exercises
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 
-class StatisticsViewModel : ViewModel() {
+class ExercisesViewModel : ViewModel() {
 
     private val _text = MutableLiveData<String>().apply {
-        value = "This is notifications Fragment"
+        value = "This is dashboard Fragment"
     }
     val text: LiveData<String> = _text
 }

@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/navigation_workouts"
-        android:name="com.example.rainsmart.ui.workouts.WorkoutsFragment"
+        android:name="com.example.trainsmart.ui.workouts.WorkoutsFragment"
         android:label="@string/title_workouts"
         tools:layout="@layout/fragment_workouts">
         <action
@@ -20,29 +20,29 @@
 
     <fragment
         android:id="@+id/navigation_workout_details"
-        android:name="com.example.rainsmart.ui.workouts.WorkoutsDetailsFragment"
+        android:name="com.example.trainsmart.ui.workouts.WorkoutsDetailsFragment"
         android:label="Workout Description">
     </fragment>
 
     <fragment
         android:id="@+id/navigation_workout_settings"
-        android:name="com.example.rainsmart.ui.workouts.WorkoutSettingsFragment"
+        android:name="com.example.trainsmart.ui.workouts.WorkoutSettingsFragment"
         android:label="Workout Settings" />
     <fragment
         android:id="@+id/navigation_exercises"
-        android:name="com.example.rainsmart.ui.exercises.ExercisesFragment"
+        android:name="com.example.trainsmart.ui.exercises.ExercisesFragment"
         android:label="@string/title_exercises"
         tools:layout="@layout/fragment_exercises" />
 
     <fragment
         android:id="@+id/navigation_statistics"
-        android:name="com.example.rainsmart.ui.statistics.StatisticsFragment"
+        android:name="com.example.trainsmart.ui.statistics.StatisticsFragment"
         android:label="@string/title_statistics"
         tools:layout="@layout/fragment_statistics" />
 
     <fragment
         android:id="@+id/navigation_settings"
-        android:name="com.example.rainsmart.ui.settings.SettingsFragment"
+        android:name="com.example.trainsmart.ui.settings.SettingsFragment"
         android:label="@string/title_settings"
         tools:layout="@layout/fragment_settings" />
 

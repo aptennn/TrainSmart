@@ -1,4 +1,4 @@
-package com.example.rainsmart.ui.theme
+package com.example.trainsmart.ui.theme
 
 import androidx.compose.ui.graphics.Color
 

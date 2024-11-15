@@ -1,15 +1,15 @@
-package com.example.rainsmart.ui.workouts
+package com.example.trainsmart.ui.workouts
 
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import com.example.rainsmart.databinding.FragmentWorkoutSettingsBinding
+import com.example.trainsmart.databinding.FragmentWorkoutDetailsBinding
 
-class WorkoutSettingsFragment : Fragment() {
+class WorkoutsDetailsFragment : Fragment() {
 
-    private var _binding: FragmentWorkoutSettingsBinding? = null
+    private var _binding: FragmentWorkoutDetailsBinding? = null
     private val binding get() = _binding!!
 
     override fun onCreateView(
@@ -17,8 +17,11 @@ class WorkoutSettingsFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentWorkoutSettingsBinding.inflate(inflater, container, false)
+        _binding = FragmentWorkoutDetailsBinding.inflate(inflater, container, false)
         val view = binding.root
+
+        //val title = arguments?.getString("detail_title")
+        //binding.detailTitle.text = title
 
         return view
     }

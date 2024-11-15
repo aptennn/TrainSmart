@@ -1,4 +1,4 @@
-package com.example.rainsmart.ui.workouts
+package com.example.trainsmart.ui.workouts
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -8,7 +8,7 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.rainsmart.R
+import com.example.trainsmart.R
 
 class WorkoutsFragment : Fragment() {
 

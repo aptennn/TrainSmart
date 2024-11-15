@@ -1,4 +1,4 @@
-package com.example.rainsmart.ui.statistics
+package com.example.trainsmart.ui.statistics
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import com.example.rainsmart.databinding.FragmentStatisticsBinding
+import com.example.trainsmart.databinding.FragmentStatisticsBinding
 
 class StatisticsFragment : Fragment() {
 

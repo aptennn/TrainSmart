@@ -1,4 +1,4 @@
-package com.example.rainsmart.ui.exercises
+package com.example.trainsmart.ui.exercises
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -9,8 +9,8 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.rainsmart.R
-import com.example.rainsmart.databinding.FragmentExercisesBinding
+import com.example.trainsmart.R
+import com.example.trainsmart.databinding.FragmentExercisesBinding
 
 class ExercisesFragment : Fragment() {
 

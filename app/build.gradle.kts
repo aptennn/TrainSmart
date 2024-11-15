@@ -1,14 +1,16 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
+    alias(libs.plugins.google.gms.google.services)
+    //id("com.google.gms.google-services")
 }
 
 android {
-    namespace = "com.example.rainsmart"
+    namespace = "com.example.trainsmart"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.example.rainsmart"
+        applicationId = "com.example.trainsmart"
         minSdk = 25
         targetSdk = 34
         versionCode = 1
@@ -70,6 +72,7 @@ dependencies {
     implementation(libs.androidx.activity)
     implementation(libs.androidx.legacy.support.v4)
     implementation(libs.androidx.fragment.ktx)
+    implementation(libs.firebase.auth)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -77,4 +80,11 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+
+    implementation(platform(libs.firebase.bom))
+    // TODO: Add the dependencies for Firebase products you want to use
+
+    // When using the BoM, don't specify versions in Firebase dependencies
+    implementation(libs.google.firebase.auth)
+
 }

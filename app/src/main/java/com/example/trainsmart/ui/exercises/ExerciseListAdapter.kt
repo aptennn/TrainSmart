@@ -1,4 +1,4 @@
-package com.example.rainsmart.ui.exercises
+package com.example.trainsmart.ui.exercises
 
 import android.content.Context
 import android.graphics.drawable.Icon
@@ -8,7 +8,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.example.rainsmart.R
+import com.example.trainsmart.R
 
 class ExerciseListAdapter(private val context: Context, private val models: ArrayList<ExerciseListItemModel>) : RecyclerView.Adapter<ExerciseListAdapter.ViewHolder>() {
 

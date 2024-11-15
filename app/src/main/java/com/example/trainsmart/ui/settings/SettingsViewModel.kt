@@ -1,4 +1,4 @@
-package com.example.rainsmart.ui.settings
+package com.example.trainsmart.ui.settings
 
 import androidx.lifecycle.ViewModel
 
