@@ -9,8 +9,14 @@ import android.widget.TextView
 import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.rainsmart.R
+import java.util.Locale
 
 class ExerciseListAdapter(private val context: Context, private val models: ArrayList<ExerciseListItemModel>, private val onClick: (ExerciseListItemModel) -> Unit) : RecyclerView.Adapter<ExerciseListAdapter.ViewHolder>() {
+    private val filteredModels: ArrayList<ExerciseListItemModel> = ArrayList(models.size)
+
+    init {
+        filteredModels.addAll(models)
+    }
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val card: CardView = itemView.findViewById(R.id.exercise_card)
@@ -24,17 +30,23 @@ class ExerciseListAdapter(private val context: Context, private val models: Arra
         return ViewHolder(view)
     }
 
+    fun setFilter(filter: String) {
+        filteredModels.clear()
+        filteredModels.addAll(models.filter { model -> model.name.lowercase(Locale.ROOT).contains(filter.lowercase(Locale.ROOT)) })
+        notifyDataSetChanged()
+    }
+
     override fun getItemCount(): Int {
-        return models.size
+        return filteredModels.size
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.label.text = models[position].name
-        if (models[position].photo != 0) {
+        holder.label.text = filteredModels[position].name
+        if (filteredModels[position].photo != 0) {
             holder.photo.setImageResource(R.drawable.exercise1)
         }
         holder.card.setOnClickListener {
-            onClick(models[position])
+            onClick(filteredModels[position])
         }
     }
 }
