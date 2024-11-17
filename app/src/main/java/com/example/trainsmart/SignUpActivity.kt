@@ -2,9 +2,9 @@ package com.example.trainsmart
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.widget.Button
 import android.widget.EditText
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
@@ -27,7 +27,7 @@ class SignUpActivity : AppCompatActivity() {
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO) // NIGHT MODE ALWAYS OFF
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
 
-            val signInButton: Button = findViewById(R.id.SignInButton)
+            val signUpButton: Button = findViewById(R.id.SignUpButton)
             val login = findViewById<EditText>(R.id.SignUpLogin)
             val email = findViewById<EditText>(R.id.SignUpEmail)
             val password = findViewById<EditText>(R.id.SignUpPassword)
@@ -35,20 +35,13 @@ class SignUpActivity : AppCompatActivity() {
 
             auth = Firebase.auth
 
-            signInButton.setOnClickListener {
+            signUpButton.setOnClickListener {
                 val intent = Intent(this@SignUpActivity, MainActivity::class.java)
-                if (checkAllFilled(login, email, password, confirmPassword))
-                {
-                    // TODO: firebase auth
-                    try {
-                        auth.createUserWithEmailAndPassword(email.text.toString(), password.text.toString())
-                        startActivity(intent)
-                    }
-                    catch (e: Exception){
-                        Log.e("FIREBASE ERROR", e.toString())}
+                if (checkAllFilled(login, email, password, confirmPassword) &&
+                    (password.text.toString() == confirmPassword.text.toString())
+                ) {
+                    createUserEmailPassword(email.text.toString(), password.text.toString())
                 }
-
-               // startActivity(intent)
             }
 
             insets
@@ -56,10 +49,50 @@ class SignUpActivity : AppCompatActivity() {
 
     }
 
-    private fun checkAllFilled(login: EditText, email: EditText, password: EditText, confirmPassword: EditText): Boolean {
-        return !(checkETisEmpty(login) || checkETisEmpty(email) || checkETisEmpty(password) || checkETisEmpty(confirmPassword))
+    private fun createUserEmailPassword(email: String, password: String) {
+        auth.createUserWithEmailAndPassword(email, password)
+            .addOnCompleteListener(this) { task ->
+                if (task.isSuccessful) {
+                    // Send email verification
+
+                    auth.currentUser?.sendEmailVerification()
+                        ?.addOnCompleteListener {
+                            Toast.makeText(
+                                baseContext, "Please check your e-mail to verify account",
+                                Toast.LENGTH_LONG
+                            ).show()
+                            if (task.isSuccessful) {
+                                val intent = Intent(this@SignUpActivity, SignInActivity::class.java)
+                                intent.putExtra("emailCache", email)
+                                Firebase.auth.signOut()
+                                startActivity(intent)
+                            }
+                        }?.addOnFailureListener {
+                            Toast.makeText(
+                                baseContext, it.localizedMessage, Toast.LENGTH_LONG
+                            ).show()
+                        }
+                }
+            }.addOnFailureListener {
+                Toast.makeText(
+                    baseContext, it.localizedMessage, Toast.LENGTH_LONG
+                ).show()
+            }
     }
 
-    private fun checkETisEmpty(editText: EditText): Boolean { return editText.text.toString() == "" }
+    private fun checkAllFilled(
+        login: EditText,
+        email: EditText,
+        password: EditText,
+        confirmPassword: EditText
+    ): Boolean {
+        return !(checkETisEmpty(login) || checkETisEmpty(email) || checkETisEmpty(password) || checkETisEmpty(
+            confirmPassword
+        ))
+    }
+
+    private fun checkETisEmpty(editText: EditText): Boolean {
+        return editText.text.toString() == ""
+    }
 
 }

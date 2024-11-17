@@ -8,7 +8,9 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.auth
 
 class LoginActivity : AppCompatActivity() {
 
@@ -36,7 +38,15 @@ class LoginActivity : AppCompatActivity() {
                 startActivity(intent)
             }
 
+            auth = Firebase.auth
+
+            if (auth.currentUser != null) {
+                val intent = Intent(this@LoginActivity, MainActivity::class.java)
+                startActivity(intent)
+            }
+
             insets
         }
     }
+
 }
