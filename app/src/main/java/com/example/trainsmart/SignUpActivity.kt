@@ -1,5 +1,7 @@
 package com.example.trainsmart
 
+import android.annotation.SuppressLint
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
@@ -63,7 +65,7 @@ class SignUpActivity : AppCompatActivity() {
                             ).show()
                             if (task.isSuccessful) {
                                 val intent = Intent(this@SignUpActivity, SignInActivity::class.java)
-                                intent.putExtra("emailCache", email)
+                                cacheEmail(email)
                                 Firebase.auth.signOut()
                                 startActivity(intent)
                             }
@@ -93,6 +95,19 @@ class SignUpActivity : AppCompatActivity() {
 
     private fun checkETisEmpty(editText: EditText): Boolean {
         return editText.text.toString() == ""
+    }
+
+    @SuppressLint("CommitPrefEdits")
+    private fun cacheEmail(email: String) {
+        val sharedPref = getSharedPreferences("myPref", Context.MODE_PRIVATE)
+        val editor = sharedPref.edit()
+
+        editor.apply {
+            putString("email", email)
+
+            apply()
+        }
+
     }
 
 }

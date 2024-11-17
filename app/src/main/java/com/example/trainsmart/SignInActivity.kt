@@ -1,6 +1,7 @@
 package com.example.trainsmart
 
 import android.content.ContentValues.TAG
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -46,9 +47,10 @@ class SignInActivity : AppCompatActivity() {
             val llNotNull: LinearLayout = findViewById(R.id.LLNotNull)
 
             auth = Firebase.auth
-            val theEmailCache:String = intent.getStringExtra("emailCache").toString()
 
-            if (intent.getStringExtra("emailCache") == null) {
+            val cachedEmail = getCachedEmail()
+
+            if (cachedEmail == null) {
                 cardViewNull.visibility = View.VISIBLE
                 llNotNull.visibility = View.GONE
 
@@ -61,7 +63,7 @@ class SignInActivity : AppCompatActivity() {
                 }
             }
             else {
-                email.text = theEmailCache
+                email.text = cachedEmail
 
                 signInButton.setOnClickListener {
 
@@ -96,6 +98,11 @@ class SignInActivity : AppCompatActivity() {
                     ).show()
                 }
             }
+    }
+
+    private fun getCachedEmail(): String? {
+        val sharedPref = getSharedPreferences("myPref", Context.MODE_PRIVATE)
+        return sharedPref.getString("email",null)
     }
 
 }

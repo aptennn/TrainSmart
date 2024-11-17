@@ -3,11 +3,20 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".ui.settings.SettingsFragment">
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="Hello" />
+    <Button
+        android:id="@+id/BtnLogOut"
+        android:layout_width="320dp"
+        android:layout_height="60dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="52dp"
+        android:backgroundTint="#2569ED"
+        android:text="Лог аут"
+        android:textColor="#FAFBFF"
+        android:textSize="18sp"
+        app:cornerRadius="15dp"
+        android:fontFamily="@font/montserrat"/>
 
 </FrameLayout>
