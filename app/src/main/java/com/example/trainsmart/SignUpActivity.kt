@@ -38,7 +38,6 @@ class SignUpActivity : AppCompatActivity() {
             auth = Firebase.auth
 
             signUpButton.setOnClickListener {
-                val intent = Intent(this@SignUpActivity, MainActivity::class.java)
                 if (checkAllFilled(login, email, password, confirmPassword) &&
                     (password.text.toString() == confirmPassword.text.toString())
                 ) {
@@ -67,6 +66,7 @@ class SignUpActivity : AppCompatActivity() {
                                 val intent = Intent(this@SignUpActivity, SignInActivity::class.java)
                                 cacheEmail(email)
                                 Firebase.auth.signOut()
+                                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
                                 startActivity(intent)
                             }
                         }?.addOnFailureListener {

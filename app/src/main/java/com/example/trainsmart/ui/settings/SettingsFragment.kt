@@ -39,7 +39,7 @@ class SettingsFragment : Fragment() {
     /** WARNING!
      * THE CODE BELOW IS JUST FOR TEST PURPOSES.
      * DO NOT WORK WITH FRAGMENTS LIKE THAT ! */
-    
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -49,6 +49,7 @@ class SettingsFragment : Fragment() {
         btnLogOut?.setOnClickListener {
             Firebase.auth.signOut()
             val intent = Intent(activity, LoginActivity::class.java)
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
             startActivity(intent)
         }
 

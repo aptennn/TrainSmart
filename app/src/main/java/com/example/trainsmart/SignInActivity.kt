@@ -1,5 +1,6 @@
 package com.example.trainsmart
 
+import android.annotation.SuppressLint
 import android.content.ContentValues.TAG
 import android.content.Context
 import android.content.Intent
@@ -60,6 +61,8 @@ class SignInActivity : AppCompatActivity() {
 
                     signInUser(emailNull.text.toString(), pass)
 
+                    cacheEmail(emailNull.text.toString())
+
                 }
             }
             else {
@@ -87,6 +90,7 @@ class SignInActivity : AppCompatActivity() {
                     Log.d(TAG, "signInWithEmail:success")
                     val user = auth.currentUser
                     val intent = Intent(this@SignInActivity, MainActivity::class.java)
+                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
                     startActivity(intent)
                 } else {
                     // If sign in fails, display a message to the user.
@@ -103,6 +107,19 @@ class SignInActivity : AppCompatActivity() {
     private fun getCachedEmail(): String? {
         val sharedPref = getSharedPreferences("myPref", Context.MODE_PRIVATE)
         return sharedPref.getString("email",null)
+    }
+
+    @SuppressLint("CommitPrefEdits")
+    private fun cacheEmail(email: String) {
+        val sharedPref = getSharedPreferences("myPref", Context.MODE_PRIVATE)
+        val editor = sharedPref.edit()
+
+        editor.apply {
+            putString("email", email)
+
+            apply()
+        }
+
     }
 
 }
