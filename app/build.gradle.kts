@@ -4,11 +4,11 @@ plugins {
 }
 
 android {
-    namespace = "com.example.rainsmart"
+    namespace = "com.example.trainsmart"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.example.rainsmart"
+        applicationId = "com.example.trainsmart"
         minSdk = 25
         targetSdk = 34
         versionCode = 1
