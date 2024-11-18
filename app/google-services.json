@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "409828829566",
+    "project_id": "trainsmart-4b3c0",
+    "storage_bucket": "trainsmart-4b3c0.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:409828829566:android:3002987802684c24ef6b2f",
+        "android_client_info": {
+          "package_name": "com.example.trainsmart"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBHH-WUEbrKGCwF5veBZFjAuLhF02Ep58g"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
