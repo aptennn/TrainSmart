@@ -1,6 +1,7 @@
 package com.example.trainsmart.ui.exercises
 
 import android.os.Bundle
+import android.renderscript.ScriptGroup.Binding
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.LayoutInflater
@@ -33,6 +34,7 @@ class ExercisesFragment : Fragment() {
             ViewModelProvider(this).get(ExercisesViewModel::class.java)
 
         _binding = FragmentExercisesBinding.inflate(inflater, container, false)
+
         val root: View = binding.root
 
         val textView: TextView = binding.textDashboard
@@ -42,10 +44,15 @@ class ExercisesFragment : Fragment() {
 
         val exerciseList: RecyclerView = root.findViewById(R.id.exercise_list)
         val exerciseModels = ArrayList<ExerciseListItemModel>()
+
+        // Сюда
         exerciseModels.add(ExerciseListItemModel(
             "Жим лёжа", R.drawable.exercise1,
             "Базовое упражнение, которое помогает развить мышцы груди, плеч и рук.",
             "1. хихи-хаха\n2. мяу мяу\n3. гав гав\n4. чик чирик"))
+
+
+
         val exerciseListAdapter = ExerciseListAdapter(requireContext(), exerciseModels, { exercise ->
             val arguments = Bundle().apply {
                 putString("exerciseName", exercise.name)
