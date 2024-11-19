@@ -32,7 +32,11 @@
         android:id="@+id/navigation_exercises"
         android:name="com.example.trainsmart.ui.exercises.ExercisesFragment"
         android:label="@string/title_exercises"
-        tools:layout="@layout/fragment_exercises" />
+        tools:layout="@layout/fragment_exercises" >
+        <action
+            android:id="@+id/action_navigation_exercises_to_navigation_exercise_details"
+            app:destination="@id/navigation_exercise_details" />
+    </fragment>
 
     <fragment
         android:id="@+id/navigation_statistics"
@@ -45,5 +49,10 @@
         android:name="com.example.trainsmart.ui.settings.SettingsFragment"
         android:label="@string/title_settings"
         tools:layout="@layout/fragment_settings" />
+    <fragment
+        android:id="@+id/navigation_exercise_details"
+        android:name="com.example.trainsmart.ui.exercises.ExerciseDetailsFragment"
+        android:label="@string/title_exercise_details"
+        tools:layout="@layout/fragment_exercise_details" />
 
 </navigation>
