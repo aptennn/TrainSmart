@@ -8,6 +8,7 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.view.ViewCompat
@@ -58,10 +59,15 @@ class SignUpActivity : AppCompatActivity() {
 
                     auth.currentUser?.sendEmailVerification()
                         ?.addOnCompleteListener {
-                            Toast.makeText(
-                                baseContext, "Please check your e-mail to verify account",
-                                Toast.LENGTH_LONG
-                            ).show()
+                            val builder = AlertDialog.Builder(this)
+                            builder.setMessage("Please check your e-mail to verify account")
+                            builder.setPositiveButton("OK") { dialog, which ->
+                                dialog.dismiss()
+                            }
+                            val dialog = builder.create()
+
+                            dialog.show()
+
                             if (task.isSuccessful) {
                                 val intent = Intent(this@SignUpActivity, SignInActivity::class.java)
                                 cacheEmail(email)
@@ -70,15 +76,25 @@ class SignUpActivity : AppCompatActivity() {
                                 startActivity(intent)
                             }
                         }?.addOnFailureListener {
-                            Toast.makeText(
-                                baseContext, it.localizedMessage, Toast.LENGTH_LONG
-                            ).show()
+                            val builder = AlertDialog.Builder(this)
+                            builder.setMessage(it.localizedMessage)
+                            builder.setPositiveButton("OK") { dialog, which ->
+                                dialog.dismiss()
+                            }
+                            val dialog = builder.create()
+
+                            dialog.show()
                         }
                 }
             }.addOnFailureListener {
-                Toast.makeText(
-                    baseContext, it.localizedMessage, Toast.LENGTH_LONG
-                ).show()
+                val builder = AlertDialog.Builder(this)
+                builder.setMessage(it.localizedMessage)
+                builder.setPositiveButton("OK") { dialog, which ->
+                    dialog.dismiss()
+                }
+                val dialog = builder.create()
+
+                dialog.show()
             }
     }
 
