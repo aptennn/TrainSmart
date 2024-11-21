@@ -1,7 +1,6 @@
 package com.example.trainsmart.ui.exercises
 
 import android.os.Bundle
-import android.renderscript.ScriptGroup.Binding
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.LayoutInflater
@@ -72,7 +71,7 @@ class ExercisesFragment : Fragment() {
                     "\n6. Тянем штангу до полного выпрямления корпуса и ног."
         ))
         exerciseModels.add(ExerciseListItemModel(
-            "Тяга вертикального блока", R.drawable.exercise3,
+            "Тяга вертикального блока", R.drawable.exercise3_old,
             "Одно из фундаментальных упражнений для развития верхней части туловища",
             "1. Сядьте на скамью тренажёра, согните колени под прямым углом, зафиксируйте" +
                     "бёдра под подушкой, настроенной под высоту голени. Держите корпус вертикально." +
@@ -139,6 +138,8 @@ class ExercisesFragment : Fragment() {
                     "\n5. На выдохе медленно и подконтрольно опускайте штангу в нижнюю точку," +
                     "разгибая руки в локтях."
         ))
+
+
         val exerciseListAdapter = ExerciseListAdapter(requireContext(), exerciseModels, { exercise ->
             val arguments = Bundle().apply {
                 putString("exerciseName", exercise.name)
