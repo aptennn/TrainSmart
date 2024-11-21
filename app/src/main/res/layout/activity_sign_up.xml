@@ -15,6 +15,24 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
+    <Button
+        style="@style/Widget.AppCompat.Button.Borderless"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:backgroundTint="#2569ED"
+        android:insetLeft="0dp"
+        android:insetTop="0dp"
+        android:insetRight="0dp"
+        android:insetBottom="0dp"
+        android:minWidth="48dip"
+        android:paddingTop="0dp"
+        android:text="↩"
+        android:textColor="#FAFBFF"
+        android:textSize="48dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:id="@+id/ReturnToLoginFromSignUp"/>
+
     <androidx.cardview.widget.CardView
         android:layout_width="375dp"
         android:layout_height="545dp"

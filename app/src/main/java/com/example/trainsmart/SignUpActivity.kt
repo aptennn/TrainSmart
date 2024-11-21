@@ -31,6 +31,7 @@ class SignUpActivity : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
 
             val signUpButton: Button = findViewById(R.id.SignUpButton)
+            val returnButton: Button = findViewById(R.id.ReturnToLoginFromSignUp)
             val login = findViewById<EditText>(R.id.SignUpLogin)
             val email = findViewById<EditText>(R.id.SignUpEmail)
             val password = findViewById<EditText>(R.id.SignUpPassword)
@@ -44,6 +45,11 @@ class SignUpActivity : AppCompatActivity() {
                 ) {
                     createUserEmailPassword(email.text.toString(), password.text.toString())
                 }
+            }
+
+            returnButton.setOnClickListener {
+                val intent = Intent(this@SignUpActivity, LoginActivity::class.java)
+                startActivity(intent)
             }
 
             insets

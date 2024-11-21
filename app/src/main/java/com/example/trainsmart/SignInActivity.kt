@@ -38,6 +38,8 @@ class SignInActivity : AppCompatActivity() {
 
             val signInButton: Button = findViewById(R.id.SignUpButton)
 
+            val returnButton: Button = findViewById(R.id.ReturnToLoginFromSignIn)
+
             val email: TextView = findViewById(R.id.UserEmail)
 
             val emailNull: EditText = findViewById(R.id.UserEmailNull)
@@ -51,13 +53,6 @@ class SignInActivity : AppCompatActivity() {
             auth = Firebase.auth
 
             val cachedEmail = getCachedEmail()
-
-            //val builder = AlertDialog.Builder(this)
-            //builder.setTitle("Title")
-            //builder.setMessage("Message")
-            //builder.setPositiveButton("OK") { dialog, which ->
-            //}
-            //val dialog = builder.create()
 
             if (cachedEmail == null) {
                 cardViewNull.visibility = View.VISIBLE
@@ -83,6 +78,11 @@ class SignInActivity : AppCompatActivity() {
                     signInUser(email.text.toString(), pass)
 
                 }
+            }
+
+            returnButton.setOnClickListener {
+                val intent = Intent(this@SignInActivity, LoginActivity::class.java)
+                startActivity(intent)
             }
 
             insets
