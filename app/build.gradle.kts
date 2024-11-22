@@ -3,6 +3,7 @@ plugins {
     alias(libs.plugins.jetbrains.kotlin.android)
     alias(libs.plugins.google.gms.google.services)
     //id("com.google.gms.google-services")
+    id ("kotlin-parcelize")
 }
 
 android {
@@ -88,5 +89,5 @@ dependencies {
     // When using the BoM, don't specify versions in Firebase dependencies
     implementation(libs.google.firebase.auth)
 
-
+    implementation(libs.androidx.core.ktx)
 }

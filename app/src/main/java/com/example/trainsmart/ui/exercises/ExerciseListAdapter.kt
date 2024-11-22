@@ -13,7 +13,7 @@ import java.util.Locale
 import android.util.Log
 
 
-class ExerciseListAdapter(private val context: Context, private val models: ArrayList<ExerciseListItemModel>, private val onClick: (ExerciseListItemModel) -> Unit) : RecyclerView.Adapter<ExerciseListAdapter.ViewHolder>() {
+class ExerciseListAdapter(private val context: Context, private val models: List<ExerciseListItemModel>, private val onClick: (ExerciseListItemModel) -> Unit) : RecyclerView.Adapter<ExerciseListAdapter.ViewHolder>() {
     private val filteredModels: ArrayList<ExerciseListItemModel> = ArrayList(models.size)
 
     init {
