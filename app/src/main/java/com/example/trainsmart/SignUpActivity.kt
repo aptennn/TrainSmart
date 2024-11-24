@@ -44,6 +44,15 @@ class SignUpActivity : AppCompatActivity() {
                     (password.text.toString() == confirmPassword.text.toString())
                 ) {
                     createUserEmailPassword(email.text.toString(), password.text.toString())
+                } else if (password.text.toString() != confirmPassword.text.toString()) {
+                    val builder = AlertDialog.Builder(this)
+                    builder.setMessage("The confirmation password does not match the original one")
+                    builder.setPositiveButton("OK") { dialog, which ->
+                        dialog.dismiss()
+                    }
+                    val dialog = builder.create()
+
+                    dialog.show()
                 }
             }
 
