@@ -8,6 +8,7 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.view.ViewCompat
@@ -30,6 +31,7 @@ class SignUpActivity : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
 
             val signUpButton: Button = findViewById(R.id.SignUpButton)
+            val returnButton: Button = findViewById(R.id.ReturnToLoginFromSignUp)
             val login = findViewById<EditText>(R.id.SignUpLogin)
             val email = findViewById<EditText>(R.id.SignUpEmail)
             val password = findViewById<EditText>(R.id.SignUpPassword)
@@ -42,7 +44,21 @@ class SignUpActivity : AppCompatActivity() {
                     (password.text.toString() == confirmPassword.text.toString())
                 ) {
                     createUserEmailPassword(email.text.toString(), password.text.toString())
+                } else if (password.text.toString() != confirmPassword.text.toString()) {
+                    val builder = AlertDialog.Builder(this)
+                    builder.setMessage("The confirmation password does not match the original one")
+                    builder.setPositiveButton("OK") { dialog, which ->
+                        dialog.dismiss()
+                    }
+                    val dialog = builder.create()
+
+                    dialog.show()
                 }
+            }
+
+            returnButton.setOnClickListener {
+                val intent = Intent(this@SignUpActivity, LoginActivity::class.java)
+                startActivity(intent)
             }
 
             insets
@@ -58,10 +74,15 @@ class SignUpActivity : AppCompatActivity() {
 
                     auth.currentUser?.sendEmailVerification()
                         ?.addOnCompleteListener {
-                            Toast.makeText(
-                                baseContext, "Please check your e-mail to verify account",
-                                Toast.LENGTH_LONG
-                            ).show()
+                            val builder = AlertDialog.Builder(this)
+                            builder.setMessage("Please check your e-mail to verify account")
+                            builder.setPositiveButton("OK") { dialog, which ->
+                                dialog.dismiss()
+                            }
+                            val dialog = builder.create()
+
+                            dialog.show()
+
                             if (task.isSuccessful) {
                                 val intent = Intent(this@SignUpActivity, SignInActivity::class.java)
                                 cacheEmail(email)
@@ -70,15 +91,25 @@ class SignUpActivity : AppCompatActivity() {
                                 startActivity(intent)
                             }
                         }?.addOnFailureListener {
-                            Toast.makeText(
-                                baseContext, it.localizedMessage, Toast.LENGTH_LONG
-                            ).show()
+                            val builder = AlertDialog.Builder(this)
+                            builder.setMessage(it.localizedMessage)
+                            builder.setPositiveButton("OK") { dialog, which ->
+                                dialog.dismiss()
+                            }
+                            val dialog = builder.create()
+
+                            dialog.show()
                         }
                 }
             }.addOnFailureListener {
-                Toast.makeText(
-                    baseContext, it.localizedMessage, Toast.LENGTH_LONG
-                ).show()
+                val builder = AlertDialog.Builder(this)
+                builder.setMessage(it.localizedMessage)
+                builder.setPositiveButton("OK") { dialog, which ->
+                    dialog.dismiss()
+                }
+                val dialog = builder.create()
+
+                dialog.show()
             }
     }
 

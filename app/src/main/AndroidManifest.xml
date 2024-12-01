@@ -19,7 +19,7 @@
             android:name="com.example.trainsmart.LoginActivity"
             android:exported="true"
             android:label="@string/title_activity_login"
-            android:theme="@style/Theme.ТrainSmart" >
+            android:theme="@style/Theme.AppCompat.DayNight.NoActionBar" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -30,14 +30,14 @@
             android:name="com.example.trainsmart.SignInActivity"
             android:exported="true"
             android:label="SignIn"
-            android:theme="@style/Theme.ТrainSmart">
+            android:theme="@style/Theme.AppCompat.DayNight.NoActionBar">
         </activity>
 
         <activity
             android:name="com.example.trainsmart.SignUpActivity"
             android:exported="true"
             android:label="SignUp"
-            android:theme="@style/Theme.ТrainSmart" >
+            android:theme="@style/Theme.AppCompat.DayNight.NoActionBar" >
         </activity>
 
         <activity

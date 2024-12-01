@@ -13,6 +13,7 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.cardview.widget.CardView
@@ -36,6 +37,8 @@ class SignInActivity : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
 
             val signInButton: Button = findViewById(R.id.SignUpButton)
+
+            val returnButton: Button = findViewById(R.id.ReturnToLoginFromSignIn)
 
             val email: TextView = findViewById(R.id.UserEmail)
 
@@ -77,6 +80,11 @@ class SignInActivity : AppCompatActivity() {
                 }
             }
 
+            returnButton.setOnClickListener {
+                val intent = Intent(this@SignInActivity, LoginActivity::class.java)
+                startActivity(intent)
+            }
+
             insets
         }
 
@@ -95,11 +103,14 @@ class SignInActivity : AppCompatActivity() {
                 } else {
                     // If sign in fails, display a message to the user.
                     Log.w(TAG, "signInWithEmail:failure", task.exception)
-                    Toast.makeText(
-                        baseContext,
-                        "Authentication failed.",
-                        Toast.LENGTH_SHORT,
-                    ).show()
+                    val builder = AlertDialog.Builder(this)
+                    builder.setMessage("Authentication failed.")
+                    builder.setPositiveButton("OK") { dialog, which ->
+                        dialog.dismiss()
+                    }
+                    val dialog = builder.create()
+
+                    dialog.show()
                 }
             }
     }
