@@ -62,9 +62,16 @@ class SignInActivity : AppCompatActivity() {
 
                     val pass = password.text.toString()
 
-                    signInUser(emailNull.text.toString(), pass)
+                    if (emailNull.text.toString() != "" && password.text.toString() != "") {
 
-                    cacheEmail(emailNull.text.toString())
+                        signInUser(emailNull.text.toString(), pass)
+
+                        cacheEmail(emailNull.text.toString())
+                    }
+                    else
+                    {
+                        Toast.makeText(this, "Empty email/password label", Toast.LENGTH_SHORT).show()
+                    }
 
                 }
             }
@@ -75,7 +82,15 @@ class SignInActivity : AppCompatActivity() {
 
                     val pass = password.text.toString()
 
-                    signInUser(email.text.toString(), pass)
+                    if (password.text.toString() != "") {
+
+                        signInUser(email.text.toString(), pass)
+
+                    }
+                    else
+                    {
+                        Toast.makeText(this, "Empty password label", Toast.LENGTH_SHORT).show()
+                    }
 
                 }
             }
