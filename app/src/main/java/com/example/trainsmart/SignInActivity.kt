@@ -50,13 +50,15 @@ class SignInActivity : AppCompatActivity() {
 
             val llNotNull: LinearLayout = findViewById(R.id.LLNotNull)
 
+            val otherUserButton : Button = findViewById(R.id.UserChange)
+
             auth = Firebase.auth
 
             val cachedEmail = getCachedEmail()
 
-            if (cachedEmail == null) {
-                cardViewNull.visibility = View.VISIBLE
-                llNotNull.visibility = View.GONE
+            if (cachedEmail == null) { // checking is there any previous user stored
+                cardViewNull.visibility = View.VISIBLE // setting layout
+                llNotNull.visibility = View.GONE // case: user not found in db
 
                 signInButton.setOnClickListener {
 
@@ -74,8 +76,9 @@ class SignInActivity : AppCompatActivity() {
                     }
 
                 }
+
             }
-            else {
+            else { // user found in db
                 email.text = cachedEmail
 
                 signInButton.setOnClickListener {
@@ -93,6 +96,33 @@ class SignInActivity : AppCompatActivity() {
                     }
 
                 }
+                // change layout and behaviour to user not found in db case
+                otherUserButton.setOnClickListener {
+                    cardViewNull.visibility = View.VISIBLE
+                    llNotNull.visibility = View.GONE
+
+
+                    signInButton.setOnClickListener {
+
+                        val pass = password.text.toString()
+
+                        if (emailNull.text.toString() != "" && password.text.toString() != "") {
+
+                            signInUser(emailNull.text.toString(), pass)
+
+                            cacheEmail(emailNull.text.toString())
+                        }
+                        else
+                        {
+                            Toast.makeText(this, "Empty email/password label", Toast.LENGTH_SHORT).show()
+                        }
+
+                    }
+
+
+                }
+                // end other user
+
             }
 
             returnButton.setOnClickListener {
@@ -112,9 +142,18 @@ class SignInActivity : AppCompatActivity() {
                     // Sign in success, update UI with the signed-in user's information
                     Log.d(TAG, "signInWithEmail:success")
                     val user = auth.currentUser
-                    val intent = Intent(this@SignInActivity, MainActivity::class.java)
-                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-                    startActivity(intent)
+
+                    if (user?.isEmailVerified!!) {
+                        val intent = Intent(this@SignInActivity, MainActivity::class.java)
+                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                        startActivity(intent)
+                    }
+                    else
+                    {
+                        Toast.makeText(this, "Please, verify your account before sign in", Toast.LENGTH_SHORT).show()
+                    }
+
+
                 } else {
                     // If sign in fails, display a message to the user.
                     Log.w(TAG, "signInWithEmail:failure", task.exception)

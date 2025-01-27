@@ -40,7 +40,7 @@ class LoginActivity : AppCompatActivity() {
 
             auth = Firebase.auth
 
-            if (auth.currentUser != null) {
+            if (auth.currentUser != null && auth.currentUser!!.isEmailVerified) {
                 val intent = Intent(this@LoginActivity, MainActivity::class.java)
                 finish()
                 startActivity(intent)
