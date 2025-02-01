@@ -1,7 +1,9 @@
 package com.example.trainsmart
 
 import android.os.Bundle
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
@@ -32,6 +34,17 @@ class MainActivity : AppCompatActivity() {
                 R.id.navigation_settings
             )
         )
+
+        val mainDestinationChangedListener = NavController.OnDestinationChangedListener { controller, destination, arguments ->
+            if (destination.id != 2131362176 && destination.id != 2131362175 &&destination.id != 2131362173 && destination.id != 2131362179) {
+                navView.visibility = View.GONE
+            } else {
+                navView.visibility = View.VISIBLE
+            }
+        }
+
+        navController.addOnDestinationChangedListener(mainDestinationChangedListener)
+
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
         //supportActionBar?.hide()
