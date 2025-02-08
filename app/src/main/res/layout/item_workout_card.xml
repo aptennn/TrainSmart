@@ -1,114 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="210dp"
-    android:layout_marginBottom="12dp"
-    android:layout_marginHorizontal="12dp"
-    android:background="@drawable/shape_workout_container"
-    android:backgroundTint="#ACACAC"
-    android:orientation="vertical">
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="365dp"
+    android:layout_height="185dp"
+    app:cardCornerRadius="30dp"
+    android:layout_marginStart="25dp"
+    android:layout_marginBottom="18dp">
+
+    <ImageView
+        android:id="@+id/workoutImage"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/constraintLayout"
-        android:layout_width="wrap_content"
-        android:layout_height="75dp"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="22dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <TextView
-            android:id="@+id/workoutTimeTV"
-            android:layout_width="wrap_content"
-            android:layout_height="20dp"
-            android:textColor="#FFFFFF"
-            android:fontFamily="@font/montserrat_regular"
-            android:textSize="16sp"
-            app:layout_constraintStart_toStartOf="@+id/workoutTitleTV"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="5dp"
-            android:text="часа"
-            android:textColor="#FFFFFF"
-            android:fontFamily="@font/montserrat_regular"
-            android:textSize="16sp"
-            app:layout_constraintStart_toEndOf="@+id/workoutTimeTV"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:ignore="HardcodedText" />
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
         <TextView
             android:id="@+id/workoutTitleTV"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="3dp"
-            android:fontFamily="@font/unbounded_regular"
-            android:textColor="#FFFFFF"
-            android:textSize="32sp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/workoutTimeTV" />
+            android:layout_width="212dp"
+            android:layout_height="90dp"
+            android:fontFamily="@font/montserrat_semi_bold"
+            android:textColor="@color/white"
+            android:textSize="22sp"
+            android:layout_marginBottom="10dp"
+            android:layout_marginStart="10dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/workoutDescription"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/workoutDescription"
+            android:layout_width="100dp"
+            android:layout_height="35dp"
+            android:background="@drawable/shape_workout_description_btn"
+            android:backgroundTint="#2569ED"
+            android:fontFamily="@font/montserrat_medium"
+            android:text="@string/wrktDescriptionButton"
+            android:textColor="@color/white"
+            android:textSize="14sp"
+            android:textAllCaps="false"
+            android:layout_marginBottom="19dp"
+            android:layout_marginEnd="19dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/workoutSettingsB"
-        android:layout_width="120dp"
-        android:layout_height="40dp"
-        android:layout_marginStart="22dp"
-        android:layout_marginTop="65dp"
-        android:layout_marginBottom="19dp"
-        android:background="@drawable/shape_workout_settings_btn"
-        android:backgroundTint="#2569ED"
-        android:text="@string/wrktSettingsButton"
-        android:fontFamily="@font/montserrat_medium"
-        android:textColor="#FAFAFA"
-        android:textSize="12sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/constraintLayout" />
-
-
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="20dp"
-        android:layout_marginEnd="22dp"
-        android:layout_marginBottom="26dp"
-        android:orientation="horizontal"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
-
-        <ImageView
-            android:id="@+id/workoutLikeIV"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:contentDescription="@string/like"
-            android:src="@drawable/ic_thumb_up" />
-
-        <TextView
-            android:id="@+id/workoutLikeTV"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:fontFamily="@font/montserrat_medium"
-            android:textColor="#FAFAFA"
-            android:textSize="12sp" />
-
-        <ImageView
-            android:id="@+id/workoutDislikeIV"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:contentDescription="@string/dislike"
-            android:src="@drawable/ic_thumb_down" />
-
-        <TextView
-            android:id="@+id/workoutDislikeTV"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:fontFamily="@font/montserrat_medium"
-            android:textColor="#FAFAFA"
-            android:textSize="12sp" />
-
-    </LinearLayout>
-</androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.cardview.widget.CardView>

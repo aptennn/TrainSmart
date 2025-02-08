@@ -11,31 +11,15 @@ import com.example.trainsmart.R
 
 class WorkoutsAdapter(
     private var workouts: List<Workout>,
-    private val onItemClickListener: (Workout) -> Unit,
-    private val onSettingsClickListener: (Workout) -> Unit,
-    private val onLikeClickListener: (Workout) -> Unit,
-    private val onDislikeClickListener: (Workout) -> Unit
+    private val onDescriptionClickListener: (Workout) -> Unit,
 ) : RecyclerView.Adapter<WorkoutsAdapter.WorkoutViewHolder>() {
 
+    private var filteredWorkouts: List<Workout> = workouts
+
     inner class WorkoutViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val time: TextView = itemView.findViewById(R.id.workoutTimeTV)
+        val background: ImageView = itemView.findViewById(R.id.workoutImage)
         val title: TextView = itemView.findViewById(R.id.workoutTitleTV)
-        val likes: TextView = itemView.findViewById(R.id.workoutLikeTV)
-        val dislikes: TextView = itemView.findViewById(R.id.workoutDislikeTV)
-        val button: Button = itemView.findViewById(R.id.workoutSettingsB)
-        private val likeIcon: ImageView = itemView.findViewById(R.id.workoutLikeIV)
-        private val dislikeIcon: ImageView = itemView.findViewById(R.id.workoutDislikeIV)
-        init {
-            itemView.setOnClickListener {
-                onItemClickListener(workouts[adapterPosition])
-            }
-            likeIcon.setOnClickListener {
-                onLikeClickListener(workouts[adapterPosition])
-            }
-            dislikeIcon.setOnClickListener {
-                onDislikeClickListener(workouts[adapterPosition])
-            }
-        }
+        val button: Button = itemView.findViewById(R.id.workoutDescription)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): WorkoutViewHolder {
@@ -44,15 +28,28 @@ class WorkoutsAdapter(
     }
 
     override fun onBindViewHolder(holder: WorkoutViewHolder, position: Int) {
-        val workout = workouts[position]
-        holder.time.text = workout.time.toString()
+        val workout = filteredWorkouts[position]
         holder.title.text = workout.title
-        holder.likes.text = workout.likes.toString()
-        holder.dislikes.text = workout.dislikes.toString()
         holder.button.setOnClickListener {
-            onSettingsClickListener(workout)
+            onDescriptionClickListener(workout)
         }
+        holder.background.setImageResource(workout.photo)
     }
 
-    override fun getItemCount(): Int = workouts.size
+    override fun getItemCount(): Int = filteredWorkouts.size
+
+    fun updateData(newItems: List<Workout>) {
+        this.workouts = newItems
+        this.filteredWorkouts = newItems
+        notifyDataSetChanged()
+    }
+
+    fun filterByType(type: Int?) {
+        filteredWorkouts = if (type == null) {
+            workouts
+        } else {
+            workouts.filter { it.type == type }
+        }
+        notifyDataSetChanged()
+    }
 }

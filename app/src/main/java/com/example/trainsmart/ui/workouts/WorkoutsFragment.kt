@@ -1,9 +1,16 @@
 package com.example.trainsmart.ui.workouts
 
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
+import android.widget.EditText
+import android.widget.HorizontalScrollView
+import android.widget.ImageButton
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -13,17 +20,32 @@ import com.example.trainsmart.ui.exercises.ExerciseListItemModel
 
 class WorkoutsFragment : Fragment() {
 
+    private lateinit var filterContainer: HorizontalScrollView
+    private var isFilterVisible = false
+    private lateinit var selectedButton: Button
+    private lateinit var searchField: EditText
+    private lateinit var adapter: WorkoutsAdapter
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.fragment_workouts, container, false)
+
+        filterContainer = view.findViewById(R.id.filterContainer)
+        val btnFilter: ImageButton = view.findViewById(R.id.btnFilter)
         val rV: RecyclerView = view.findViewById(R.id.workoutsRV)
 
+        val btnAll = view.findViewById<Button>(R.id.btnAllTypes)
+        val btnUpper = view.findViewById<Button>(R.id.btnUpperBody)
+        val btnLower = view.findViewById<Button>(R.id.btnLowerBody)
+        val buttons = listOf(btnAll, btnUpper, btnLower)
+
+        searchField = view.findViewById(R.id.searchField)
         val items = listOf(
             Workout(
-                "Грудь/Бицепс", R.drawable.image_wrkt_1,1.5, 25, 5,
+                "Программа для тренировки рук", R.drawable.image_wrkt_2,1.5,
                 listOf(
                     ExerciseListItemModel(
                         "Жим лёжа", R.drawable.exercise1,
@@ -52,9 +74,10 @@ class WorkoutsFragment : Fragment() {
                         "5 подходов по 5 повторений"
                     ),
                 ),
+                1
             ),
             Workout(
-                "Спина/Трицепс", R.drawable.image_wrkt_2, 1.5, 33, 15,
+                "Программа для тренировки спины", R.drawable.image_wrkt_1, 1.5,
                 listOf(
                     ExerciseListItemModel(
                         "Тяга вертикального блока", R.drawable.exercise3,
@@ -88,10 +111,12 @@ class WorkoutsFragment : Fragment() {
                                 "\n5. Постарайтесь держать спину ровной на протяжении всего упражнения, а лопатки собранными вместе.",
                         "3 подхода по 11 повторений"
                     ),
+
                 ),
+                1
             ),
             Workout(
-                "Ноги/Плечи", R.drawable.image_wrkt_3, 1.5, 19, 3,
+                "Программа для тренировки ног", R.drawable.image_wrkt_3, 1.5,
                 listOf(
                     ExerciseListItemModel(
                         "Приседания со штангой", R.drawable.exercise4,
@@ -135,26 +160,84 @@ class WorkoutsFragment : Fragment() {
                         "3 подхода по 8 повторений "
                     ),
                 ),
-            ),
+                2
+            )
         )
 
-        rV.layoutManager = LinearLayoutManager(requireContext())
-        rV.adapter = WorkoutsAdapter(
+
+        adapter = WorkoutsAdapter(
             items,
-            onItemClickListener = { workout ->
+            onDescriptionClickListener = { workout ->
                 val bundle = Bundle().apply {
                     putParcelable("workoutKey", workout)
                 }
                 findNavController().navigate(R.id.navigation_workout_details, bundle)
             },
-            onSettingsClickListener = { workout ->
-                val bundle = Bundle().apply {}
-                findNavController().navigate(R.id.navigation_workout_settings, bundle)
-            },
-            onLikeClickListener = {},
-            onDislikeClickListener = {},
         )
 
+        rV.layoutManager = LinearLayoutManager(requireContext())
+        rV.adapter = adapter
+
+        setupSearch(items)
+
+        btnFilter.setOnClickListener {
+            toggleFiltersVisibility()
+        }
+
+        selectedButton = btnAll
+
+        btnAll.setOnClickListener {
+            adapter.filterByType(null)
+            updateButtonStyles(buttons, btnAll)
+        }
+
+        btnUpper.setOnClickListener {
+            adapter.filterByType(1)
+            updateButtonStyles(buttons, btnUpper)
+        }
+
+        btnLower.setOnClickListener {
+            adapter.filterByType(2)
+            updateButtonStyles(buttons, btnLower)
+        }
+
         return view
+    }
+
+    private fun toggleFiltersVisibility() {
+        if (isFilterVisible) {
+            filterContainer.visibility = View.GONE
+        } else {
+            filterContainer.visibility = View.VISIBLE
+        }
+        isFilterVisible = !isFilterVisible
+    }
+
+    private fun updateButtonStyles(buttons: List<Button>, clickedButton: Button) {
+        // Сбрасываем стиль у предыдущей кнопки
+        selectedButton.setBackgroundResource(R.drawable.shape_button_unselected)
+        selectedButton.setTextColor(ContextCompat.getColor(requireContext(), R.color.black))
+
+        // Устанавливаем стиль для новой выбранной кнопки
+        clickedButton.setBackgroundResource(R.drawable.shape_button_selected)
+        clickedButton.setTextColor(ContextCompat.getColor(requireContext(), R.color.white))
+
+        // Обновляем текущую выбранную кнопку
+        selectedButton = clickedButton
+    }
+
+    private fun setupSearch(items: List<Workout>) {
+        searchField.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+
+            override fun afterTextChanged(s: Editable?) {
+                val query = s.toString().lowercase()
+                val filteredItems = items.filter { workout ->
+                    workout.title.lowercase().contains(query)
+                }
+                adapter.updateData(filteredItems)
+            }
+        })
     }
 }

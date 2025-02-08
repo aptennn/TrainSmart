@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -7,7 +9,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/constraintLayout2"
         android:layout_width="match_parent"
-        android:layout_height="270dp"
+        android:layout_height="395dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -15,78 +17,137 @@
         <ImageView
             android:id="@+id/iv_exercise"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            android:scaleType="centerCrop"/>
 
-        <TextView
-            android:id="@+id/tv_exercise_title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="25dp"
-            android:layout_marginTop="160dp"
-            android:layout_marginBottom="70dp"
-            app:layout_constraintBottom_toBottomOf="@+id/iv_exercise"
+        <ImageButton
+            android:id="@+id/ibBack"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            android:fontFamily="@font/unbounded_regular"
-            android:textSize="32sp"
-            android:textColor="@color/white"/>
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="40dp"
+            android:src="@drawable/ic_arrow_back"
+            android:background="@drawable/shape_bg_circle"
+            android:scaleType="center" />
 
-        <TextView
-            android:id="@+id/tv_exercise_time"
-            android:layout_width="wrap_content"
-            android:layout_height="20dp"
-            android:layout_marginStart="25dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tv_exercise_title"
-            android:fontFamily="@font/montserrat_regular"
-            android:textSize="16sp"
-            android:textColor="@color/white"/>
-
-        <TextView
-            android:id="@+id/tv_exercise_count_exercises"
-            android:layout_width="200dp"
-            android:layout_height="20dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            android:layout_marginStart="25dp"
-            app:layout_constraintStart_toEndOf="@+id/tv_exercise_time"
-            app:layout_constraintTop_toBottomOf="@+id/tv_exercise_title"
-            android:fontFamily="@font/montserrat_regular"
-            android:textSize="16sp"
-            android:textColor="@color/white"/>
+        <ImageButton
+            android:id="@+id/ibFavorite"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginTop="40dp"
+            android:layout_marginEnd="20dp"
+            android:background="@drawable/shape_bg_circle"
+            android:src="@drawable/ic_favorite"
+            android:scaleType="center" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/constraintLayout3"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="550dp"
+        android:layout_marginTop="-30dp"
+        android:background="@drawable/shape_rounded_top_corners"
+        android:clipChildren="true"
+        android:clipToPadding="true"
+        android:elevation="30dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/constraintLayout2">
 
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cardView3"
+            android:layout_width="367dp"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="27dp"
+            android:layout_marginVertical="22dp"
+            app:cardBackgroundColor="#F6F6F6"
+            app:cardCornerRadius="15dp"
+            app:cardElevation="4dp"
+            app:cardUseCompatPadding="true"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:padding="16dp">
+
+                <TextView
+                    android:id="@+id/timeTextView"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:fontFamily="@font/montserrat_regular"
+                    android:gravity="center"
+                    android:textColor="@color/black"
+                    android:textSize="16sp" />
+
+                <View
+                    android:layout_width="1dp"
+                    android:layout_height="24dp"
+                    android:layout_marginHorizontal="8dp"
+                    android:layout_marginVertical="4dp"
+                    android:background="@color/black" />
+
+                <TextView
+                    android:id="@+id/exercisesCountTextView"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:fontFamily="@font/montserrat_regular"
+                    android:gravity="center"
+                    android:textColor="@color/black"
+                    android:textSize="16sp" />
+
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+
+
         <TextView
-            android:id="@+id/tv_list_exercises"
-            android:layout_width="wrap_content"
+            android:id="@+id/tvTitle"
+            android:layout_width="310dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="25dp"
+            android:layout_marginEnd="75dp"
             android:fontFamily="@font/montserrat_semi_bold"
-            android:text="Список упражнений:"
             android:textColor="@color/black"
-            android:textSize="18sp"
+            android:textSize="22dp"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-    </androidx.constraintlayout.widget.ConstraintLayout>
+            app:layout_constraintTop_toBottomOf="@+id/cardView3" />
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rv_exercises"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="25dp"
-        android:layout_marginEnd="25dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/constraintLayout3" />
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_exercises"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="22dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tvTitle" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btnStart"
+            android:layout_width="300dp"
+            android:layout_height="50dp"
+            android:background="@drawable/shape_workout_description_btn"
+            android:backgroundTint="#2569ED"
+            android:fontFamily="@font/montserrat_semi_bold"
+            android:text="Начать"
+            android:textColor="#FAFAFA"
+            android:textSize="20sp"
+            android:layout_marginBottom="50dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

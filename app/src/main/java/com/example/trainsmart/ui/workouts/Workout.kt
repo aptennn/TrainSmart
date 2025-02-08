@@ -5,4 +5,4 @@ import com.example.trainsmart.ui.exercises.ExerciseListItemModel
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
-data class Workout(val title: String, val photo: Int, val time: Double, val likes: Int, val dislikes: Int, val exercises: List<ExerciseListItemModel>) : Parcelable
+data class Workout(val title: String, val photo: Int, val time: Double, val exercises: List<ExerciseListItemModel>, val type: Int) : Parcelable
