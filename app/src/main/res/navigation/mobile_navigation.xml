@@ -25,10 +25,6 @@
     </fragment>
 
     <fragment
-        android:id="@+id/navigation_workout_settings"
-        android:name="com.example.trainsmart.ui.workouts.WorkoutSettingsFragment"
-        android:label="Workout Settings" />
-    <fragment
         android:id="@+id/navigation_exercises"
         android:name="com.example.trainsmart.ui.exercises.ExercisesFragment"
         android:label="@string/title_exercises"
