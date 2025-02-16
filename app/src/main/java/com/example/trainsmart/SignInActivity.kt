@@ -143,15 +143,15 @@ class SignInActivity : AppCompatActivity() {
                     Log.d(TAG, "signInWithEmail:success")
                     val user = auth.currentUser
 
-                    if (user?.isEmailVerified!!) {
+//                    if (user?.isEmailVerified!!) {
                         val intent = Intent(this@SignInActivity, MainActivity::class.java)
                         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
                         startActivity(intent)
-                    }
-                    else
-                    {
-                        Toast.makeText(this, "Please, verify your account before sign in", Toast.LENGTH_SHORT).show()
-                    }
+//                    }
+//                    else
+//                    {
+//                        Toast.makeText(this, "Please, verify your account before sign in", Toast.LENGTH_SHORT).show()
+//                    }
 
 
                 } else {

@@ -1,22 +1,72 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".ui.settings.SettingsFragment">
 
+    <TextView
+        android:id="@+id/UserEmailSettings"
+        android:layout_width="320dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="52dp"
+        android:fontFamily="@font/unbounded"
+        android:text="email@example.com"
+        android:textColor="@color/black"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/TvIsVerified"
+        android:layout_width="320dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="42dp"
+        android:fontFamily="@font/unbounded"
+        android:text="Not verified."
+        android:textColor="@color/black"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:layout_marginLeft="15dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/UserEmailSettings" />
+
+    <Button
+        android:id="@+id/Verify"
+        android:layout_width="320dp"
+        android:layout_height="60dp"
+        android:layout_gravity="center_horizontal"
+        android:backgroundTint="#2569ED"
+        android:fontFamily="@font/montserrat"
+        android:text="Verify"
+        android:textColor="#FAFBFF"
+        android:textSize="18sp"
+        app:cornerRadius="15dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/TvIsVerified"
+        android:layout_marginTop="20dp"
+        android:visibility="gone"/>
+
     <Button
         android:id="@+id/BtnLogOut"
         android:layout_width="320dp"
         android:layout_height="60dp"
         android:layout_gravity="center_horizontal"
-        android:layout_marginTop="52dp"
-        android:backgroundTint="#2569ED"
+        android:layout_marginBottom="62dp"
+        android:backgroundTint="#F44336"
+        android:fontFamily="@font/montserrat"
         android:text="Лог аут"
         android:textColor="#FAFBFF"
         android:textSize="18sp"
         app:cornerRadius="15dp"
-        android:fontFamily="@font/montserrat"/>
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
-</FrameLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
