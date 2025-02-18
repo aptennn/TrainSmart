@@ -9,24 +9,20 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.example.trainsmart.databinding.ActivityMainBinding
-import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
+    private lateinit var navController: NavController
+    private lateinit var appBarConfiguration: AppBarConfiguration
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val navView: BottomNavigationView = binding.navView
-
-        val navController = findNavController(R.id.nav_host_fragment_activity_main)
-        // Passing each menu ID as a set of Ids because each
-        // menu should be considered as top level destinations.
-        val appBarConfiguration = AppBarConfiguration(
+        navController = findNavController(R.id.nav_host_fragment_activity_main)
+        appBarConfiguration = AppBarConfiguration(
             setOf(
                 R.id.navigation_workouts,
                 R.id.navigation_exercises,
@@ -35,23 +31,35 @@ class MainActivity : AppCompatActivity() {
             )
         )
 
-        val mainDestinationChangedListener = NavController.OnDestinationChangedListener { controller, destination, arguments ->
-            if (destination.id != 2131362176 && destination.id != 2131362175 &&destination.id != 2131362173 && destination.id != 2131362179) {
-                navView.visibility = View.GONE
-            } else {
-                navView.visibility = View.VISIBLE
+        // Настройка BottomNavigationView
+        binding.navView.setupWithNavController(navController)
+
+        // Управление видимостью BottomBar
+        navController.addOnDestinationChangedListener { _, destination, _ ->
+            when (destination.id) {
+                R.id.navigation_workouts,
+                R.id.navigation_exercises,
+                R.id.navigation_statistics,
+                R.id.navigation_settings -> showBottomNav()
+                else -> hideBottomNav()
             }
         }
 
-        navController.addOnDestinationChangedListener(mainDestinationChangedListener)
-
         setupActionBarWithNavController(navController, appBarConfiguration)
-        navView.setupWithNavController(navController)
         //supportActionBar?.hide()
     }
 
+
+
+    private fun showBottomNav() {
+        binding.navView.visibility = View.VISIBLE
+    }
+
+    private fun hideBottomNav() {
+        binding.navView.visibility = View.GONE
+    }
+
     override fun onSupportNavigateUp(): Boolean {
-        val navController = findNavController(R.id.nav_host_fragment_activity_main)
         return navController.navigateUp() || super.onSupportNavigateUp()
     }
 }

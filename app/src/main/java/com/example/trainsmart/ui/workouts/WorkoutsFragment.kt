@@ -20,224 +20,231 @@ import com.example.trainsmart.ui.exercises.ExerciseListItemModel
 
 class WorkoutsFragment : Fragment() {
 
-    private lateinit var filterContainer: HorizontalScrollView
-    private var isFilterVisible = false
-    private lateinit var selectedButton: Button
-    private lateinit var searchField: EditText
+    private var filterContainer: HorizontalScrollView? = null
+    private var selectedButton: Button? = null
+    private var searchField: EditText? = null
     private lateinit var adapter: WorkoutsAdapter
+    private val originalItems = mutableListOf<Workout>()
+    private var currentFilter: Int? = null
+    private var currentQuery: String = ""
+    private var isFilterVisible = false
+    private var isDataInitialized = false
+    private var searchTextWatcher: TextWatcher? = null
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        initializeData()
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val view = inflater.inflate(R.layout.fragment_workouts, container, false)
+        return inflater.inflate(R.layout.fragment_workouts, container, false)
+    }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        initializeViews(view)
+        setupRecyclerView(view)
+        setupFilters(view)
+        setupSearch()
+    }
+
+    override fun onDestroyView() {
+        cleanupResources()
+        super.onDestroyView()
+    }
+
+    private fun initializeData() {
+        if (!isDataInitialized) {
+            originalItems.addAll(createWorkoutItems())
+            isDataInitialized = true
+        }
+    }
+
+    private fun initializeViews(view: View) {
         filterContainer = view.findViewById(R.id.filterContainer)
-        val btnFilter: ImageButton = view.findViewById(R.id.btnFilter)
-        val rV: RecyclerView = view.findViewById(R.id.workoutsRV)
+        searchField = view.findViewById(R.id.searchField)
+        view.findViewById<ImageButton>(R.id.btnFilter).setOnClickListener { toggleFiltersVisibility() }
+    }
 
+    private fun setupRecyclerView(view: View) {
+        val recyclerView = view.findViewById<RecyclerView>(R.id.workoutsRV)
+        recyclerView.layoutManager = LinearLayoutManager(requireContext())
+        adapter = WorkoutsAdapter { navigateToWorkoutDetails(it) }
+        recyclerView.adapter = adapter
+        adapter.submitList(originalItems)
+    }
+
+    private fun setupFilters(view: View) {
         val btnAll = view.findViewById<Button>(R.id.btnAllTypes)
         val btnUpper = view.findViewById<Button>(R.id.btnUpperBody)
         val btnLower = view.findViewById<Button>(R.id.btnLowerBody)
-        val buttons = listOf(btnAll, btnUpper, btnLower)
 
-        searchField = view.findViewById(R.id.searchField)
-        val items = listOf(
+        selectedButton = btnAll
+        updateButtonStyles(listOf(btnAll, btnUpper, btnLower), btnAll)
+
+        listOf(btnAll, btnUpper, btnLower).forEach { button ->
+            button?.setOnClickListener { handleFilterClick(button) }
+        }
+    }
+
+    private fun setupSearch() {
+        searchTextWatcher = createTextWatcher()
+        searchField?.addTextChangedListener(searchTextWatcher)
+    }
+
+    private fun cleanupResources() {
+        searchField?.removeTextChangedListener(searchTextWatcher)
+        searchTextWatcher = null
+        searchField?.setText("")
+        filterContainer = null
+        selectedButton = null
+        // Сброс фильтров и состояния
+        currentFilter = null
+        currentQuery = ""
+        isFilterVisible = false
+        // Сброс стилей кнопок
+        view?.findViewById<Button>(R.id.btnAllTypes)?.let { defaultButton ->
+            updateButtonStyles(
+                listOf(
+                    view?.findViewById(R.id.btnAllTypes),
+                    view?.findViewById(R.id.btnUpperBody),
+                    view?.findViewById(R.id.btnLowerBody)
+                ),
+                defaultButton
+            )
+        }
+        adapter.submitList(emptyList())
+    }
+
+    private fun createWorkoutItems(): List<Workout> {
+        return listOf(
             Workout(
-                "Программа для тренировки рук", R.drawable.image_wrkt_2,1.5,
+                "Программа для тренировки рук", R.drawable.image_arms_wrkt, 1.5,
                 listOf(
                     ExerciseListItemModel(
                         "Жим лёжа", R.drawable.exercise1,
                         "Базовое упражнение, которое помогает развить мышцы груди, плеч и рук.",
-                        "1. Штанга находится на уровне глаз" +
-                                "\n2. Занять такое положение на скамье, чтобы голова, поясница, лопатки и ноги имели точки опоры." +
-                                "\n3. Чтобы избежать травм, во время выполнения упражнения" +
-                                "лопатки должны быть сведены." +
-                                "\n4. Опускание штанги происходит на вдохе, подъем — на выдохе." +
-                                "\n5. Ваш хват должен быть сверху, большие пальцы должны располагаться под штангой и поверх пальцев.",
+                        "1. Штанга находится на уровне глаз\n2. Занять такое положение на скамье...",
                         "3 подхода по 6 повторений"
                     ),
                     ExerciseListItemModel(
                         "Подъем штанги на бицепс", R.drawable.exercise6,
                         "Cиловое изолированное упражнение, направленное на развитие бицепса плеча.",
-                        "1. Встаньте ровно со штангой в руках, спина прямая, ноги на ширине плеч." +
-                                "\n2. Отрегулируйте хват так, чтобы было удобно — на ширине плеч или у́же." +
-                                "Опустите плечи вниз и сведите лопатки вместе. Это придаст корпусу больше " +
-                                "стабильности и жёсткости." +
-                                "\n3. Прижмите локти к телу и удерживайте их в этом положении, чтобы " +
-                                "исключить из работы дельтовидные мускулы." +
-                                "\n4. Одновременно делайте выдох и поднимайте штангу вверх до груди," +
-                                "сгибая руки в локтевых суставах. Сделайте небольшую паузу в верхней точке." +
-                                "\n5. На выдохе медленно и подконтрольно опускайте штангу в нижнюю точку," +
-                                "разгибая руки в локтях.",
+                        "1. Встаньте ровно со штангой в руках...",
                         "5 подходов по 5 повторений"
-                    ),
+                    )
                 ),
                 1
             ),
             Workout(
-                "Программа для тренировки спины", R.drawable.image_wrkt_1, 1.5,
+                "Программа для тренировки спины", R.drawable.image_back_wrkt, 1.5,
                 listOf(
                     ExerciseListItemModel(
                         "Тяга вертикального блока", R.drawable.exercise3,
                         "Одно из фундаментальных упражнений для развития верхней части туловища",
-                        "1. Сядьте на скамью тренажёра, согните колени под прямым углом, зафиксируйте" +
-                                "бёдра под подушкой, настроенной под высоту голени. Держите корпус вертикально." +
-                                "Живот собран и немного втянут (не выпячивается). Такая позиция даёт вам прочную" +
-                                "опору, которая поможет избежать раскачиваний корпуса и потери силы при движении." +
-                                "\n2. Возьмите рукоять прямым хватом на расстоянии полторы ширины плеч, локти чуть согнуты." +
-                                "\n3. Для начала движения на выдохе выгните корпус в грудном отделе как во время" +
-                                "подтягиваний: плечи отведите назад, максимально сведите лопатки, согните локти" +
-                                "и подтяните рукоятку тренажёра до шеи, почти касаясь верха грудного отдела." +
-                                "\n4. Доведя рукоять до конца, на долю секунды зафиксируйте лопатки сведёнными," +
-                                "а плечи — отведёнными назад. Затем плавно на вдохе отпустите рукоять вверх — в" +
-                                "стартовое положение.",
+                        "1. Сядьте на скамью тренажёра...",
                         "2 подхода по 10 повторений"
                     ),
                     ExerciseListItemModel(
                         "Тяга горизонтального блока", R.drawable.exercise5,
-                        "Cиловое упражнение на развитие мышц спины, которое выполняется на блочном" +
-                                "тренажёре. Его также называют тягой нижнего блока к поясу и просто тягой к животу.",
-                        "1. Расположитесь на сидении тренажёра, упираясь стопами ног в пол или в " +
-                                "специальную платформу. Ноги слегка согнуты в коленях. Возьмитесь за рукоятку, " +
-                                "предварительно подобрав её для себя." +
-                                "\n2. Спина прямая с лёгким прогибом в пояснице, лопатки опущены вниз и сведены" +
-                                "вместе, грудь выведена вперёд, шея ровная, взгляд направлен прямо." +
-                                "\n3. На выдохе подтяните рукоятку к животу. На выдохе сгибайте руки в локтях, " +
-                                "отводя прижатые локти к корпусу за спину. Сделайте небольшую паузу." +
-                                "\n4. На вдохе медленно выпрямите руки в локтевом суставе. В упражнении " +
-                                "допускается небольшое маятниковое раскачивание корпуса вперёд и назад." +
-                                "\n5. Постарайтесь держать спину ровной на протяжении всего упражнения, а лопатки собранными вместе.",
+                        "Cиловое упражнение на развитие мышц спины...",
+                        "1. Расположитесь на сидении тренажёра...",
                         "3 подхода по 11 повторений"
-                    ),
-
+                    )
                 ),
                 1
             ),
             Workout(
-                "Программа для тренировки ног", R.drawable.image_wrkt_3, 1.5,
+                "Программа для тренировки ног", R.drawable.image_leg_wrkt, 1.5,
                 listOf(
                     ExerciseListItemModel(
                         "Приседания со штангой", R.drawable.exercise4,
-                        "Эффективное базовое упражнение, которое позволяет увеличить силу, мощность " +
-                                "и мышечную массу нижней части тела.",
-                        "1. Плотно зафиксируйте ладони на грифе, коленные суставы немного согните и " +
-                                "сделайте один шаг вперед. Пройдя под снарядом, поставьте обе ноги на одном " +
-                                "уровне и поднимитесь, следя за тем, чтобы лопатки оказались сведенными, а гриф" +
-                                "лег на верхнюю часть спины. В верном положении вес ложится на трапецию и " +
-                                "поддерживается задними дельтовидными мышцами. Если ощутите слишком сильное" +
-                                "болезненное давление на позвоночник, вернитесь в начальную позицию и повторите подход." +
-                                "\n2. Теперь выпрямите ноги и снимите штангу с опоры. Следом шагните назад, " +
-                                "голову держите прямо, чтобы было проще держать прогиб в пояснице и, опять же," +
-                                "не потерять равновесие. Стопы расставьте шире плеч, немного разводя носки в стороны." +
-                                "\n3. Убедившись, что лопатки сведены, спина находится в легком наклоне вперед, " +
-                                "а мышц пресса напряжены, на выдохе плавно разведите и согните колени. Не " +
-                                "отводите таз назад, словно садитесь на воображаемый стул (распространенная ошибка" +
-                                "среди начинающих атлетов). Голени и колени должны работать в естественной для тела плоскости." +
-                                "\n4. Приседайте достаточно глубоко, чтобы тазовые кости оказались ниже коленных суставов." +
-                                "Так нагрузка будет распределяться равномерно, суставы со связками не испытают перенапряжения." +
-                                "\n5. Из нижней позиции толкните тело вверх, плавно разгибая колени. Избегайте " +
-                                "резких движений, следите за техникой и ни в коем случае не гонитесь за скоростью." +
-                                "\n6. В завершении нужного числа повторов подойдите к стойке и верните снаряд " +
-                                "на место. Делать это нужно, слегка сгибая коленные суставы, но не наклоняясь.",
+                        "Эффективное базовое упражнение...",
+                        "1. Плотно зафиксируйте ладони на грифе...",
                         "4 подхода по 5 повторений"
                     ),
                     ExerciseListItemModel(
                         "Становая тяга", R.drawable.exercise2,
-                        "Базовое упражнение силового тренинга, которое заключается в подъеме штанги с " +
-                                "пола за счет мышц ног и спины.",
-                        "1. Располагаем ноги на ширине плеч. Стопы параллельны друг другу. Штанга" +
-                                "соприкасается с голенью ноги." +
-                                "\n2. Держим прямую спину с лёгким прогибом во время всего упражнения.  " +
-                                "Лопатки опущены вниз и сведены вместе. Грудь выводим вверх. Голова смотрит прямо, шея ровная." +
-                                "\n3. На вдохе отводим таз и сгибаем колени, наклоняя корпус вперёд, чтобы взять " +
-                                "штангу руками на ширине плеч или чуть шире. " +
-                                "\n4. В положении полуприседа держим руками штангу. Плечи не рекомендуется выводить" +
-                                " сильно вперёд за снаряд." +
-                                "\n5. На выдохе мощным движением тянем штангу руками вверх. Поднимаем таз и разгибаемся в коленях." +
-                                "\n6. Тянем штангу до полного выпрямления корпуса и ног.",
-                        "3 подхода по 8 повторений "
-                    ),
+                        "Базовое упражнение силового тренинга...",
+                        "1. Располагаем ноги на ширине плеч...",
+                        "3 подхода по 8 повторений"
+                    )
                 ),
                 2
             )
         )
+    }
 
-
-        adapter = WorkoutsAdapter(
-            items,
-            onDescriptionClickListener = { workout ->
-                val bundle = Bundle().apply {
-                    putParcelable("workoutKey", workout)
-                }
-                findNavController().navigate(R.id.navigation_workout_details, bundle)
-            },
+    private fun handleFilterClick(button: Button) {
+        currentFilter = when (button.id) {
+            R.id.btnUpperBody -> 1
+            R.id.btnLowerBody -> 2
+            else -> null
+        }
+        applyFilters()
+        updateButtonStyles(
+            listOf(
+                requireView().findViewById(R.id.btnAllTypes),
+                requireView().findViewById(R.id.btnUpperBody),
+                requireView().findViewById(R.id.btnLowerBody)
+            ),
+            button
         )
+    }
 
-        rV.layoutManager = LinearLayoutManager(requireContext())
-        rV.adapter = adapter
-
-        setupSearch(items)
-
-        btnFilter.setOnClickListener {
-            toggleFiltersVisibility()
+    private fun applyFilters() {
+        val filtered = originalItems.filter {
+            it.matchesQuery(currentQuery) && it.matchesFilter(currentFilter)
         }
+        adapter.submitList(filtered)
+    }
 
-        selectedButton = btnAll
+    private fun Workout.matchesQuery(query: String): Boolean {
+        return title.lowercase().contains(query.lowercase())
+    }
 
-        btnAll.setOnClickListener {
-            adapter.filterByType(null)
-            updateButtonStyles(buttons, btnAll)
-        }
+    private fun Workout.matchesFilter(filter: Int?): Boolean {
+        return filter == null || type == filter
+    }
 
-        btnUpper.setOnClickListener {
-            adapter.filterByType(1)
-            updateButtonStyles(buttons, btnUpper)
-        }
-
-        btnLower.setOnClickListener {
-            adapter.filterByType(2)
-            updateButtonStyles(buttons, btnLower)
-        }
-
-        return view
+    private fun navigateToWorkoutDetails(workout: Workout) {
+        findNavController().navigate(
+            R.id.navigation_workout_details,
+            Bundle().apply { putParcelable("workoutKey", workout) }
+        )
     }
 
     private fun toggleFiltersVisibility() {
-        if (isFilterVisible) {
-            filterContainer.visibility = View.GONE
-        } else {
-            filterContainer.visibility = View.VISIBLE
-        }
+        filterContainer?.visibility = if (isFilterVisible) View.GONE else View.VISIBLE
         isFilterVisible = !isFilterVisible
     }
 
-    private fun updateButtonStyles(buttons: List<Button>, clickedButton: Button) {
-        // Сбрасываем стиль у предыдущей кнопки
-        selectedButton.setBackgroundResource(R.drawable.shape_button_unselected)
-        selectedButton.setTextColor(ContextCompat.getColor(requireContext(), R.color.black))
-
-        // Устанавливаем стиль для новой выбранной кнопки
-        clickedButton.setBackgroundResource(R.drawable.shape_button_selected)
-        clickedButton.setTextColor(ContextCompat.getColor(requireContext(), R.color.white))
-
-        // Обновляем текущую выбранную кнопку
+    private fun updateButtonStyles(buttons: List<Button?>, clickedButton: Button) {
+        buttons.forEach { button ->
+            button?.setBackgroundResource(
+                if (button == clickedButton) R.drawable.shape_button_selected
+                else R.drawable.shape_button_unselected
+            )
+            button?.setTextColor(
+                ContextCompat.getColor(
+                    requireContext(),
+                    if (button == clickedButton) R.color.white else R.color.black
+                )
+            )
+        }
         selectedButton = clickedButton
     }
 
-    private fun setupSearch(items: List<Workout>) {
-        searchField.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
-
-            override fun afterTextChanged(s: Editable?) {
-                val query = s.toString().lowercase()
-                val filteredItems = items.filter { workout ->
-                    workout.title.lowercase().contains(query)
-                }
-                adapter.updateData(filteredItems)
-            }
-        })
+    private fun createTextWatcher() = object : TextWatcher {
+        override fun afterTextChanged(s: Editable?) {
+            currentQuery = s?.toString().orEmpty()
+            applyFilters()
+        }
+        override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+        override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
     }
 }
