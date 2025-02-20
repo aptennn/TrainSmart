@@ -1,5 +1,6 @@
 package com.example.trainsmart.ui.workouts
 
+import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -30,6 +31,9 @@ class WorkoutsFragment : Fragment() {
     private var isFilterVisible = false
     private var isDataInitialized = false
     private var searchTextWatcher: TextWatcher? = null
+    private val toTrainingsBasic: ImageButton? = null
+    private val toTrainingsUser: ImageButton? = null
+    private val toTrainingsFavorite: ImageButton? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -68,6 +72,22 @@ class WorkoutsFragment : Fragment() {
         filterContainer = view.findViewById(R.id.filterContainer)
         searchField = view.findViewById(R.id.searchField)
         view.findViewById<ImageButton>(R.id.btnFilter).setOnClickListener { toggleFiltersVisibility() }
+
+        val toTrainingsBasic : ImageButton = view.findViewById(R.id.basic_trainings)
+        val toTrainingsUser : ImageButton = view.findViewById(R.id.user_trainings)
+        val toTrainingsFavorite : ImageButton = view.findViewById(R.id.favorite_trainings)
+
+        toTrainingsBasic.setOnClickListener {
+            findNavController().navigate(R.id.navigation_workouts)
+        }
+
+        toTrainingsUser.setOnClickListener {
+            findNavController().navigate(R.id.navigation_trainings_user)
+        }
+
+        toTrainingsFavorite.setOnClickListener {
+            findNavController().navigate(R.id.navigation_trainings_favorite)
+        }
     }
 
     private fun setupRecyclerView(view: View) {

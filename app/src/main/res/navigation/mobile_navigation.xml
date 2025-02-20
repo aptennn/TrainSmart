@@ -49,4 +49,12 @@
         android:id="@+id/navigation_exercise_details"
         android:name="com.example.trainsmart.ui.exercises.ExerciseDetailsFragment"
         tools:layout="@layout/fragment_exercise_details" />
+    <fragment
+        android:id="@+id/navigation_trainings_user"
+        android:name="com.example.trainsmart.ui.workouts.TrainingsUser"
+        tools:layout="@layout/fragment_user_trainings"/>
+    <fragment
+        android:id="@+id/navigation_trainings_favorite"
+        android:name="com.example.trainsmart.ui.workouts.TrainingsFavorite"
+        tools:layout="@layout/fragment_favorite_trainings"/>
 </navigation>
