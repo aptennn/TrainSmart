@@ -1,6 +1,5 @@
 package com.example.trainsmart.ui.workouts
 
-import android.graphics.BitmapFactory
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup

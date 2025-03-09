@@ -1,16 +1,116 @@
-<?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_marginVertical="12dp">
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <!-- Заголовок -->
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Тренировки"
+        android:textSize="14sp"
+        android:textColor="@color/black"
+        android:fontFamily="@font/unbounded_regular"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="24dp"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="16dp"
+        android:gravity="center_vertical">
+
+        <EditText
+            android:id="@+id/searchField"
+            android:layout_width="0dp"
+            android:layout_height="55dp"
+            android:layout_weight="1"
+            android:hint="Поиск"
+            android:imeOptions="actionSearch"
+            android:textStyle="bold"
+            android:fontFamily="@font/montserrat_regular"
+            android:textSize="18sp"
+            android:paddingHorizontal="16dp"
+            android:drawableStart="@drawable/ic_search"
+            android:background="@drawable/shape_search_field_background"
+            android:drawablePadding="8dp"
+            android:layout_marginEnd="8dp"
+            android:inputType="text" />
+
+        <ImageButton
+            android:id="@+id/btnFilter"
+            android:layout_width="55dp"
+            android:layout_height="55dp"
+            android:background="@drawable/custom_ripple_for_filter_button"
+            android:src="@drawable/ic_sort"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent" />
+    </LinearLayout>
+
+    <HorizontalScrollView
+        android:id="@+id/filterContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginBottom="16dp"
+        android:visibility="gone"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/btnAllTypes"
+                android:layout_width="100dp"
+                android:layout_height="40dp"
+                android:background="@drawable/shape_button_selected"
+                android:textColor="@color/white"
+                android:text="Все типы"
+                android:textAllCaps="false"
+                android:textSize="14sp"
+                android:fontFamily="@font/montserrat_semi_bold"
+                android:layout_marginEnd="8dp"/>
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/btnUpperBody"
+                android:layout_width="100dp"
+                android:layout_height="40dp"
+                android:background="@drawable/shape_button_unselected"
+                android:textColor="@color/black"
+                android:layout_marginEnd="8dp"
+                android:text="Верх тела"
+                android:textAllCaps="false"
+                android:textSize="14sp"
+                android:fontFamily="@font/montserrat_semi_bold" />
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/btnLowerBody"
+                android:layout_width="100dp"
+                android:layout_height="40dp"
+                android:layout_marginEnd="8dp"
+                android:background="@drawable/shape_button_unselected"
+                android:textColor="@color/black"
+                android:text="Низ тела"
+                android:textAllCaps="false"
+                android:textSize="14sp"
+                android:fontFamily="@font/montserrat_semi_bold" />
+        </LinearLayout>
+    </HorizontalScrollView>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/workoutsRV"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-</androidx.constraintlayout.widget.ConstraintLayout>
+        android:layout_weight="1"
+        android:layout_height="0dp"/>
+
+</LinearLayout>

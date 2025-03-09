@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.fragment.app.Fragment
@@ -32,12 +33,15 @@ class WorkoutsDetailsFragment : Fragment() {
     ): View {
         val view = inflater.inflate(R.layout.fragment_workout_details, container, false)
 
-        val workoutTitle: TextView = view.findViewById(R.id.tv_exercise_title)
-        val workoutTime: TextView = view.findViewById(R.id.tv_exercise_time)
-        val workoutCountExersices: TextView = view.findViewById(R.id.tv_exercise_count_exercises)
+        val workoutTitle: TextView = view.findViewById(R.id.tvTitle)
+        val workoutTime: TextView = view.findViewById(R.id.timeTextView)
+        val workoutCountExersices: TextView = view.findViewById(R.id.exercisesCountTextView)
         val workoutImage: ImageView = view.findViewById(R.id.iv_exercise)
         val rV: RecyclerView = view.findViewById(R.id.rv_exercises)
-        val startButton: Button = view.findViewById(R.id.btn_start)
+        val startButton: Button = view.findViewById(R.id.btnStart)
+        val backButton: ImageButton = view.findViewById(R.id.ibBack)
+        val favoriteButton: ImageButton = view.findViewById(R.id.ibFavorite)
+
 
         workout?.let{
             workoutTitle.text = it.title
@@ -50,6 +54,14 @@ class WorkoutsDetailsFragment : Fragment() {
 
         startButton.setOnClickListener {
             startActivity(Intent(context, WorkoutActivity::class.java))
+        }
+
+        backButton.setOnClickListener {
+            requireActivity().onBackPressedDispatcher.onBackPressed()
+        }
+
+        favoriteButton.setOnClickListener {
+
         }
 
         return view

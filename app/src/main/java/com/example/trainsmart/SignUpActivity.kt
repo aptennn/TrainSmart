@@ -6,7 +6,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
-import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -77,19 +76,23 @@ class SignUpActivity : AppCompatActivity() {
                             val builder = AlertDialog.Builder(this)
                             builder.setMessage("Please check your e-mail to verify account")
                             builder.setPositiveButton("OK") { dialog, which ->
+                                cacheEmail(email)
+                                Firebase.auth.signOut()
                                 dialog.dismiss()
+                                val intent = Intent(this@SignUpActivity, SignInActivity::class.java)
+                                startActivity(intent)
                             }
                             val dialog = builder.create()
 
                             dialog.show()
 
-                            if (task.isSuccessful) {
-                                val intent = Intent(this@SignUpActivity, SignInActivity::class.java)
-                                cacheEmail(email)
-                                Firebase.auth.signOut()
-                                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-                                startActivity(intent)
-                            }
+//                            if (task.isSuccessful) {
+//                                val intent = Intent(this@SignUpActivity, SignInActivity::class.java)
+//                                cacheEmail(email)
+//                                Firebase.auth.signOut()
+//                                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+//                                startActivity(intent)
+//                            }
                         }?.addOnFailureListener {
                             val builder = AlertDialog.Builder(this)
                             builder.setMessage(it.localizedMessage)
