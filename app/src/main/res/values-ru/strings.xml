@@ -3,4 +3,5 @@
     <string name="app_name">ТrainSmart</string>
     <string name="workout_starts_in">Тренировка начнётся через</string>
     <string name="get_ready">Приготовьтесь!</string>
+    <string name="exercise_repetition_count">Кол-во повторений</string>
 </resources>

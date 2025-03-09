@@ -10,6 +10,7 @@ import com.example.trainsmart.ui.workouts.Workout
 
 class WorkoutActivity : AppCompatActivity() {
     private var workout: Workout? = null
+    private var currentExerciseIndex: Int = -1
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -24,7 +25,8 @@ class WorkoutActivity : AppCompatActivity() {
         workout = intent.extras!!.getParcelable("workoutKey")!!
     }
     fun onCountdownEnd() {
-        val nextFragment = WorkoutExerciseFragment.newInstance(workout!!)
+        currentExerciseIndex = 0
+        val nextFragment = WorkoutExerciseFragment.newInstance(workout!!, currentExerciseIndex)
         supportFragmentManager.beginTransaction()
             .replace(R.id.workoutFragment, nextFragment)
             .commit()
