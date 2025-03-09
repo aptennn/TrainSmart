@@ -5,6 +5,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.example.trainsmart.ui.workout.WorkoutExerciseFragment
 import com.example.trainsmart.ui.workouts.Workout
 
 class WorkoutActivity : AppCompatActivity() {
@@ -20,6 +21,12 @@ class WorkoutActivity : AppCompatActivity() {
             insets
         }
 
-        workout = intent.extras?.getParcelable("workoutKey")
+        workout = intent.extras!!.getParcelable("workoutKey")!!
+    }
+    fun onCountdownEnd() {
+        val nextFragment = WorkoutExerciseFragment.newInstance(workout!!)
+        supportFragmentManager.beginTransaction()
+            .replace(R.id.workoutFragment, nextFragment)
+            .commit()
     }
 }

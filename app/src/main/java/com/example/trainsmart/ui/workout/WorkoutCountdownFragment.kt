@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import com.example.trainsmart.R
+import com.example.trainsmart.WorkoutActivity
 import java.util.Locale
 import java.util.Timer
 import java.util.TimerTask
@@ -33,10 +34,12 @@ class WorkoutCountdownFragment : Fragment() {
         var countdownTimerTask: TimerTask? = null
         countdownTimerTask = object : TimerTask() {
             override fun run() {
-                this@WorkoutCountdownFragment.activity?.runOnUiThread {
+                val activity = this@WorkoutCountdownFragment.activity as WorkoutActivity
+                activity.runOnUiThread {
                     this@WorkoutCountdownFragment.decreaseCountdown()
                     if (countdownSeconds == 0) {
                         countdownTimerTask?.cancel()
+                        activity.onCountdownEnd()
                     }
                 }
             }
