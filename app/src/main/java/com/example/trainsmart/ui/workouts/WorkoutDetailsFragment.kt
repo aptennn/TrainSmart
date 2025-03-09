@@ -53,7 +53,11 @@ class WorkoutsDetailsFragment : Fragment() {
         }
 
         startButton.setOnClickListener {
-            startActivity(Intent(context, WorkoutActivity::class.java))
+            val intent = Intent(context, WorkoutActivity::class.java)
+            intent.putExtras(Bundle().apply {
+                putParcelable("workoutKey", workout)
+            })
+            startActivity(intent)
         }
 
         backButton.setOnClickListener {
