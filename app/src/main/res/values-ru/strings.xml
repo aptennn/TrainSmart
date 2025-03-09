@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">ТrainSmart</string>
+    <string name="workout_starts_in">Тренировка начнётся через</string>
+    <string name="get_ready">Приготовьтесь!</string>
+</resources>

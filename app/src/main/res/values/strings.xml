@@ -14,4 +14,7 @@
     <string name="exercise_technique">Техника выполнения</string>
     <string name="title_exercise_details">Упражнение</string>
     <string name="hint_search_exercises">Поиск</string>
+    <string name="button_start_workout">Start</string>
+    <string name="workout_starts_in">Workout starts in</string>
+    <string name="get_ready">Get ready!</string>
 </resources>
