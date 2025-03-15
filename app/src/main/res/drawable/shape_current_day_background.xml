@@ -1,0 +1,5 @@
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+    <solid android:color="#2569ED"/> <!-- Цвет фона -->
+    <size android:width="32dp" android:height="32dp"/> <!-- Размер круга -->
+    <corners android:radius="16dp"/> <!-- Делаем круг -->
+</shape>
