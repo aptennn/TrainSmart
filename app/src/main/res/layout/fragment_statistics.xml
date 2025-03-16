@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -7,51 +8,54 @@
     android:background="#FAFAFA"
     tools:context=".ui.statistics.StatisticsFragment">
 
+    <!-- Заголовок "Статистика" -->
     <TextView
         android:id="@+id/textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
-        android:layout_marginTop="63dp"
+        android:layout_marginTop="32dp"
         android:fontFamily="@font/unbounded_medium"
         android:text="Статистика"
         android:textColor="@color/black"
         android:textSize="16sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"/>
 
+    <!-- Блок с показателями -->
     <LinearLayout
         android:id="@+id/LLstats"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="40dp"
+        android:layout_marginTop="24dp"
         android:gravity="center"
+        android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView">
 
+        <!-- Левая статистика -->
         <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_marginEnd="32dp"
-            android:gravity="center_horizontal"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
             android:orientation="vertical">
 
             <ImageView
-                android:layout_width="36dp"
-                android:layout_height="36dp"
-                android:layout_marginBottom="18dp"
-                android:src="@drawable/ic_train" />
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_marginBottom="8dp"
+                android:src="@drawable/ic_train"/>
 
             <TextView
                 android:id="@+id/TVtrainsCount"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="4dp"
                 android:fontFamily="@font/montserrat_bold"
                 android:text="1"
                 android:textColor="@color/black"
-                android:textSize="18sp" />
+                android:textSize="20sp"/>
 
             <TextView
                 android:layout_width="wrap_content"
@@ -59,32 +63,31 @@
                 android:fontFamily="@font/montserrat_regular"
                 android:text="ТРЕНИРОВКА"
                 android:textColor="#8D8D8D"
-                android:textSize="16sp" />
-
+                android:textSize="14sp"/>
         </LinearLayout>
 
+        <!-- Правая статистика -->
         <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_marginStart="32dp"
-            android:gravity="center_horizontal"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
             android:orientation="vertical">
 
             <ImageView
-                android:layout_width="36dp"
-                android:layout_height="36dp"
-                android:layout_marginBottom="18dp"
-                android:src="@drawable/ic_clock" />
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_marginBottom="8dp"
+                android:src="@drawable/ic_clock"/>
 
             <TextView
                 android:id="@+id/TVtime"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="4dp"
                 android:fontFamily="@font/montserrat_bold"
                 android:text="30 м. 22 с."
                 android:textColor="@color/black"
-                android:textSize="18sp" />
+                android:textSize="20sp"/>
 
             <TextView
                 android:layout_width="wrap_content"
@@ -92,19 +95,20 @@
                 android:fontFamily="@font/montserrat_regular"
                 android:text="ВРЕМЯ"
                 android:textColor="#8D8D8D"
-                android:textSize="16sp" />
-
+                android:textSize="14sp"/>
         </LinearLayout>
     </LinearLayout>
 
+    <!-- Блок истории -->
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="40dp"
+        android:layout_marginTop="32dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/LLstats">
 
+        <!-- Заголовок и кнопка -->
         <TextView
             android:id="@+id/textView2"
             android:layout_width="wrap_content"
@@ -122,146 +126,60 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="24dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
+            android:clickable="true"
+            android:focusable="true"
             android:fontFamily="@font/montserrat_medium"
             android:text="Все тренировки"
             android:textColor="@drawable/selector_text_color"
             android:textSize="16sp"
-            android:clickable="true"
-            android:focusable="true"/>
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
+        <!-- Календарь -->
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="365dp"
-            android:layout_height="200dp"
-            android:layout_marginTop="19dp"
-            android:layout_marginBottom="20dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="16dp"
+            android:layout_marginVertical="16dp"
             android:background="@drawable/shape_rounded_white_rect"
             android:elevation="4dp"
-            android:gravity="center"
-            android:orientation="vertical"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textView2">
 
-            <LinearLayout
-                android:id="@+id/linearLayout4"
+            <com.kizitonwose.calendar.view.WeekCalendarView
+                android:id="@+id/weekCalendarView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="16dp"
+                android:layout_marginTop="29dp"
+                android:layout_marginHorizontal="17dp"
+                app:cv_daySize="seventhWidth"
+                app:cv_dayViewResource="@layout/layout_calendar_day"
+                app:cv_scrollPaged="true"
+                app:layout_constraintBottom_toTopOf="@+id/view"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
-
-                <!-- Заголовки дней недели -->
-                <GridLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:columnCount="7"
-                    android:rowCount="1">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_columnWeight="1"
-                        android:fontFamily="@font/montserrat_light"
-                        android:gravity="center"
-                        android:text="Пн"
-                        android:textColor="#8D8D8D"
-                        android:textSize="16sp" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_columnWeight="1"
-                        android:fontFamily="@font/montserrat_light"
-                        android:gravity="center"
-                        android:text="Вт"
-                        android:textColor="#8D8D8D"
-                        android:textSize="16sp" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_columnWeight="1"
-                        android:fontFamily="@font/montserrat_light"
-                        android:gravity="center"
-                        android:text="Ср"
-                        android:textColor="#8D8D8D"
-                        android:textSize="16sp" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_columnWeight="1"
-                        android:fontFamily="@font/montserrat_light"
-                        android:gravity="center"
-                        android:text="Чт"
-                        android:textColor="#8D8D8D"
-                        android:textSize="16sp" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_columnWeight="1"
-                        android:fontFamily="@font/montserrat_light"
-                        android:gravity="center"
-                        android:text="Пт"
-                        android:textColor="#8D8D8D"
-                        android:textSize="16sp" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_columnWeight="1"
-                        android:fontFamily="@font/montserrat_light"
-                        android:gravity="center"
-                        android:text="Сб"
-                        android:textColor="#8D8D8D"
-                        android:textSize="16sp" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_columnWeight="1"
-                        android:fontFamily="@font/montserrat_light"
-                        android:gravity="center"
-                        android:text="Вс"
-                        android:textColor="#8D8D8D"
-                        android:textSize="16sp" />
-
-                </GridLayout>
-
-                <!-- Числа дней -->
-                <GridLayout
-                    android:id="@+id/daysGrid"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:columnCount="7"
-                    android:rowCount="1" />
-
-            </LinearLayout>
+                app:layout_constraintTop_toTopOf="parent" />
 
             <View
                 android:id="@+id/view"
-                android:layout_width="300dp"
-                android:layout_height="3dp"
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:layout_marginHorizontal="24dp"
                 android:layout_marginVertical="17dp"
                 android:background="#FAFAFA"
                 app:layout_constraintBottom_toTopOf="@+id/textView4"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/linearLayout4" />
+                app:layout_constraintTop_toBottomOf="@+id/weekCalendarView" />
 
             <TextView
                 android:id="@+id/textView3"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="17dp"
-                android:layout_marginBottom="31dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginBottom="16dp"
                 android:fontFamily="@font/unbounded_regular"
                 android:text="Серия из 7 дней"
                 android:textColor="@color/black"
@@ -273,8 +191,8 @@
                 android:id="@+id/textView4"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="17dp"
-                android:layout_marginBottom="24dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginBottom="16dp"
                 android:fontFamily="@font/montserrat_bold"
                 android:lines="2"
                 android:text="Рекорд:\n13 дней"
@@ -284,5 +202,4 @@
                 app:layout_constraintEnd_toEndOf="parent" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
-
 </androidx.constraintlayout.widget.ConstraintLayout>
