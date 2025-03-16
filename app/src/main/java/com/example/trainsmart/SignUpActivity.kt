@@ -12,13 +12,21 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.lifecycle.lifecycleScope
+import com.example.trainsmart.data.User
+import com.example.trainsmart.firestore.FireStoreClient
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.auth
+import kotlinx.coroutines.launch
 
 class SignUpActivity : AppCompatActivity() {
 
     private lateinit var auth: FirebaseAuth
+
+    private lateinit var userId : String
+    private lateinit var userEmail : String
+    private lateinit var userName : String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,6 +51,8 @@ class SignUpActivity : AppCompatActivity() {
                     (password.text.toString() == confirmPassword.text.toString())
                 ) {
                     createUserEmailPassword(email.text.toString(), password.text.toString())
+                    userEmail = email.text.toString()
+                    userName = login.text.toString()
                 } else if (password.text.toString() != confirmPassword.text.toString()) {
                     val builder = AlertDialog.Builder(this)
                     builder.setMessage("The confirmation password does not match the original one")
@@ -86,13 +96,7 @@ class SignUpActivity : AppCompatActivity() {
 
                             dialog.show()
 
-//                            if (task.isSuccessful) {
-//                                val intent = Intent(this@SignUpActivity, SignInActivity::class.java)
-//                                cacheEmail(email)
-//                                Firebase.auth.signOut()
-//                                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-//                                startActivity(intent)
-//                            }
+
                         }?.addOnFailureListener {
                             val builder = AlertDialog.Builder(this)
                             builder.setMessage(it.localizedMessage)
@@ -103,7 +107,17 @@ class SignUpActivity : AppCompatActivity() {
 
                             dialog.show()
                         }
+
+                    if (task.isSuccessful) {                                    // adding user to firestore
+                        val firestoreClient = FireStoreClient()
+                        userId = Firebase.auth.uid!!
+                        lifecycleScope.launch {
+                            firestoreClient.insertUser(User(userId, userEmail, userName)).collect{}
+                        }
+                    }
+
                 }
+
             }.addOnFailureListener {
                 val builder = AlertDialog.Builder(this)
                 builder.setMessage(it.localizedMessage)
