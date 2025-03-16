@@ -30,7 +30,8 @@
             android:scaleType="center"
             android:src="@drawable/ic_arrow_back"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"/>
+            app:layout_constraintTop_toTopOf="parent"
+            android:elevation="4dp"/>
 
         <ImageButton
             android:id="@+id/ibFavorite"
@@ -42,7 +43,8 @@
             android:scaleType="center"
             android:src="@drawable/ic_favorite"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"/>
+            app:layout_constraintTop_toTopOf="parent"
+            android:elevation="4dp"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -53,7 +55,7 @@
         android:layout_height="0dp"
         android:layout_marginTop="-40dp"
         android:background="@drawable/shape_rounded_top_corners"
-        android:elevation="8dp"
+        android:elevation="4dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toBottomOf="@id/topSection">
 
@@ -149,7 +151,8 @@
             app:cornerRadius="12dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"/>
+            app:layout_constraintStart_toStartOf="parent"
+            android:elevation="4dp"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

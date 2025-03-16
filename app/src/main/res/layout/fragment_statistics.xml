@@ -118,6 +118,7 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
+            android:id="@+id/TVallTrainings"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="24dp"
@@ -134,9 +135,12 @@
             android:layout_width="365dp"
             android:layout_height="200dp"
             android:layout_marginTop="19dp"
+            android:layout_marginBottom="20dp"
             android:background="@drawable/shape_rounded_white_rect"
+            android:elevation="4dp"
             android:gravity="center"
             android:orientation="vertical"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textView2">

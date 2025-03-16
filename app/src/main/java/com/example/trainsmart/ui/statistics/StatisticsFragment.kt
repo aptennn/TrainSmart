@@ -14,6 +14,7 @@ import com.example.trainsmart.R
 import com.example.trainsmart.databinding.FragmentStatisticsBinding
 import java.util.Calendar
 import androidx.core.graphics.toColorInt
+import androidx.navigation.fragment.findNavController
 
 class StatisticsFragment : Fragment() {
 
@@ -27,11 +28,18 @@ class StatisticsFragment : Fragment() {
     ): View {
         _binding = FragmentStatisticsBinding.inflate(inflater, container, false)
         val root: View = binding.root
-
         // Настройка календаря текущей недели
         setupWeekCalendar()
 
         return root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        binding.TVallTrainings.setOnClickListener {
+            findNavController().navigate(R.id.action_navigationStatistics_to_navigationStatisticsHistory)
+        }
     }
 
     private fun setupWeekCalendar() {
