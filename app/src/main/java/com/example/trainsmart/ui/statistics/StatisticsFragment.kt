@@ -1,5 +1,6 @@
 package com.example.trainsmart.ui.statistics
 
+import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -61,15 +62,11 @@ class StatisticsFragment : Fragment() {
         binding.weekCalendarView.scrollToDate(currentDate)
 
         binding.weekCalendarView.dayBinder = object : WeekDayBinder<DayViewContainer> {
-            // Called only when a new container is needed.
             override fun create(view: View) = DayViewContainer(view)
 
-            // Called every time we need to reuse a container.
             override fun bind(container: DayViewContainer, data: WeekDay) {
-                // Устанавливаем число
                 container.dayNumberView.text = data.date.dayOfMonth.toString()
 
-                // Устанавливаем название дня недели
                 container.dayNameText.text = when (data.date.dayOfWeek) {
                     DayOfWeek.MONDAY -> "Пн"
                     DayOfWeek.TUESDAY -> "Вт"
@@ -81,13 +78,12 @@ class StatisticsFragment : Fragment() {
                     else -> ""
                 }
 
-                // Устанавливаем фон для текущего дня
-                val bgRes = if (data.date == LocalDate.now()) {
-                    R.drawable.shape_background_current_day
+                if (data.date == LocalDate.now()) {
+                    container.dayNumberView.setBackgroundResource(R.drawable.shape_background_current_day)
+                    container.dayNumberView.setTextColor(Color.WHITE)
                 } else {
-                    R.drawable.shape_background_calendar_days
+                    container.dayNumberView.setBackgroundResource(R.drawable.shape_background_calendar_days)
                 }
-                container.dayNumberView.setBackgroundResource(bgRes)
             }
         }
     }

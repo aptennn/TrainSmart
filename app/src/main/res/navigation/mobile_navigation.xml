@@ -60,5 +60,16 @@
         android:id="@+id/navigation_statistics_history"
         android:name="com.example.trainsmart.ui.statistics.StatisticsHistoryFragment"
         tools:layout="@layout/fragment_statistics_history"
-        android:label="Statistics History"/>
+        android:label="Statistics History">
+        <action
+            android:id="@+id/action_navigationStatisticsHistory_to_navigationStatisticsDayHistory"
+            app:destination="@id/navigation_statistics_day_history"
+            app:popUpTo="@id/navigation_statistics_history"
+            app:popUpToInclusive="false"/>
+    </fragment>
+    <fragment
+        android:id="@+id/navigation_statistics_day_history"
+        android:name="com.example.trainsmart.ui.statistics.StatisticsDayFragment"
+        tools:layout="@layout/fragment_statistics_day"
+        android:label="Statistics Day History"/>
 </navigation>

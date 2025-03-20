@@ -8,8 +8,11 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.core.view.children
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import com.example.trainsmart.R
 import com.example.trainsmart.databinding.FragmentStatisticsHistoryBinding
+import com.example.trainsmart.ui.exercises.ExerciseListItemModel
+import com.example.trainsmart.ui.workouts.Workout
 import com.kizitonwose.calendar.core.CalendarDay
 import com.kizitonwose.calendar.core.CalendarMonth
 import com.kizitonwose.calendar.core.DayPosition
@@ -21,9 +24,7 @@ import com.kizitonwose.calendar.view.ViewContainer
 import java.time.DayOfWeek
 import java.time.LocalDate
 import java.time.YearMonth
-import java.time.format.DateTimeFormatter
 import java.time.format.DateTimeFormatterBuilder
-import java.time.format.TextStyle
 import java.time.temporal.ChronoField
 import java.util.Locale
 
@@ -64,6 +65,41 @@ class StatisticsHistoryFragment : Fragment() {
 
         class DayViewContainer(view: View) : ViewContainer(view) {
             val textView: TextView = view.findViewById(R.id.calendarDayText)
+            lateinit var day: CalendarDay
+
+            init {
+                view.setOnClickListener {
+                    if (day.date == LocalDate.now()) {
+                        // Only use month dates
+                        findNavController().navigate(
+                            R.id.navigation_statistics_day_history,
+                            Bundle().apply {
+                                val workoutHistory = WorkoutHistory(Workout(
+                                    "Программа для тренировки спины", R.drawable.image_back_wrkt, 1.5,
+                                    listOf(
+                                        ExerciseListItemModel(
+                                            "Тяга вертикального блока", R.drawable.exercise3,
+                                            "Одно из фундаментальных упражнений для развития верхней части туловища",
+                                            "1. Сядьте на скамью тренажёра...",
+                                            "2 подхода по 10 повторений"
+                                        ),
+                                        ExerciseListItemModel(
+                                            "Тяга горизонтального блока", R.drawable.exercise5,
+                                            "Cиловое упражнение на развитие мышц спины...",
+                                            "1. Расположитесь на сидении тренажёра...",
+                                            "3 подхода по 11 повторений"
+                                        )
+                                    ),
+                                    1
+                                ), day.date.toString())
+                                putParcelable("workoutHistoryKey", workoutHistory)
+                            }
+                        )
+                    }
+                    // Use the CalendarDay associated with this container.
+
+                }
+            }
         }
 
         class MonthHeaderContainer(view: View) : ViewContainer(view) {
@@ -75,18 +111,19 @@ class StatisticsHistoryFragment : Fragment() {
             override fun create(view: View) = DayViewContainer(view)
             override fun bind(container: DayViewContainer, data: CalendarDay) {
 
+                container.day = data
                 container.textView.text = data.date.dayOfMonth.toString()
 
                 if (data.position == DayPosition.MonthDate) {
                     container.textView.setTextColor(Color.BLACK)
-                    val bgRes = if (data.date == LocalDate.now()) {
-                        R.drawable.shape_background_current_day
+                    if (data.date == LocalDate.now()) {
+                        container.textView.setBackgroundResource(R.drawable.shape_background_current_day)
+                        container.textView.setTextColor(Color.WHITE)
                     } else {
-                        R.drawable.shape_background_calendar_days
+                        container.textView.setBackgroundResource(R.drawable.shape_background_calendar_days)
                     }
-                    container.textView.setBackgroundResource(bgRes)
                 } else {
-                    container.textView.setTextColor(Color.LTGRAY)
+                    container.textView.setTextColor(Color.TRANSPARENT)
                     container.textView.setBackgroundColor(Color.TRANSPARENT)
                 }
             }
