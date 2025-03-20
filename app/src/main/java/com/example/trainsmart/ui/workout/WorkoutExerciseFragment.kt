@@ -9,24 +9,31 @@ import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import com.example.trainsmart.R
+import com.example.trainsmart.WorkoutActivity
 import com.example.trainsmart.ui.exercises.ExerciseListItemModel
+import com.example.trainsmart.ui.workout.view.WorkoutProgressBar
 import com.example.trainsmart.ui.workouts.Workout
 
 private const val ARGNAME_WORKOUT = "workout"
 private const val ARGNAME_EXERCISE_INDEX = "exerciseIndex"
+private const val ARGNAME_SET_INDEX = "setIndex"
 
 class WorkoutExerciseFragment : Fragment() {
     private var workout: Workout? = null
     private var exerciseIndex: Int? = null
+    private var setIndex: Int? = null
     private var exercise: ExerciseListItemModel? = null
+    private var nSets: Int? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
             workout = it.getParcelable(ARGNAME_WORKOUT)
             exerciseIndex = it.getInt(ARGNAME_EXERCISE_INDEX)
+            setIndex = it.getInt(ARGNAME_SET_INDEX)
         }
         exercise = workout?.exercises?.get(exerciseIndex!!)
+        nSets = parseNumSets(exercise?.countReps!!)
     }
 
     override fun onCreateView(
@@ -40,23 +47,40 @@ class WorkoutExerciseFragment : Fragment() {
         val imageView: ImageView = root.findViewById(R.id.currentExercisePicture)
         imageView.setImageResource(exercise.photo)
         val repetitionCountTextView: TextView = root.findViewById(R.id.currentExerciseRepetitionCount)
-        val repetitionStringWords = exercise.countReps.split(' ')
-        if (repetitionStringWords.size == 5)
-            repetitionCountTextView.text = repetitionStringWords[3]
-        else
-            repetitionCountTextView.text = "???"
+        repetitionCountTextView.text = parseNumReps(exercise.countReps).toString()
 
         val buttonStart: Button = root.findViewById(R.id.buttonStart)
+        buttonStart.setOnClickListener { (activity as WorkoutActivity).onNextSetClicked() }
+
+        val progressBar: WorkoutProgressBar = root.findViewById(R.id.workoutProgress)
+        progressBar.currentExercise = exerciseIndex!!
+        progressBar.currentSet = setIndex!!
+        progressBar.setCounts = workout!!.exercises.map { parseNumSets(it.countReps) }.toTypedArray()
         return root
+    }
+
+    private fun parseNumReps(s: String): Int {
+        val words = s.split(' ')
+        if (words.size != 5)
+            throw IllegalArgumentException("invalid sets+reps string")
+        return words[3].toInt()
+    }
+
+    private fun parseNumSets(s: String): Int {
+        val words = s.split(' ')
+        if (words.size != 5)
+            throw IllegalArgumentException("invalid sets+reps string")
+        return words[0].toInt()
     }
 
     companion object {
         @JvmStatic
-        fun newInstance(workout: Workout, exerciseIndex: Int) =
+        fun newInstance(workout: Workout, exerciseIndex: Int, setIndex: Int) =
             WorkoutExerciseFragment().apply {
                 arguments = Bundle().apply {
                     putParcelable(ARGNAME_WORKOUT, workout)
                     putInt(ARGNAME_EXERCISE_INDEX, exerciseIndex)
+                    putInt(ARGNAME_SET_INDEX, setIndex)
                 }
             }
     }

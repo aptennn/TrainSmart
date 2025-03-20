@@ -5,7 +5,18 @@
     android:id="@+id/constraintLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.workout.WorkoutExerciseFragment" >
+    tools:context=".ui.workout.WorkoutExerciseFragment">
+
+    <com.example.trainsmart.ui.workout.view.WorkoutProgressBar
+        android:id="@+id/workoutProgress"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginEnd="5dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/currentExerciseName"
@@ -17,7 +28,7 @@
         android:textSize="28sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@id/workoutProgress" />
 
     <ImageView
         android:id="@+id/currentExercisePicture"
