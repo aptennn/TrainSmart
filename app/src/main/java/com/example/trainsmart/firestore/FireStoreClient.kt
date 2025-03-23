@@ -122,7 +122,7 @@ class FireStoreClient {
 
     fun getExercisesByIds(
         idS: List<String>
-    ): Flow<List<Exercise>?> {
+    ): Flow<List<Exercise?>?> {
         return callbackFlow {
             db.collection(collectionBasicEx)
                 .get()
@@ -247,7 +247,6 @@ class FireStoreClient {
             "name" to name,
             "photoUrl" to photoUrl,
             "duration" to duration,
-            "description" to description,
             "exercises" to exercises,
             "type" to type
         )
@@ -258,7 +257,6 @@ class FireStoreClient {
             name = this["name"] as String,
             photoUrl = this["photoUrl"] as String,
             duration = this["type"] as String,
-            description = this["description"] as String,
             exercises = this["exercises"] as Map<String, String>,
             type = this["type"] as String
         )
