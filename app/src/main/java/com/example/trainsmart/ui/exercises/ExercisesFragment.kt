@@ -60,6 +60,84 @@ class ExercisesFragment : Fragment() {
 
         val exerciseModels = mutableListOf<ExerciseListItemModel>()
 
+
+        lifecycleScope.launch {
+            firestoreClient.getAllExercises().collect { result ->
+                // Start Animation
+
+                if (result.isNotEmpty()) {
+                    println(909)
+                    for (exercise in result)
+                        exercise?.let { exercises.add(it)
+                            println(exercise.name)
+                            println(exercises.size)
+                        }
+                    for (exercise in exercises) {
+                        //println(133)
+                        //println(exercises.size)
+                        //println(exercise.name)
+                        exerciseModels.add(
+                            ExerciseListItemModel(
+                                exercise.name,
+                                R.drawable.exercise4,
+                                exercise.description,
+                                exercise.technique,
+                                "3 подхода по 6 повторений"
+                            )
+                        )
+                        //exerciseListAdapter.notifyDataSetChanged()
+                    }
+                }
+                else{
+                    println("result is null")
+                }
+
+                println("SIZE:")
+                println(exerciseModels.size)
+
+                var exerciseListAdapter = ExerciseListAdapter(requireContext(), exerciseModels, { exercise ->
+                    var arguments = Bundle().apply {
+                        putString("exerciseName", exercise.name)
+                        putInt("exercisePhoto", exercise.photo)
+                        putString("exerciseDescription", exercise.description)
+                        putString("exerciseTechnique", exercise.technique)
+                    }
+                    findNavController().navigate(R.id.navigation_exercise_details, arguments)
+                })
+                exerciseListAdapter.notifyDataSetChanged()
+                exerciseList.setAdapter(exerciseListAdapter)
+                exerciseList.layoutManager = LinearLayoutManager(context)
+
+                // Finish Animation
+
+                val searchBox: EditText = root.findViewById(R.id.exercise_search)
+                searchBox.addTextChangedListener(object : TextWatcher {
+                    override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+                    override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+                    override fun afterTextChanged(s: Editable?) {
+                        exerciseListAdapter.setFilter(s.toString())
+                    }
+                })
+            }
+
+
+        }
+
+
+        //exerciseListAdapter.notifyDataSetChanged()
+        //exerciseListAdapter.setFilter(" ")
+
+
+        return root
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
+
+}
+
 //        val exerciseModels = ArrayList<ExerciseListItemModel>()
 //
 //        for (exercise in exercises) {
@@ -70,7 +148,7 @@ class ExercisesFragment : Fragment() {
 //            ))
 //        }
 
-        // Сюда
+// Сюда
 //        exerciseModels.add(ExerciseListItemModel(
 //            "Жим лёжа", R.drawable.exercise1,
 //            "Базовое упражнение, которое помогает развить мышцы груди, плеч и рук.",
@@ -170,77 +248,3 @@ class ExercisesFragment : Fragment() {
 //                    "разгибая руки в локтях.",
 //            "5 подходов по 5 раз"
 //        ))
-
-
-        lifecycleScope.launch {
-            firestoreClient.getAllExercises().collect { result ->
-                if (result.isNotEmpty()) {
-                    println(909)
-                    for (exercise in result)
-                        exercise?.let { exercises.add(it)
-                            println(exercise.name)
-                            println(exercises.size)
-                        }
-                    for (exercise in exercises) {
-                        //println(133)
-                        //println(exercises.size)
-                        //println(exercise.name)
-                        exerciseModels.add(
-                            ExerciseListItemModel(
-                                exercise.name,
-                                R.drawable.exercise4,
-                                exercise.description,
-                                exercise.technique,
-                                "3 подхода по 6 повторений"
-                            )
-                        )
-                        //exerciseListAdapter.notifyDataSetChanged()
-                    }
-                }
-                else{
-                    println("result is null")
-                }
-
-                println("SIZE:")
-                println(exerciseModels.size)
-
-                var exerciseListAdapter = ExerciseListAdapter(requireContext(), exerciseModels, { exercise ->
-                    var arguments = Bundle().apply {
-                        putString("exerciseName", exercise.name)
-                        putInt("exercisePhoto", exercise.photo)
-                        putString("exerciseDescription", exercise.description)
-                        putString("exerciseTechnique", exercise.technique)
-                    }
-                    findNavController().navigate(R.id.navigation_exercise_details, arguments)
-                })
-                exerciseListAdapter.notifyDataSetChanged()
-                exerciseList.setAdapter(exerciseListAdapter)
-                exerciseList.layoutManager = LinearLayoutManager(context)
-
-                val searchBox: EditText = root.findViewById(R.id.exercise_search)
-                searchBox.addTextChangedListener(object : TextWatcher {
-                    override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
-                    override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
-                    override fun afterTextChanged(s: Editable?) {
-                        exerciseListAdapter.setFilter(s.toString())
-                    }
-                })
-            }
-
-
-        }
-
-
-        //exerciseListAdapter.notifyDataSetChanged()
-        //exerciseListAdapter.setFilter(" ")
-
-
-        return root
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
-    }
-
-}
