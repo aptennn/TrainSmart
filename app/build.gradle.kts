@@ -13,7 +13,7 @@ android {
 
     defaultConfig {
         applicationId = "com.example.trainsmart"
-        minSdk = 25
+        minSdk = 26
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
@@ -83,6 +83,8 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+
+    implementation(libs.calendar)
 
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.firestore)

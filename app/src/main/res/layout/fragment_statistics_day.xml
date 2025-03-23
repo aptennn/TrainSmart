@@ -33,17 +33,19 @@
             app:layout_constraintTop_toTopOf="parent"
             android:elevation="4dp"/>
 
-        <ImageButton
-            android:id="@+id/ibFavorite"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_marginEnd="20dp"
+        <TextView
+            android:padding="4dp"
+            android:id="@+id/tvDate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_marginTop="40dp"
-            android:background="@drawable/shape_bg_circle"
-            android:scaleType="center"
-            android:src="@drawable/ic_favorite"
+            android:background="@drawable/shape_rounded_white_rect"
+            android:layout_marginEnd="20dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
+            android:textSize="18sp"
+            android:fontFamily="@font/montserrat_semi_bold"
+            android:textColor="@color/black"
             android:elevation="4dp"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
@@ -73,6 +75,7 @@
             app:layout_constraintTop_toTopOf="parent">
 
             <LinearLayout
+                android:id="@+id/ll1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:padding="16dp"
@@ -107,20 +110,6 @@
             </LinearLayout>
         </androidx.cardview.widget.CardView>
 
-        <!-- Title -->
-        <TextView
-            android:id="@+id/tvTitle"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="24dp"
-            android:layout_marginTop="24dp"
-            android:layout_marginEnd="24dp"
-            android:fontFamily="@font/montserrat_semi_bold"
-            android:textColor="@color/black"
-            android:textSize="20sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/statsCard"/>
 
         <!-- Exercises List -->
         <androidx.recyclerview.widget.RecyclerView
@@ -130,14 +119,14 @@
             android:layout_marginVertical="16dp"
             android:clipToPadding="false"
             android:layout_marginHorizontal="25dp"
-            app:layout_constraintBottom_toTopOf="@id/btnStart"
+            app:layout_constraintBottom_toTopOf="@id/btnRepeat"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tvTitle"/>
+            app:layout_constraintTop_toBottomOf="@id/statsCard"/>
 
-        <!-- Start Button -->
+        <!-- Repeat Button -->
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnStart"
+            android:id="@+id/btnRepeat"
             android:layout_width="0dp"
             android:layout_height="56dp"
             android:layout_marginHorizontal="24dp"
@@ -145,7 +134,7 @@
             android:fontFamily="@font/montserrat_semi_bold"
             android:insetTop="0dp"
             android:insetBottom="0dp"
-            android:text="Начать"
+            android:text="Повторить"
             android:textAllCaps="false"
             android:textSize="18sp"
             app:cornerRadius="12dp"

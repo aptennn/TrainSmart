@@ -32,7 +32,13 @@
         android:id="@+id/navigation_statistics"
         android:name="com.example.trainsmart.ui.statistics.StatisticsFragment"
         android:label="@string/title_statistics"
-        tools:layout="@layout/fragment_statistics" />
+        tools:layout="@layout/fragment_statistics">
+        <action
+            android:id="@+id/action_navigationStatistics_to_navigationStatisticsHistory"
+            app:destination="@id/navigation_statistics_history"
+            app:popUpTo="@id/navigation_statistics"
+            app:popUpToInclusive="false"/>
+    </fragment>
     <fragment
         android:id="@+id/navigation_settings"
         android:name="com.example.trainsmart.ui.settings.SettingsFragment"
@@ -43,10 +49,27 @@
     <fragment
         android:id="@+id/navigation_workout_details"
         android:name="com.example.trainsmart.ui.workouts.WorkoutsDetailsFragment"
-        android:label="Workout Description">
-    </fragment>
+        tools:layout="@layout/fragment_workout_details"
+        android:label="Workout Description"/>
     <fragment
         android:id="@+id/navigation_exercise_details"
         android:name="com.example.trainsmart.ui.exercises.ExerciseDetailsFragment"
-        tools:layout="@layout/fragment_exercise_details" />
+        tools:layout="@layout/fragment_exercise_details"
+        android:label="Exersice Details"/>
+    <fragment
+        android:id="@+id/navigation_statistics_history"
+        android:name="com.example.trainsmart.ui.statistics.StatisticsHistoryFragment"
+        tools:layout="@layout/fragment_statistics_history"
+        android:label="Statistics History">
+        <action
+            android:id="@+id/action_navigationStatisticsHistory_to_navigationStatisticsDayHistory"
+            app:destination="@id/navigation_statistics_day_history"
+            app:popUpTo="@id/navigation_statistics_history"
+            app:popUpToInclusive="false"/>
+    </fragment>
+    <fragment
+        android:id="@+id/navigation_statistics_day_history"
+        android:name="com.example.trainsmart.ui.statistics.StatisticsDayFragment"
+        tools:layout="@layout/fragment_statistics_day"
+        android:label="Statistics Day History"/>
 </navigation>
