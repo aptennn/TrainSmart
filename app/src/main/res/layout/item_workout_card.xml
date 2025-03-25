@@ -1,16 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="365dp"
+    android:layout_width="330dp"
     android:layout_height="185dp"
-    android:focusable="true"
-    app:cardCornerRadius="30dp"
-    android:layout_marginStart="25dp"
-    android:layout_marginEnd="25dp"
-    android:layout_marginBottom="18dp"
+    android:layout_marginStart="15dp"
+    android:layout_marginEnd="15dp"
+    android:layout_marginBottom="14dp"
     android:clickable="true"
-    android:foreground="?attr/selectableItemBackground">
+    android:focusable="true"
+    android:foreground="?attr/selectableItemBackground"
+    app:cardCornerRadius="30dp">
 
     <ImageView
         android:id="@+id/workoutImage"
@@ -24,32 +23,18 @@
 
         <TextView
             android:id="@+id/workoutTitleTV"
-            android:layout_width="212dp"
-            android:layout_height="90dp"
-            android:fontFamily="@font/montserrat_semi_bold"
+            android:layout_width="180dp"
+            android:layout_height="0dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="80dp"
+            android:layout_marginBottom="20dp"
+            android:fontFamily="@font/unbounded"
+            android:gravity="bottom"
             android:textColor="@color/white"
-            android:textSize="22sp"
-            android:layout_marginBottom="10dp"
-            android:layout_marginStart="10dp"
+            android:textSize="18sp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/workoutDescription"
-            app:layout_constraintStart_toStartOf="parent" />
-
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/workoutDescription"
-            android:layout_width="100dp"
-            android:layout_height="35dp"
-            android:background="@drawable/shape_workout_description_btn"
-            android:backgroundTint="#2569ED"
-            android:fontFamily="@font/montserrat_medium"
-            android:text="@string/wrktDescriptionButton"
-            android:textColor="@color/white"
-            android:textSize="14sp"
-            android:textAllCaps="false"
-            android:layout_marginBottom="19dp"
-            android:layout_marginEnd="19dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
