@@ -5,6 +5,5 @@ data class Workout(
     val photoUrl : String = "Url",
     val duration : String = "Duration",
     val exercises: Map<String, String> = mapOf("uid" to "times-repetitions"), // подходы-повторения
-    val description : String = "Description",
     val type : String = "Type"
 )
