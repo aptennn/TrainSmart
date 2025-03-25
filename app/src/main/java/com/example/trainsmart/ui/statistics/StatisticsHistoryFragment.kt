@@ -75,7 +75,7 @@ class StatisticsHistoryFragment : Fragment() {
                             R.id.navigation_statistics_day_history,
                             Bundle().apply {
                                 val workoutHistory = WorkoutHistory(Workout(
-                                    "Программа для тренировки спины", R.drawable.image_back_wrkt, 1.5,
+                                    "Программа для тренировки спины", R.drawable.image_back_wrkt, 1.5.toString(),
                                     listOf(
                                         ExerciseListItemModel(
                                             "Тяга вертикального блока", R.drawable.exercise3,

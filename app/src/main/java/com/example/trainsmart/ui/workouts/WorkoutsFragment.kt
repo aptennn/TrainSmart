@@ -20,6 +20,8 @@ import com.example.trainsmart.R
 import com.example.trainsmart.data.Exercise
 import com.example.trainsmart.firestore.FireStoreClient
 import com.example.trainsmart.ui.exercises.ExerciseListItemModel
+import kotlinx.coroutines.async
+import kotlinx.coroutines.delay
 import com.example.trainsmart.ui.workouts.Workout as UiWorkout
 import com.example.trainsmart.data.Workout as DataWorkout
 import kotlinx.coroutines.launch
@@ -65,8 +67,51 @@ class WorkoutsFragment : Fragment() {
 
     private fun initializeData() {
         if (!isDataInitialized) {
-            originalItems.addAll(createWorkoutItems())
-            isDataInitialized = true
+            val firestoreClient = FireStoreClient()
+            val uiWorkouts = mutableListOf<UiWorkout>()
+            val workouts = mutableListOf<DataWorkout>()
+            lifecycleScope.launch {
+                firestoreClient.getAllWorkouts().collect { result ->
+                    if (result.isNotEmpty()) {
+                        for (workout in result) {
+                            println(workout?.name)
+                            workout?.let {
+                                workouts.add(it)
+                            }
+                        }
+                        for (workout in workouts) {
+                            uiWorkouts.add(
+                                UiWorkout(
+                                    workout.name,
+                                    R.drawable.exercise3,
+                                    workout.duration,
+                                    exercisesToList(workout.exercises, firestoreClient),
+                                    1
+                                )
+                            )
+                        }
+                    } else {
+                        println("result is null")
+                    }
+                    println("SIZE UI LIST 333333333333:")
+                    println(uiWorkouts.size)
+                    originalItems.addAll(uiWorkouts)
+                    println()
+                    isDataInitialized = true
+
+                    val recyclerView = view?.findViewById<RecyclerView>(R.id.workoutsRV)
+                    if (recyclerView != null) {
+                        recyclerView.layoutManager = LinearLayoutManager(requireContext())
+                    }
+                    adapter = WorkoutsAdapter { navigateToWorkoutDetails(it) }
+                    if (recyclerView != null) {
+                        recyclerView.adapter = adapter
+                    }
+                    adapter.submitList(originalItems)
+                }
+
+            }
+
         }
     }
 
@@ -76,6 +121,8 @@ class WorkoutsFragment : Fragment() {
         view.findViewById<ImageButton>(R.id.btnFilter).setOnClickListener { toggleFiltersVisibility() }
     }
 
+
+    // ДИЧЬ!!!
     private fun setupRecyclerView(view: View) {
         val recyclerView = view.findViewById<RecyclerView>(R.id.workoutsRV)
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
@@ -190,7 +237,8 @@ class WorkoutsFragment : Fragment() {
         val exIds = exercises.map { it.key }
         val exReps = exercises.map { it.value }
         val dataExs = mutableListOf<Exercise>()
-        lifecycleScope.launch {
+
+        lifecycleScope.async {
         for (exercise in exercises)
             firestoreClient.getExercisesByIds(exIds).collect { result ->
                 if (result != null) {
@@ -209,8 +257,14 @@ class WorkoutsFragment : Fragment() {
                         )
                     }
                 }
+
+
+
             }
+
+
         }
+        //def.join()
 
         return uiExercisesList
     }
@@ -243,7 +297,8 @@ class WorkoutsFragment : Fragment() {
                 else{
                     println("result is null")
                 }
-
+                println("SIZE UI LIST:")
+                println(uiWorkouts.size)
             }
 
         }
