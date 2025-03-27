@@ -29,7 +29,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="12dp"
         android:fontFamily="@font/unbounded"
-        android:text="5"
+        android:text="3"
         android:textColor="@color/white"
         android:textSize="64sp"
         android:textStyle="bold"

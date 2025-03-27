@@ -32,7 +32,10 @@ class WorkoutExerciseFragment : Fragment() {
             exerciseIndex = it.getInt(ARGNAME_EXERCISE_INDEX)
             setIndex = it.getInt(ARGNAME_SET_INDEX)
         }
+        println("error here")
+
         exercise = workout?.exercises?.get(exerciseIndex!!)
+        println(exercise?.countReps!!)
         nSets = parseNumSets(exercise?.countReps!!)
     }
 
@@ -60,15 +63,16 @@ class WorkoutExerciseFragment : Fragment() {
     }
 
     private fun parseNumReps(s: String): Int {
-        val words = s.split(' ')
-        if (words.size != 5)
+        val words = s.split('-')
+        if (words.size != 2)
             throw IllegalArgumentException("invalid sets+reps string")
-        return words[3].toInt()
+        return words[1].toInt()
     }
 
     private fun parseNumSets(s: String): Int {
-        val words = s.split(' ')
-        if (words.size != 5)
+        val words = s.split('-')
+        println(words.size)
+        if (words.size != 2)
             throw IllegalArgumentException("invalid sets+reps string")
         return words[0].toInt()
     }

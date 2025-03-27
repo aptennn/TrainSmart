@@ -80,11 +80,13 @@ class WorkoutsFragment : Fragment() {
                             }
                         }
                         for (workout in workouts) {
+                            println(workout.duration)
                             uiWorkouts.add(
                                 UiWorkout(
                                     workout.name,
                                     R.drawable.exercise3,
                                     workout.duration,
+
                                     exercisesToList(workout.exercises, firestoreClient),
                                     1
                                 )

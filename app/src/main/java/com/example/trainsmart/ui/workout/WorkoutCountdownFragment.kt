@@ -20,7 +20,7 @@ import java.util.TimerTask
  */
 class WorkoutCountdownFragment : Fragment() {
     private var countdown: Timer = Timer()
-    private var countdownSeconds: Int = 5
+    private var countdownSeconds: Int = 3
     private var countdownSecondsLabel: TextView? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
