@@ -63,16 +63,15 @@ class WorkoutExerciseFragment : Fragment() {
     }
 
     private fun parseNumReps(s: String): Int {
-        val words = s.split('-')
-        if (words.size != 2)
+        val words = s.split(' ')
+        if (words.size != 5)
             throw IllegalArgumentException("invalid sets+reps string")
-        return words[1].toInt()
+        return words[3].toInt()
     }
 
     private fun parseNumSets(s: String): Int {
-        val words = s.split('-')
-        println(words.size)
-        if (words.size != 2)
+        val words = s.split(' ')
+        if (words.size != 5)
             throw IllegalArgumentException("invalid sets+reps string")
         return words[0].toInt()
     }
