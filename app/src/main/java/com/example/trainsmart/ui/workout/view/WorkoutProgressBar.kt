@@ -76,7 +76,7 @@ class WorkoutProgressBar @JvmOverloads constructor(
         }
         var setWidth = (w - totalSpacing) / totalSetCount
         var x = horizontalPadding
-        val cornerRadius = (h - VERTICAL_PADDING * 2f) * 0.2f
+        val cornerRadius = (h - VERTICAL_PADDING * 2f) * 0.5f
         for (ex in 0..<setCounts.size) {
             val setCount = setCounts[ex]
             for (i in 0..<setCount) {
