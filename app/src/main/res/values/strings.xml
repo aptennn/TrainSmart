@@ -18,4 +18,5 @@
     <string name="workout_starts_in">Workout starts in</string>
     <string name="get_ready">Get ready!</string>
     <string name="exercise_repetition_count">Number of repetitions</string>
+    <string name="exercise_break">Break</string>
 </resources>

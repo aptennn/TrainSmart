@@ -7,6 +7,7 @@ import android.graphics.Paint
 import android.util.AttributeSet
 import android.util.Log
 import android.view.View
+import androidx.core.graphics.withClip
 import com.example.trainsmart.R
 import kotlin.math.min
 
@@ -31,6 +32,7 @@ class WorkoutProgressBar @JvmOverloads constructor(
         }
     var currentExercise: Int = 0
     var currentSet: Int = 0
+    var partialProgress: Float = 0f
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec)
@@ -82,6 +84,11 @@ class WorkoutProgressBar @JvmOverloads constructor(
             for (i in 0..<setCount) {
                 val paint = if (ex < currentExercise || (ex == currentExercise && i < currentSet)) accentPaint else grayPaint
                 canvas.drawRoundRect(x, VERTICAL_PADDING, x + setWidth, h - VERTICAL_PADDING, cornerRadius, cornerRadius, paint)
+                if (ex == currentExercise && i == currentSet && partialProgress != 0f) {
+                    canvas.withClip(x, VERTICAL_PADDING, x + (setWidth * partialProgress), h - VERTICAL_PADDING) {
+                        this.drawRoundRect(x, VERTICAL_PADDING, x + setWidth, h - VERTICAL_PADDING, cornerRadius, cornerRadius, accentPaint)
+                    }
+                }
                 if (i != setCount - 1) {
                     x += setWidth + setSpacing
                 } else {

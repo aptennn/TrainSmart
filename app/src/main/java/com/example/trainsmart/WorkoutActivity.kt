@@ -33,7 +33,7 @@ class WorkoutActivity : AppCompatActivity() {
             .replace(R.id.workoutFragment, nextFragment)
             .commit()
     }
-    fun onNextSetClicked() {
+    fun goToNextSet() {
         if (currentSetIndex == extractNumSets(workout!!.exercises[currentExerciseIndex].countReps) - 1) {
             if (currentExerciseIndex == workout!!.exercises.size - 1) {
                 finish()
