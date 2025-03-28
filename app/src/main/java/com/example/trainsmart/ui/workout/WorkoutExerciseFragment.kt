@@ -5,9 +5,9 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.appcompat.widget.AppCompatImageButton
 import com.example.trainsmart.R
 import com.example.trainsmart.WorkoutActivity
 import com.example.trainsmart.ui.exercises.ExerciseListItemModel
@@ -52,7 +52,7 @@ class WorkoutExerciseFragment : Fragment() {
         val repetitionCountTextView: TextView = root.findViewById(R.id.currentExerciseRepetitionCount)
         repetitionCountTextView.text = parseNumReps(exercise.countReps).toString()
 
-        val buttonStart: Button = root.findViewById(R.id.buttonStart)
+        val buttonStart: AppCompatImageButton = root.findViewById(R.id.buttonStart)
         buttonStart.setOnClickListener { (activity as WorkoutActivity).onNextSetClicked() }
 
         val progressBar: WorkoutProgressBar = root.findViewById(R.id.workoutProgress)
