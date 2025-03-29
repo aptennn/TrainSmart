@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.trainsmart.R
 import java.util.Locale
 import android.util.Log
+import coil.load
 
 class ExerciseListAdapter(private val context: Context, private val models: List<ExerciseListItemModel>, private val onClick: (ExerciseListItemModel) -> Unit) : RecyclerView.Adapter<ExerciseListAdapter.ViewHolder>() {
     private val filteredModels: ArrayList<ExerciseListItemModel> = ArrayList(models.size)
@@ -63,6 +64,11 @@ class ExerciseListAdapter(private val context: Context, private val models: List
                 5 -> holder.photo.setImageResource(R.drawable.exercise6)
             }
 
+            val imageView: ImageView = holder.photo
+            val imageUrl = "https://example.com/image.jpg"
+
+
+            imageView.load(imageUrl)
 
         }
 
