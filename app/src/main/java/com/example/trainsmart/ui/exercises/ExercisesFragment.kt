@@ -82,7 +82,7 @@ class ExercisesFragment : Fragment() {
                             ExerciseListItemModel(
                                 "",
                                 exercise.name,
-                                R.drawable.exercise4,
+                                exercise.photoUrl,
                                 exercise.description,
                                 exercise.technique,
                                 "3 подхода по 6 повторений"
@@ -101,7 +101,7 @@ class ExercisesFragment : Fragment() {
                 var exerciseListAdapter = ExerciseListAdapter(requireContext(), exerciseModels, { exercise ->
                     var arguments = Bundle().apply {
                         putString("exerciseName", exercise.name)
-                        putInt("exercisePhoto", exercise.photo)
+                        putString("exercisePhoto", exercise.photo)
                         putString("exerciseDescription", exercise.description)
                         putString("exerciseTechnique", exercise.technique)
                     }

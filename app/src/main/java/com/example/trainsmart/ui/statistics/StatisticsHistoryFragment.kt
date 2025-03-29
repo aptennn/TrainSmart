@@ -79,7 +79,7 @@ class StatisticsHistoryFragment : Fragment() {
                                     listOf(
                                         ExerciseListItemModel(
                                             "2",
-                                            "Тяга вертикального блока", R.drawable.exercise3,
+                                            "Тяга вертикального блока", "https://ksd-images.lt/display/aikido/cache/1298f905f591174c3d942bbe9371f10e.jpeg",
                                             "Одно из фундаментальных упражнений для развития верхней части туловища",
                                             "1. Сядьте на скамью тренажёра...",
                                             "2 подхода по 10 повторений"
@@ -87,7 +87,7 @@ class StatisticsHistoryFragment : Fragment() {
                                         ExerciseListItemModel(
 
                                             "2",
-                                            "Тяга горизонтального блока", R.drawable.exercise5,
+                                            "Тяга горизонтального блока", "https://ksd-images.lt/display/aikido/cache/1298f905f591174c3d942bbe9371f10e.jpeg",
                                             "Cиловое упражнение на развитие мышц спины...",
                                             "1. Расположитесь на сидении тренажёра...",
                                             "3 подхода по 11 повторений"

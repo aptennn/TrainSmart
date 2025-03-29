@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import coil.load
 import com.example.trainsmart.R
 
 private const val ARG_EXERCISE_NAME = "exerciseName"
@@ -16,7 +17,7 @@ private const val ARG_EXERCISE_TECHNIQUE = "exerciseTechnique"
 
 class ExerciseDetailsFragment : Fragment() {
     private var exerciseName: String? = null
-    private var exercisePhoto: Int? = null
+    private var exercisePhoto: String? = null
     private var exerciseDescription: String? = null
     private var exerciseTechnique: String? = null
 
@@ -29,7 +30,7 @@ class ExerciseDetailsFragment : Fragment() {
         super.onCreate(savedInstanceState)
         arguments?.let {
             exerciseName = it.getString(ARG_EXERCISE_NAME)
-            exercisePhoto = it.getInt(ARG_EXERCISE_PHOTO)
+            exercisePhoto = it.getString(ARG_EXERCISE_PHOTO)
             exerciseDescription = it.getString(ARG_EXERCISE_DESCRIPTION)
             exerciseTechnique = it.getString(ARG_EXERCISE_TECHNIQUE)
         }
@@ -46,8 +47,11 @@ class ExerciseDetailsFragment : Fragment() {
         viewExerciseTechnique = root.findViewById(R.id.text_exercise_technique)
 
         viewExerciseName?.text = exerciseName
-        if (exercisePhoto != null)
-            viewExercisePhoto?.setImageResource(exercisePhoto!!)
+        //if (exercisePhoto != null)
+
+        viewExercisePhoto?.load(exercisePhoto)
+
+            // viewExercisePhoto?.setImageResource(exercisePhoto!!)
         viewExerciseDescription?.text = exerciseDescription
         viewExerciseTechnique?.text = exerciseTechnique
         return root
@@ -55,11 +59,11 @@ class ExerciseDetailsFragment : Fragment() {
 
     companion object {
         @JvmStatic
-        fun newInstance(name: String, photo: Int, description: String, technique: String) =
+        fun newInstance(name: String, photo: String, description: String, technique: String) =
             ExerciseDetailsFragment().apply {
                 arguments = Bundle().apply {
                     putString(ARG_EXERCISE_NAME, name)
-                    putInt(ARG_EXERCISE_PHOTO, photo)
+                    putString(ARG_EXERCISE_PHOTO, photo)
                     putString(ARG_EXERCISE_DESCRIPTION, description)
                     putString(ARG_EXERCISE_TECHNIQUE, technique)
                 }

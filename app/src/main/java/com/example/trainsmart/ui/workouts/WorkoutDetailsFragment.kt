@@ -46,7 +46,7 @@ class WorkoutsDetailsFragment : Fragment() {
 
         workout?.let{
             workoutTitle.text = it.title
-            workoutTime.text = "${it.time} часа"
+            workoutTime.text = "${it.time}"
             workoutCountExersices.text = "${it.exercises.size} упражнения"
             workoutImage.setImageResource(it.photo)
             rV.layoutManager = LinearLayoutManager(requireContext())
