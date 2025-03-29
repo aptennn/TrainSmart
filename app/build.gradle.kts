@@ -91,6 +91,9 @@ dependencies {
     implementation(libs.firebase.firestore)
     // TODO: Add the dependencies for Firebase products you want to use
 
+    // image load
+    implementation(libs.coil)
+
     // When using the BoM, don't specify versions in Firebase dependencies
     implementation(libs.google.firebase.auth)
 

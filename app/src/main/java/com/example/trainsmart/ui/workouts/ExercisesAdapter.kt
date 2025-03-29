@@ -6,6 +6,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import coil.load
 import com.example.trainsmart.R
 import com.example.trainsmart.ui.exercises.ExerciseListItemModel
 
@@ -28,7 +29,7 @@ class ExerciseAdapter(private val exercises: List<ExerciseListItemModel>) :
         val exercise = exercises[position]
         holder.exerciseName.text = exercise.name
         holder.exerciseReps.text = exercise.countReps
-        holder.exerciseImage.setImageResource(exercise.photo)
+        holder.exerciseImage.load(exercise.photo)
     }
 
     override fun getItemCount(): Int = exercises.size

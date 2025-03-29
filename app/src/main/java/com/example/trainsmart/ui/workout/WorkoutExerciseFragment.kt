@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
+import coil.load
 import com.example.trainsmart.R
 import com.example.trainsmart.WorkoutActivity
 import com.example.trainsmart.ui.exercises.ExerciseListItemModel
@@ -48,7 +49,7 @@ class WorkoutExerciseFragment : Fragment() {
         val nameTextView: TextView = root.findViewById(R.id.currentExerciseName)
         nameTextView.text = exercise.name
         val imageView: ImageView = root.findViewById(R.id.currentExercisePicture)
-        imageView.setImageResource(exercise.photo)
+        imageView.load(exercise.photo)
         val repetitionCountTextView: TextView = root.findViewById(R.id.currentExerciseRepetitionCount)
         repetitionCountTextView.text = parseNumReps(exercise.countReps).toString()
 

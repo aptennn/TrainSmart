@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.trainsmart.R
 import java.util.Locale
 import android.util.Log
+import coil.load
 
 class ExerciseListAdapter(private val context: Context, private val models: List<ExerciseListItemModel>, private val onClick: (ExerciseListItemModel) -> Unit) : RecyclerView.Adapter<ExerciseListAdapter.ViewHolder>() {
     private val filteredModels: ArrayList<ExerciseListItemModel> = ArrayList(models.size)
@@ -45,26 +46,29 @@ class ExerciseListAdapter(private val context: Context, private val models: List
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.label.text = filteredModels[position].name
         holder.id.text = filteredModels[position].id
+        println("photo" + filteredModels[position].photo)
+        holder.photo.load(filteredModels[position].photo)
+
 
         println("HERE IDS")
         println(filteredModels[position].id)
 
-        if (filteredModels[position].photo != 0) {
+//        if (filteredModels[position].photo != 0) {
+//
+//            val TAG = this.javaClass.simpleName
+//            Log.i(TAG, position.toString())
 
-            val TAG = this.javaClass.simpleName
-            Log.i(TAG, position.toString())
-
-            when(position){
+            /*when(position){
                 0 -> holder.photo.setImageResource(R.drawable.exercise1)
                 1 -> holder.photo.setImageResource(R.drawable.exercise2)
                 2 -> holder.photo.setImageResource(R.drawable.exercise3)
                 3 -> holder.photo.setImageResource(R.drawable.exercise4)
                 4 -> holder.photo.setImageResource(R.drawable.exercise5)
                 5 -> holder.photo.setImageResource(R.drawable.exercise6)
-            }
+            }*/
 
 
-        }
+//        }
 
         holder.card.setOnClickListener {
             onClick(filteredModels[position])

@@ -242,7 +242,7 @@ class WorkoutsFragment : Fragment() {
                             ExerciseListItemModel(
                                 dataExs[i].id,
                                 dataExs[i].name,
-                                R.drawable.exercise3,
+                                dataExs[i].photoUrl,
                                 dataExs[i].description,
                                 dataExs[i].technique,
                                 exReps[i]
