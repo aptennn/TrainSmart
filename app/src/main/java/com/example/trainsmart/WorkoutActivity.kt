@@ -5,6 +5,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.example.trainsmart.R.*
 import com.example.trainsmart.ui.workout.WorkoutExerciseFragment
 import com.example.trainsmart.ui.workouts.Workout
 
@@ -13,11 +14,15 @@ class WorkoutActivity : AppCompatActivity() {
     private var currentExerciseIndex: Int = -1
     private var currentSetIndex: Int = -1
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+
+
         enableEdgeToEdge()
-        setContentView(R.layout.activity_workout)
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
+        setContentView(layout.activity_workout)
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
@@ -30,7 +35,7 @@ class WorkoutActivity : AppCompatActivity() {
         currentSetIndex = 0
         val nextFragment = WorkoutExerciseFragment.newInstance(workout!!, currentExerciseIndex, currentSetIndex)
         supportFragmentManager.beginTransaction()
-            .replace(R.id.workoutFragment, nextFragment)
+            .replace(id.workoutFragment, nextFragment)
             .commit()
     }
     fun onNextSetClicked() {
@@ -47,7 +52,7 @@ class WorkoutActivity : AppCompatActivity() {
         }
         val nextFragment = WorkoutExerciseFragment.newInstance(workout!!, currentExerciseIndex, currentSetIndex)
         supportFragmentManager.beginTransaction()
-            .replace(R.id.workoutFragment, nextFragment)
+            .replace(id.workoutFragment, nextFragment)
             .commit()
     }
 

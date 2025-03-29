@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.example.trainsmart.R
@@ -29,13 +30,14 @@ class StatisticsFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        (requireActivity() as AppCompatActivity).supportActionBar?.title = "Статистика"
         _binding = FragmentStatisticsBinding.inflate(inflater, container, false)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
+        (requireActivity() as AppCompatActivity).supportActionBar?.title = "Статистика"
         binding.TVallTrainings.setOnClickListener {
             findNavController().navigate(R.id.action_navigationStatistics_to_navigationStatisticsHistory)
         }

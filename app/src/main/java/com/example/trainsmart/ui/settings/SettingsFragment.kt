@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.example.trainsmart.LoginActivity
@@ -40,6 +41,7 @@ class SettingsFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        (requireActivity() as AppCompatActivity).supportActionBar?.title = "Настройки"
         return inflater.inflate(R.layout.fragment_settings, container, false)
     }
 
@@ -52,6 +54,7 @@ class SettingsFragment : Fragment() {
 
         auth = Firebase.auth
 
+        (requireActivity() as AppCompatActivity).supportActionBar?.title = "Настройки"
         val cachedEmail = getCachedEmail()
 
         val v: View? = getView()

@@ -12,7 +12,6 @@ import com.example.trainsmart.R
 import java.util.Locale
 import android.util.Log
 
-
 class ExerciseListAdapter(private val context: Context, private val models: List<ExerciseListItemModel>, private val onClick: (ExerciseListItemModel) -> Unit) : RecyclerView.Adapter<ExerciseListAdapter.ViewHolder>() {
     private val filteredModels: ArrayList<ExerciseListItemModel> = ArrayList(models.size)
 
@@ -21,6 +20,7 @@ class ExerciseListAdapter(private val context: Context, private val models: List
     }
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        val id: TextView = itemView.findViewById(R.id.exercise_id)
         val card: CardView = itemView.findViewById(R.id.exercise_card)
         val label: TextView = itemView.findViewById(R.id.exercise_list_item_label)
         val photo: ImageView = itemView.findViewById(R.id.image_exercise_photo)
@@ -44,6 +44,10 @@ class ExerciseListAdapter(private val context: Context, private val models: List
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.label.text = filteredModels[position].name
+        holder.id.text = filteredModels[position].id
+
+        println("HERE IDS")
+        println(filteredModels[position].id)
 
         if (filteredModels[position].photo != 0) {
 

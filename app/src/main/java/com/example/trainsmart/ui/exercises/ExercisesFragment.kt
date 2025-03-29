@@ -10,6 +10,7 @@ import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.iterator
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -59,7 +60,7 @@ class ExercisesFragment : Fragment() {
         var exercises = mutableListOf<Exercise>()
 
         val exerciseModels = mutableListOf<ExerciseListItemModel>()
-
+        (requireActivity() as AppCompatActivity).supportActionBar?.title = "Упражнения"
 
         lifecycleScope.launch {
             firestoreClient.getAllExercises().collect { result ->
@@ -78,6 +79,7 @@ class ExercisesFragment : Fragment() {
                         //println(exercise.name)
                         exerciseModels.add(
                             ExerciseListItemModel(
+                                "",
                                 exercise.name,
                                 R.drawable.exercise4,
                                 exercise.description,
@@ -129,6 +131,11 @@ class ExercisesFragment : Fragment() {
 
 
         return root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        (requireActivity() as AppCompatActivity).supportActionBar?.title = "Упражнения"
     }
 
     override fun onDestroyView() {

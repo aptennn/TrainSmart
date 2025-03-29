@@ -78,12 +78,15 @@ class StatisticsHistoryFragment : Fragment() {
                                     "Программа для тренировки спины", R.drawable.image_back_wrkt, 1.5.toString(),
                                     listOf(
                                         ExerciseListItemModel(
+                                            "2",
                                             "Тяга вертикального блока", R.drawable.exercise3,
                                             "Одно из фундаментальных упражнений для развития верхней части туловища",
                                             "1. Сядьте на скамью тренажёра...",
                                             "2 подхода по 10 повторений"
                                         ),
                                         ExerciseListItemModel(
+
+                                            "2",
                                             "Тяга горизонтального блока", R.drawable.exercise5,
                                             "Cиловое упражнение на развитие мышц спины...",
                                             "1. Расположитесь на сидении тренажёра...",

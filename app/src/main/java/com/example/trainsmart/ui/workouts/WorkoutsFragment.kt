@@ -1,5 +1,7 @@
 package com.example.trainsmart.ui.workouts
 
+import com.example.trainsmart.R
+import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -10,21 +12,23 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.HorizontalScrollView
 import android.widget.ImageButton
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.trainsmart.R
 import com.example.trainsmart.data.Exercise
 import com.example.trainsmart.firestore.FireStoreClient
+import com.example.trainsmart.ui.WorkoutCreate.WorkoutCreateActivity
 import com.example.trainsmart.ui.exercises.ExerciseListItemModel
 import kotlinx.coroutines.async
-import kotlinx.coroutines.delay
-import com.example.trainsmart.ui.workouts.Workout as UiWorkout
-import com.example.trainsmart.data.Workout as DataWorkout
 import kotlinx.coroutines.launch
+import com.example.trainsmart.data.Workout as DataWorkout
+import com.example.trainsmart.ui.workouts.Workout as UiWorkout
+
+
 
 class WorkoutsFragment : Fragment() {
 
@@ -42,6 +46,7 @@ class WorkoutsFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         initializeData()
+
     }
 
     override fun onCreateView(
@@ -49,21 +54,59 @@ class WorkoutsFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        (requireActivity() as AppCompatActivity).supportActionBar?.title = "Тренировки"
+        /*val binding = WorkoutsFragment.inflate(inflater, container, false)
+
+        // Find the button by ID
+        val button = binding.buttonSwitchActivity // Assuming you use ViewBinding
+
+        // Set an onClickListener to the button
+        button.setOnClickListener {
+            // Intent to start a new activity
+            val intent = Intent(requireContext(), WorkoutCreateActivity::class.java)
+
+            // Start the new activity
+            startActivity(intent)
+        }
+
+        return binding.root*/
+
         return inflater.inflate(R.layout.fragment_workouts, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+
         super.onViewCreated(view, savedInstanceState)
         initializeViews(view)
         setupRecyclerView(view)
         setupFilters(view)
         setupSearch()
+
+        (requireActivity() as AppCompatActivity).supportActionBar?.title = "Тренировки"
+
+        val button = view.findViewById<Button>(R.id.button_create)
+
+        // Set an OnClickListener to the button
+        button.setOnClickListener {
+            // Create an Intent to start the new activity
+            val intent = Intent(requireContext(), WorkoutCreateActivity::class.java)
+
+            // Start the new activity
+            startActivity(intent)
+        }
     }
 
     override fun onDestroyView() {
         cleanupResources()
         super.onDestroyView()
     }
+
+    override fun onResume() {
+        super.onResume()
+        isDataInitialized = false
+        initializeData()
+    }
+
 
     private fun initializeData() {
         if (!isDataInitialized) {
@@ -73,6 +116,13 @@ class WorkoutsFragment : Fragment() {
             lifecycleScope.launch {
                 firestoreClient.getAllWorkouts().collect { result ->
                     if (result.isNotEmpty()) {
+
+
+                        workouts.clear()
+                        uiWorkouts.clear()
+                        originalItems.clear()
+                        adapter.submitList(emptyList())
+
                         for (workout in result) {
                             println(workout?.name)
                             workout?.let {
@@ -97,6 +147,7 @@ class WorkoutsFragment : Fragment() {
                     }
                     println("SIZE UI LIST 333333333333:")
                     println(uiWorkouts.size)
+                    originalItems.clear()
                     originalItems.addAll(uiWorkouts)
                     println()
                     isDataInitialized = true
@@ -234,6 +285,8 @@ class WorkoutsFragment : Fragment() {
 //        )
 //    }
 
+
+
     private fun exercisesToList(exercises: Map<String, String>, firestoreClient: FireStoreClient): List<ExerciseListItemModel> {
         val uiExercisesList = mutableListOf<ExerciseListItemModel>()
         val exIds = exercises.map { it.key }
@@ -250,6 +303,7 @@ class WorkoutsFragment : Fragment() {
                     for (i in 0 until dataExs.size) {
                         uiExercisesList.add(
                             ExerciseListItemModel(
+                                dataExs[i].id,
                                 dataExs[i].name,
                                 R.drawable.exercise3,
                                 dataExs[i].description,

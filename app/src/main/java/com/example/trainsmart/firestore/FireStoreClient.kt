@@ -163,6 +163,7 @@ class FireStoreClient {
                     for (document in result) {
 
                         val exercise = document.data.toExercise()
+                        exercise.id = document.id
                         exercises.add(exercise);
 
                     }
@@ -196,6 +197,7 @@ class FireStoreClient {
 
     private fun Map<String, Any>.toExercise(): Exercise {
         return Exercise(
+            // no id = this["id"] as String,
             name = this["name"] as String,
             photoUrl = this["photoUrl"] as String,
             description = this["description"] as String,
@@ -242,8 +244,25 @@ class FireStoreClient {
         }
     }
 
+    fun saveWorkout(workout: Workout): Flow<Boolean> {
+        return callbackFlow {
+            db.collection("basic-workouts")
+                .add(workout)
+                .addOnSuccessListener {
+                    println("🔥 Тренировка '${workout.name}' успешно сохранена!")
+                    trySend(true)
+                }
+                .addOnFailureListener { e ->
+                    println("❌ Ошибка при сохранении тренировки: ${e.message}")
+                    trySend(false)
+                }
+            awaitClose {}
+        }
+    }
+
     private fun Workout.ToHashMap(): HashMap<String, Any> {
         return hashMapOf(
+            //"id" to id,
             "name" to name,
             "photoUrl" to photoUrl,
             "duration" to duration,

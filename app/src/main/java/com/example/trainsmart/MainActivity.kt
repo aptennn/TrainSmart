@@ -46,6 +46,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         setupActionBarWithNavController(navController, appBarConfiguration)
+         supportActionBar?.title = "Тренировки"
         //supportActionBar?.hide()
     }
 
