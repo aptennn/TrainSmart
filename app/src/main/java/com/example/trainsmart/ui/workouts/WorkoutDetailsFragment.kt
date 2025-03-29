@@ -20,7 +20,8 @@ class WorkoutsDetailsFragment : Fragment() {
     private var workout: Workout? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+        // ПОМЕНЯЛ с savedInstanceState на null чтоб без наложения
+        super.onCreate(null)
         arguments?.let {
             workout = it.getParcelable("workoutKey")
         }
@@ -61,6 +62,7 @@ class WorkoutsDetailsFragment : Fragment() {
         }
 
         backButton.setOnClickListener {
+            //getActivity().onBackPressed();
             requireActivity().onBackPressedDispatcher.onBackPressed()
         }
 

@@ -9,7 +9,7 @@
     <fragment
         android:id="@+id/navigation_workouts"
         android:name="com.example.trainsmart.ui.workouts.WorkoutsFragment"
-        android:label="@string/title_workouts"
+        android:label="Тренировки"
         tools:layout="@layout/fragment_workouts">
         <action
             android:id="@+id/action_navigationWorkouts_to_navigationWorkoutDetails"
@@ -20,7 +20,7 @@
     <fragment
         android:id="@+id/navigation_exercises"
         android:name="com.example.trainsmart.ui.exercises.ExercisesFragment"
-        android:label="@string/title_exercises"
+        android:label="Упражнения"
         tools:layout="@layout/fragment_exercises">
         <action
             android:id="@+id/action_navigationExercises_to_navigationExercisesDetails"
@@ -31,7 +31,7 @@
     <fragment
         android:id="@+id/navigation_statistics"
         android:name="com.example.trainsmart.ui.statistics.StatisticsFragment"
-        android:label="@string/title_statistics"
+        android:label="Статистика"
         tools:layout="@layout/fragment_statistics">
         <action
             android:id="@+id/action_navigationStatistics_to_navigationStatisticsHistory"
@@ -42,7 +42,7 @@
     <fragment
         android:id="@+id/navigation_settings"
         android:name="com.example.trainsmart.ui.settings.SettingsFragment"
-        android:label="@string/title_settings"
+        android:label="Настройки"
         tools:layout="@layout/fragment_settings" />
 
     <!-- Дочерние фрагменты -->

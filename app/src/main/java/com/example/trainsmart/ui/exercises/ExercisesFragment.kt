@@ -66,6 +66,7 @@ class ExercisesFragment : Fragment() {
             firestoreClient.getAllExercises().collect { result ->
                 // Start Animation
 
+
                 if (result.isNotEmpty()) {
                     println(909)
                     for (exercise in result)
@@ -138,7 +139,15 @@ class ExercisesFragment : Fragment() {
         (requireActivity() as AppCompatActivity).supportActionBar?.title = "Упражнения"
     }
 
+    override fun onResume() {
+        super.onResume()
+        (requireActivity() as AppCompatActivity).supportActionBar?.title = "Упражнения"
+
+    }
+
     override fun onDestroyView() {
+        (requireActivity() as AppCompatActivity).supportActionBar?.title = "Упражнения"
+
         super.onDestroyView()
         _binding = null
     }

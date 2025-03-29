@@ -130,7 +130,7 @@ class WorkoutCreateActivity : AppCompatActivity() {
                     }
 
                     // Формируем Map с упражнениями (значение по умолчанию "3x10")
-                    val exercisesMap = selectedExercises.associateWith { "3x10" }
+                    val exercisesMap = selectedExercises.associateWith { "3-10" }
 
                     val workout = Workout(
                         name = workoutName,
