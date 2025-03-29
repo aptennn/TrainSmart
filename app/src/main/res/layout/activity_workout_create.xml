@@ -31,6 +31,51 @@
             android:padding="8dp"
             android:inputType="textMultiLine"
             android:minLines="3" />
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Выбери тип тренировки: "
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:textColor="@color/black"
+                android:gravity="center"
+                android:fontFamily="@font/montserrat_medium"
+                android:padding="10dp" />
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/btnUpperBody"
+                    android:layout_width="100dp"
+                    android:layout_height="40dp"
+                    android:background="@drawable/shape_button_unselected"
+                    android:textColor="@color/black"
+                    android:layout_marginEnd="8dp"
+                    android:text="Верх тела"
+                    android:textAllCaps="false"
+                    android:textSize="14sp"
+                    android:fontFamily="@font/montserrat_semi_bold" />
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/btnLowerBody"
+                    android:layout_width="100dp"
+                    android:layout_height="40dp"
+                    android:layout_marginEnd="8dp"
+                    android:background="@drawable/shape_button_unselected"
+                    android:textColor="@color/black"
+                    android:text="Низ тела"
+                    android:textAllCaps="false"
+                    android:textSize="14sp"
+                    android:fontFamily="@font/montserrat_semi_bold" />
+            </LinearLayout>
+        </LinearLayout>
+
 
         <TextView
             android:layout_width="wrap_content"

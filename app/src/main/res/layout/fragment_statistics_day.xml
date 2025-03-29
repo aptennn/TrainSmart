@@ -20,18 +20,18 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintTop_toTopOf="parent"/>
 
-        <ImageButton
-            android:id="@+id/ibBack"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_marginStart="20dp"
-            android:layout_marginTop="40dp"
-            android:background="@drawable/shape_bg_circle"
-            android:scaleType="center"
-            android:src="@drawable/ic_arrow_back"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            android:elevation="4dp"/>
+<!--        <ImageButton-->
+<!--            android:id="@+id/ibBack"-->
+<!--            android:layout_width="50dp"-->
+<!--            android:layout_height="50dp"-->
+<!--            android:layout_marginStart="20dp"-->
+<!--            android:layout_marginTop="40dp"-->
+<!--            android:background="@drawable/shape_bg_circle"-->
+<!--            android:scaleType="center"-->
+<!--            android:src="@drawable/ic_arrow_back"-->
+<!--            app:layout_constraintStart_toStartOf="parent"-->
+<!--            app:layout_constraintTop_toTopOf="parent"-->
+<!--            android:elevation="4dp"/>-->
 
         <TextView
             android:padding="4dp"

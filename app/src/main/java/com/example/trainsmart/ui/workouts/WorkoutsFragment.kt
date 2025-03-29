@@ -37,7 +37,7 @@ class WorkoutsFragment : Fragment() {
     private var searchField: EditText? = null
     private lateinit var adapter: WorkoutsAdapter
     private val originalItems = mutableListOf<UiWorkout>()
-    private var currentFilter: Int? = null
+    private var currentFilter: String? = null
     private var currentQuery: String = ""
     private var isFilterVisible = false
     private var isDataInitialized = false
@@ -46,7 +46,6 @@ class WorkoutsFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         initializeData()
-
     }
 
     override fun onCreateView(
@@ -54,7 +53,7 @@ class WorkoutsFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        (requireActivity() as AppCompatActivity).supportActionBar?.title = "Тренировки"
+        //(requireActivity() as AppCompatActivity).supportActionBar?.title = "Тренировки"
         /*val binding = WorkoutsFragment.inflate(inflater, container, false)
 
         // Find the button by ID
@@ -82,7 +81,7 @@ class WorkoutsFragment : Fragment() {
         setupFilters(view)
         setupSearch()
 
-        (requireActivity() as AppCompatActivity).supportActionBar?.title = "Тренировки"
+        //(requireActivity() as AppCompatActivity).supportActionBar?.title = "Тренировки"
 
         val button = view.findViewById<Button>(R.id.button_create)
 
@@ -133,12 +132,11 @@ class WorkoutsFragment : Fragment() {
                             println(workout.duration)
                             uiWorkouts.add(
                                 UiWorkout(
-                                    workout.name,
-                                    R.drawable.exercise3,
-                                    workout.duration,
-
-                                    exercisesToList(workout.exercises, firestoreClient),
-                                    1
+                                    title = workout.name,
+                                    photo = R.drawable.exercise3,
+                                    time = workout.duration,
+                                    exercises = exercisesToList(workout.exercises, firestoreClient),
+                                    type = workout.type
                                 )
                             )
                         }
@@ -226,67 +224,6 @@ class WorkoutsFragment : Fragment() {
         adapter.submitList(emptyList())
     }
 
-//    private fun createWorkoutItems(): List<Workout> {
-//        return listOf(
-//            Workout(
-//                "Программа для тренировки рук", R.drawable.image_arms_wrkt, 1.5,
-//                listOf(
-//                    ExerciseListItemModel(
-//                        "Жим лёжа", R.drawable.exercise1,
-//                        "Базовое упражнение, которое помогает развить мышцы груди, плеч и рук.",
-//                        "1. Штанга находится на уровне глаз\n2. Занять такое положение на скамье...",
-//                        "3 подхода по 6 повторений"
-//                    ),
-//                    ExerciseListItemModel(
-//                        "Подъем штанги на бицепс", R.drawable.exercise6,
-//                        "Cиловое изолированное упражнение, направленное на развитие бицепса плеча.",
-//                        "1. Встаньте ровно со штангой в руках...",
-//                        "5 подходов по 5 повторений"
-//                    )
-//                ),
-//                1
-//            ),
-//            Workout(
-//                "Программа для тренировки спины", R.drawable.image_back_wrkt, 1.5,
-//                listOf(
-//                    ExerciseListItemModel(
-//                        "Тяга вертикального блока", R.drawable.exercise3,
-//                        "Одно из фундаментальных упражнений для развития верхней части туловища",
-//                        "1. Сядьте на скамью тренажёра...",
-//                        "2 подхода по 10 повторений"
-//                    ),
-//                    ExerciseListItemModel(
-//                        "Тяга горизонтального блока", R.drawable.exercise5,
-//                        "Cиловое упражнение на развитие мышц спины...",
-//                        "1. Расположитесь на сидении тренажёра...",
-//                        "3 подхода по 11 повторений"
-//                    )
-//                ),
-//                1
-//            ),
-//            Workout(
-//                "Программа для тренировки ног", R.drawable.image_leg_wrkt, 1.5,
-//                listOf(
-//                    ExerciseListItemModel(
-//                        "Приседания со штангой", R.drawable.exercise4,
-//                        "Эффективное базовое упражнение...",
-//                        "1. Плотно зафиксируйте ладони на грифе...",
-//                        "4 подхода по 5 повторений"
-//                    ),
-//                    ExerciseListItemModel(
-//                        "Становая тяга", R.drawable.exercise2,
-//                        "Базовое упражнение силового тренинга...",
-//                        "1. Располагаем ноги на ширине плеч...",
-//                        "3 подхода по 8 повторений"
-//                    )
-//                ),
-//                2
-//            )
-//        )
-//    }
-
-
-
     private fun exercisesToList(exercises: Map<String, String>, firestoreClient: FireStoreClient): List<ExerciseListItemModel> {
         val uiExercisesList = mutableListOf<ExerciseListItemModel>()
         val exIds = exercises.map { it.key }
@@ -341,11 +278,11 @@ class WorkoutsFragment : Fragment() {
                     for (workout in workouts) {
                         uiWorkouts.add(
                             UiWorkout(
-                                workout.name,
-                                R.drawable.exercise3,
-                                workout.duration,
-                                exercisesToList(workout.exercises, firestoreClient),
-                                1
+                                title = workout.name,
+                                photo = R.drawable.exercise3,
+                                time = workout.duration,
+                                exercises = exercisesToList(workout.exercises, firestoreClient),
+                                type = workout.type
                             )
                         )
                     }
@@ -364,8 +301,8 @@ class WorkoutsFragment : Fragment() {
 
     private fun handleFilterClick(button: Button) {
         currentFilter = when (button.id) {
-            R.id.btnUpperBody -> 1
-            R.id.btnLowerBody -> 2
+            R.id.btnUpperBody -> "Верх тела"
+            R.id.btnLowerBody -> "Низ тела"
             else -> null
         }
         applyFilters()
@@ -390,8 +327,8 @@ class WorkoutsFragment : Fragment() {
         return title.lowercase().contains(query.lowercase())
     }
 
-    private fun UiWorkout.matchesFilter(filter: Int?): Boolean {
-        return filter == null || type == filter
+    private fun UiWorkout.matchesFilter(filter: String?): Boolean {
+        return filter == null || type.equals(filter, ignoreCase = true)
     }
 
     private fun navigateToWorkoutDetails(workout: UiWorkout) {

@@ -5,9 +5,11 @@ import android.os.Bundle
 import android.util.Log
 import android.view.MenuItem
 import android.view.View
+import android.widget.Button
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContentProviderCompat.requireContext
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.AppBarConfiguration
@@ -38,7 +40,7 @@ class WorkoutCreateActivity : AppCompatActivity() {
 
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var binding: ActivityWorkoutCreateBinding
-
+    private var selectedWorkoutType: String = ""
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -47,6 +49,7 @@ class WorkoutCreateActivity : AppCompatActivity() {
         binding = ActivityWorkoutCreateBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        setupTypeButtons()
 
 
         val exerciseList: RecyclerView = findViewById(R.id.recyclerViewCreate)
@@ -114,39 +117,32 @@ class WorkoutCreateActivity : AppCompatActivity() {
                 exerciseList.layoutManager = LinearLayoutManager(applicationContext)
 
                 binding.buttonCreateFinish.setOnClickListener {
-
                     val selectedExercises = exerciseModels.filter { it.isSelected }.map { it.id }
                     val workoutName = binding.editTextWorkoutName.text.toString().trim()
                     val workoutDescription = binding.editTextWorkoutDescription.text.toString().trim()
 
-                    if (workoutName.isEmpty()) {
-                        println("Введите название тренировки!")
-                        showAlertDialog()
+                    // Добавлена проверка типа тренировки
+                    if (workoutName.isEmpty() || selectedExercises.isEmpty() || selectedWorkoutType.isEmpty()) {
+                        showAlertDialog("Заполните все обязательные поля!")
                         return@setOnClickListener
                     }
 
-                    if(selectedExercises.isEmpty()){
-                        showAlertDialog()
-                    }
-
-                    // Формируем Map с упражнениями (значение по умолчанию "3x10")
                     val exercisesMap = selectedExercises.associateWith { "3-10" }
 
                     val workout = Workout(
                         name = workoutName,
-                        photoUrl = "", // Если у тренировки нет фото, можно оставить пустым
-                        duration = "30 минут", // Можно заменить на вводимое пользователем значение
+                        photoUrl = "",
+                        duration = "30 минут",
                         exercises = exercisesMap,
-                        type = "Силовая" // Можно сделать выбор типа тренировки
+                        type = selectedWorkoutType // Используем выбранный тип
                     )
 
                     lifecycleScope.launch {
                         firestoreClient.saveWorkout(workout).collect { success ->
                             if (success) {
-                                println("✅ Тренировка '$workoutName' сохранена в Firestore!")
-                                finish() // Закрываем Activity после успешного сохранения
+                                finish()
                             } else {
-                                println("❌ Ошибка при сохранении тренировки")
+                                showAlertDialog("Ошибка сохранения")
                             }
                         }
                     }
@@ -154,6 +150,30 @@ class WorkoutCreateActivity : AppCompatActivity() {
             }
 
         }
+    }
+
+    private fun setupTypeButtons() {
+        val btnUpper = binding.btnUpperBody
+        val btnLower = binding.btnLowerBody
+
+        btnUpper.setOnClickListener {
+            selectedWorkoutType = "Верх тела"
+            updateButtonStyle(btnUpper, btnLower)
+        }
+
+        btnLower.setOnClickListener {
+            selectedWorkoutType = "Низ тела"
+            updateButtonStyle(btnLower, btnUpper)
+        }
+    }
+
+    // Добавлен метод для обновления стилей кнопок
+    private fun updateButtonStyle(selectedButton: Button, unselectedButton: Button) {
+        selectedButton.setBackgroundResource(R.drawable.shape_button_selected)
+        selectedButton.setTextColor(ContextCompat.getColor(this, R.color.white))
+
+        unselectedButton.setBackgroundResource(R.drawable.shape_button_unselected)
+        unselectedButton.setTextColor(ContextCompat.getColor(this, R.color.black))
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -166,25 +186,12 @@ class WorkoutCreateActivity : AppCompatActivity() {
         }
     }
 
-    private fun showAlertDialog() {
-
-        val builder = AlertDialog.Builder(this)
-
-        builder.setTitle("Неправильные данные")
-
-            .setMessage("Введите имя и выберите упражнения")
-
-            .setPositiveButton("OK") { dialog, which ->
-
-                // Действие при нажатии на кнопку OK\
-                dialog.dismiss()
-
-            }
-
-        val alertDialog = builder.create()
-
-        alertDialog.show()
-
+    private fun showAlertDialog(message: String) {
+        AlertDialog.Builder(this)
+            .setTitle("Ошибка")
+            .setMessage(message)
+            .setPositiveButton("OK", null)
+            .show()
     }
 
 

@@ -35,7 +35,7 @@ class StatisticsDayFragment : Fragment() {
         val workoutCountExersices: TextView = view.findViewById(R.id.exercisesCountTextView)
         val workoutImage: ImageView = view.findViewById(R.id.iv_exercise)
         val rV: RecyclerView = view.findViewById(R.id.rv_exercises)
-        val backButton: ImageButton = view.findViewById(R.id.ibBack)
+        //val backButton: ImageButton = view.findViewById(R.id.ibBack)
         val workoutDate: TextView = view.findViewById(R.id.tvDate)
         val repeatButton: Button = view.findViewById(R.id.btnRepeat)
 
@@ -51,9 +51,9 @@ class StatisticsDayFragment : Fragment() {
             workoutDate.text = it;
         }
 
-        backButton.setOnClickListener {
-            requireActivity().onBackPressedDispatcher.onBackPressed()
-        }
+//        backButton.setOnClickListener {
+//            requireActivity().onBackPressedDispatcher.onBackPressed()
+//        }
 
         return view
     }

@@ -70,13 +70,13 @@ class SettingsFragment : Fragment() {
 
         if (auth.currentUser?.isEmailVerified!!) {
             if (tvIsVerified != null) {
-                tvIsVerified.text = "Verified."
+                tvIsVerified.text = "Подтвержден"
             }
         }
         else
             {
                 if (tvIsVerified != null) {
-                    tvIsVerified.text = "Not verified."
+                    tvIsVerified.text = "Не подтвержден"
                 }
                 if (btnVerify != null) {
                     btnVerify.visibility = View.VISIBLE

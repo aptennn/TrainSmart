@@ -40,13 +40,13 @@ class WorkoutsDetailsFragment : Fragment() {
         val workoutImage: ImageView = view.findViewById(R.id.iv_exercise)
         val rV: RecyclerView = view.findViewById(R.id.rv_exercises)
         val startButton: Button = view.findViewById(R.id.btnStart)
-        val backButton: ImageButton = view.findViewById(R.id.ibBack)
+        //val backButton: ImageButton = view.findViewById(R.id.ibBack)
         val favoriteButton: ImageButton = view.findViewById(R.id.ibFavorite)
 
 
         workout?.let{
             workoutTitle.text = it.title
-            workoutTime.text = "${it.time} часа"
+            workoutTime.text = it.type
             workoutCountExersices.text = "${it.exercises.size} упражнения"
             workoutImage.setImageResource(it.photo)
             rV.layoutManager = LinearLayoutManager(requireContext())
@@ -61,10 +61,10 @@ class WorkoutsDetailsFragment : Fragment() {
             startActivity(intent)
         }
 
-        backButton.setOnClickListener {
-            //getActivity().onBackPressed();
-            requireActivity().onBackPressedDispatcher.onBackPressed()
-        }
+//        backButton.setOnClickListener {
+//            //getActivity().onBackPressed();
+//            requireActivity().onBackPressedDispatcher.onBackPressed()
+//        }
 
         favoriteButton.setOnClickListener {
 

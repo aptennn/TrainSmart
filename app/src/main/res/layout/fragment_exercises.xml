@@ -8,47 +8,97 @@
     android:paddingEnd="0dp"
     tools:context=".ui.exercises.ExercisesFragment">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/exercise_list_controls"
+    <LinearLayout
+        android:id="@+id/l1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="10dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:padding="16dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
         <EditText
-            android:id="@+id/exercise_search"
+            android:id="@+id/searchField"
             android:layout_width="0dp"
-            android:layout_height="48dp"
-            android:layout_marginEnd="15dp"
-            android:background="@drawable/shape_gray_round_rect"
-            android:ems="10"
-            android:fontFamily="@font/montserrat"
-            android:hint="@string/hint_search_exercises"
+            android:layout_height="55dp"
+            android:layout_marginEnd="8dp"
+            android:layout_weight="1"
+            android:background="@drawable/shape_search_field_background"
+            android:drawableStart="@drawable/ic_search"
+            android:drawablePadding="8dp"
+            android:fontFamily="@font/montserrat_regular"
+            android:hint="Поиск"
+            android:imeOptions="actionSearch"
             android:inputType="text"
-            android:paddingHorizontal="12dp"
-            android:paddingVertical="4dp"
-            android:textColor="#898989"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/exercise_sort"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            android:paddingHorizontal="16dp"
+            android:textSize="18sp"
+            android:textStyle="bold" />
 
-        <ImageButton
-            android:id="@+id/exercise_sort"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@drawable/shape_gray_round_rect"
-            android:padding="0dp"
-            android:scaleType="centerCrop"
-            android:src="@drawable/ic_sort"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+<!--        <ImageButton-->
+<!--            android:id="@+id/btnFilter"-->
+<!--            android:layout_width="55dp"-->
+<!--            android:layout_height="55dp"-->
+<!--            android:background="@drawable/custom_ripple_for_filter_button"-->
+<!--            android:src="@drawable/ic_sort"-->
+<!--            app:layout_constraintBottom_toBottomOf="parent"-->
+<!--            app:layout_constraintEnd_toEndOf="parent"-->
+<!--            app:layout_constraintTop_toTopOf="parent" />-->
+    </LinearLayout>
 
+<!--    <HorizontalScrollView-->
+<!--        android:id="@+id/filterContainer"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_marginStart="16dp"-->
+<!--        android:layout_marginBottom="16dp"-->
+<!--        android:visibility="gone"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintEnd_toEndOf="parent">-->
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+<!--        <LinearLayout-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:orientation="horizontal">-->
+
+<!--            <androidx.appcompat.widget.AppCompatButton-->
+<!--                android:id="@+id/btnAllTypes"-->
+<!--                android:layout_width="100dp"-->
+<!--                android:layout_height="40dp"-->
+<!--                android:background="@drawable/shape_button_selected"-->
+<!--                android:textColor="@color/white"-->
+<!--                android:text="Все типы"-->
+<!--                android:textAllCaps="false"-->
+<!--                android:textSize="14sp"-->
+<!--                android:fontFamily="@font/montserrat_semi_bold"-->
+<!--                android:layout_marginEnd="8dp"/>-->
+
+<!--            <androidx.appcompat.widget.AppCompatButton-->
+<!--                android:id="@+id/btnUpperBody"-->
+<!--                android:layout_width="100dp"-->
+<!--                android:layout_height="40dp"-->
+<!--                android:background="@drawable/shape_button_unselected"-->
+<!--                android:textColor="@color/black"-->
+<!--                android:layout_marginEnd="8dp"-->
+<!--                android:text="Верх тела"-->
+<!--                android:textAllCaps="false"-->
+<!--                android:textSize="14sp"-->
+<!--                android:fontFamily="@font/montserrat_semi_bold" />-->
+
+<!--            <androidx.appcompat.widget.AppCompatButton-->
+<!--                android:id="@+id/btnLowerBody"-->
+<!--                android:layout_width="100dp"-->
+<!--                android:layout_height="40dp"-->
+<!--                android:layout_marginEnd="8dp"-->
+<!--                android:background="@drawable/shape_button_unselected"-->
+<!--                android:textColor="@color/black"-->
+<!--                android:text="Низ тела"-->
+<!--                android:textAllCaps="false"-->
+<!--                android:textSize="14sp"-->
+<!--                android:fontFamily="@font/montserrat_semi_bold" />-->
+<!--        </LinearLayout>-->
+<!--    </HorizontalScrollView>-->
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/exercise_list"
@@ -60,7 +110,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/exercise_list_controls" />
+        app:layout_constraintTop_toBottomOf="@+id/l1" />
 
     <TextView
         android:id="@+id/text_dashboard"

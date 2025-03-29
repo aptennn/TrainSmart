@@ -41,9 +41,9 @@ class StatisticsHistoryFragment : Fragment() {
         _binding = FragmentStatisticsHistoryBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
-        binding.ibBack.setOnClickListener {
-            requireActivity().onBackPressedDispatcher.onBackPressed()
-        }
+//        binding.ibBack.setOnClickListener {
+//            requireActivity().onBackPressedDispatcher.onBackPressed()
+//        }
 
         return root
     }
@@ -93,7 +93,7 @@ class StatisticsHistoryFragment : Fragment() {
                                             "3 подхода по 11 повторений"
                                         )
                                     ),
-                                    1
+                                    "Верх тела"
                                 ), day.date.toString())
                                 putParcelable("workoutHistoryKey", workoutHistory)
                             }

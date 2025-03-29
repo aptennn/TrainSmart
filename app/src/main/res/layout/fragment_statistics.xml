@@ -8,31 +8,17 @@
     android:background="#FAFAFA"
     tools:context=".ui.statistics.StatisticsFragment">
 
-    <!-- Заголовок "Статистика" -->
-    <TextView
-        android:id="@+id/textView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="24dp"
-        android:layout_marginTop="32dp"
-        android:fontFamily="@font/unbounded_medium"
-        android:text="Статистика"
-        android:textColor="@color/black"
-        android:textSize="16sp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"/>
-
     <!-- Блок с показателями -->
     <LinearLayout
         android:id="@+id/LLstats"
         android:layout_width="0dp"
+        android:layout_marginTop="30dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
         android:gravity="center"
         android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView">
+        app:layout_constraintTop_toTopOf="parent">
 
         <!-- Левая статистика -->
         <LinearLayout
@@ -46,7 +32,7 @@
                 android:layout_width="48dp"
                 android:layout_height="48dp"
                 android:layout_marginBottom="8dp"
-                android:src="@drawable/ic_train"/>
+                android:src="@drawable/ic_train" />
 
             <TextView
                 android:id="@+id/TVtrainsCount"
@@ -55,7 +41,7 @@
                 android:fontFamily="@font/montserrat_bold"
                 android:text="1"
                 android:textColor="@color/black"
-                android:textSize="20sp"/>
+                android:textSize="20sp" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -63,7 +49,7 @@
                 android:fontFamily="@font/montserrat_regular"
                 android:text="ТРЕНИРОВКА"
                 android:textColor="#8D8D8D"
-                android:textSize="14sp"/>
+                android:textSize="14sp" />
         </LinearLayout>
 
         <!-- Правая статистика -->
@@ -78,7 +64,7 @@
                 android:layout_width="48dp"
                 android:layout_height="48dp"
                 android:layout_marginBottom="8dp"
-                android:src="@drawable/ic_clock"/>
+                android:src="@drawable/ic_clock" />
 
             <TextView
                 android:id="@+id/TVtime"
@@ -87,7 +73,7 @@
                 android:fontFamily="@font/montserrat_bold"
                 android:text="30 м. 22 с."
                 android:textColor="@color/black"
-                android:textSize="20sp"/>
+                android:textSize="20sp" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -95,7 +81,7 @@
                 android:fontFamily="@font/montserrat_regular"
                 android:text="ВРЕМЯ"
                 android:textColor="#8D8D8D"
-                android:textSize="14sp"/>
+                android:textSize="14sp" />
         </LinearLayout>
     </LinearLayout>
 
