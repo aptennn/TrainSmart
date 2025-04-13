@@ -12,17 +12,16 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.HorizontalScrollView
 import android.widget.ImageButton
+import android.widget.ProgressBar
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.trainsmart.data.Exercise
 import com.example.trainsmart.firestore.FireStoreClient
 import com.example.trainsmart.ui.WorkoutCreate.WorkoutCreateActivity
 import com.example.trainsmart.ui.exercises.ExerciseListItemModel
-import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import com.example.trainsmart.data.Workout as DataWorkout
@@ -31,6 +30,9 @@ import com.example.trainsmart.ui.workouts.Workout as UiWorkout
 
 class WorkoutsFragment : Fragment() {
 
+    private var progressBar: ProgressBar? = null
+    private lateinit var workoutsList: RecyclerView
+    private lateinit var buttonCreate: Button
     private var filterContainer: HorizontalScrollView? = null
     private var selectedButton: Button? = null
     private var searchField: EditText? = null
@@ -52,49 +54,35 @@ class WorkoutsFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        //(requireActivity() as AppCompatActivity).supportActionBar?.title = "Тренировки"
-        /*val binding = WorkoutsFragment.inflate(inflater, container, false)
-
-        // Find the button by ID
-        val button = binding.buttonSwitchActivity // Assuming you use ViewBinding
-
-        // Set an onClickListener to the button
-        button.setOnClickListener {
-            // Intent to start a new activity
-            val intent = Intent(requireContext(), WorkoutCreateActivity::class.java)
-
-            // Start the new activity
-            startActivity(intent)
-        }
-
-        return binding.root*/
         return inflater.inflate(R.layout.fragment_workouts, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
         super.onViewCreated(view, savedInstanceState)
+
+        workoutsList = view.findViewById<RecyclerView>(R.id.workoutsRV)
+        workoutsList.layoutManager = LinearLayoutManager(requireContext())
+        adapter = WorkoutsAdapter { navigateToWorkoutDetails(it) }
+        workoutsList.adapter = adapter
+        workoutsList.visibility = View.GONE
+        adapter.submitList(originalItems)
+
         initializeViews(view)
-        setupRecyclerView(view)
         setupFilters(view)
         setupSearch()
 
-        //(requireActivity() as AppCompatActivity).supportActionBar?.title = "Тренировки"
-
-        val button = view.findViewById<Button>(R.id.button_create)
+        buttonCreate = view.findViewById<Button>(R.id.button_create)
+        buttonCreate.visibility = View.GONE
 
         // Set an OnClickListener to the button
-        button.setOnClickListener {
+        buttonCreate.setOnClickListener {
             // Create an Intent to start the new activity
             val intent = Intent(requireContext(), WorkoutCreateActivity::class.java)
 
             // Start the new activity
             startActivity(intent)
         }
-    }
-
-    private fun setupViews() {
-
     }
 
     override fun onDestroyView() {
@@ -111,14 +99,13 @@ class WorkoutsFragment : Fragment() {
 
     private fun initializeData() {
         if (!isDataInitialized) {
+            progressBar?.visibility = View.VISIBLE
             val firestoreClient = FireStoreClient()
             val uiWorkouts = mutableListOf<UiWorkout>()
             val workouts = mutableListOf<DataWorkout>()
             lifecycleScope.launch {
                 firestoreClient.getAllWorkouts().collect { result ->
                     if (result.isNotEmpty()) {
-
-
                         workouts.clear()
                         uiWorkouts.clear()
                         originalItems.clear()
@@ -130,6 +117,7 @@ class WorkoutsFragment : Fragment() {
                                 workouts.add(it)
                             }
                         }
+
                         for (workout in workouts) {
                             println(workout.duration)
                             uiWorkouts.add(
@@ -152,6 +140,11 @@ class WorkoutsFragment : Fragment() {
                     println()
                     isDataInitialized = true
 
+                    progressBar?.visibility = View.GONE
+                    buttonCreate.visibility = View.VISIBLE
+                    workoutsList.visibility = View.VISIBLE
+
+
                     val recyclerView = view?.findViewById<RecyclerView>(R.id.workoutsRV)
                     if (recyclerView != null) {
                         recyclerView.layoutManager = LinearLayoutManager(requireContext())
@@ -161,6 +154,7 @@ class WorkoutsFragment : Fragment() {
                         recyclerView.adapter = adapter
                     }
                     adapter.submitList(originalItems)
+
                 }
 
             }
@@ -171,18 +165,9 @@ class WorkoutsFragment : Fragment() {
     private fun initializeViews(view: View) {
         filterContainer = view.findViewById(R.id.filterContainer)
         searchField = view.findViewById(R.id.searchField)
+        progressBar = view.findViewById(R.id.progressBar)
         view.findViewById<ImageButton>(R.id.btnFilter)
             .setOnClickListener { toggleFiltersVisibility() }
-    }
-
-
-    // ДИЧЬ!!!
-    private fun setupRecyclerView(view: View) {
-        val recyclerView = view.findViewById<RecyclerView>(R.id.workoutsRV)
-        recyclerView.layoutManager = LinearLayoutManager(requireContext())
-        adapter = WorkoutsAdapter { navigateToWorkoutDetails(it) }
-        recyclerView.adapter = adapter
-        adapter.submitList(originalItems)
     }
 
     private fun setupFilters(view: View) {
@@ -204,16 +189,17 @@ class WorkoutsFragment : Fragment() {
     }
 
     private fun cleanupResources() {
+        progressBar?.visibility = View.GONE
         searchField?.removeTextChangedListener(searchTextWatcher)
         searchTextWatcher = null
         searchField?.setText("")
         filterContainer = null
         selectedButton = null
-        // Сброс фильтров и состояния
+
         currentFilter = null
         currentQuery = ""
         isFilterVisible = false
-        // Сброс стилей кнопок
+
         view?.findViewById<Button>(R.id.btnAllTypes)?.let { defaultButton ->
             updateButtonStyles(
                 listOf(
