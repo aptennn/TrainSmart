@@ -23,10 +23,10 @@ import com.example.trainsmart.firestore.FireStoreClient
 import com.example.trainsmart.ui.WorkoutCreate.WorkoutCreateActivity
 import com.example.trainsmart.ui.exercises.ExerciseListItemModel
 import kotlinx.coroutines.async
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import com.example.trainsmart.data.Workout as DataWorkout
 import com.example.trainsmart.ui.workouts.Workout as UiWorkout
-
 
 
 class WorkoutsFragment : Fragment() {
@@ -168,7 +168,8 @@ class WorkoutsFragment : Fragment() {
     private fun initializeViews(view: View) {
         filterContainer = view.findViewById(R.id.filterContainer)
         searchField = view.findViewById(R.id.searchField)
-        view.findViewById<ImageButton>(R.id.btnFilter).setOnClickListener { toggleFiltersVisibility() }
+        view.findViewById<ImageButton>(R.id.btnFilter)
+            .setOnClickListener { toggleFiltersVisibility() }
     }
 
 
@@ -223,42 +224,69 @@ class WorkoutsFragment : Fragment() {
         adapter.submitList(emptyList())
     }
 
-    private fun exercisesToList(exercises: Map<String, String>, firestoreClient: FireStoreClient): List<ExerciseListItemModel> {
-        val uiExercisesList = mutableListOf<ExerciseListItemModel>()
-        val exIds = exercises.map { it.key }
-        val exReps = exercises.map { it.value }
-        val dataExs = mutableListOf<Exercise>()
+//    private fun exercisesToList(exercises: Map<String, String>, firestoreClient: FireStoreClient): List<ExerciseListItemModel> {
+//        val uiExercisesList = mutableListOf<ExerciseListItemModel>()
+//        val exIds = exercises.map { it.key }
+//        val exReps = exercises.map { it.value }
+//        val dataExs = mutableListOf<Exercise>()
+//
+//        lifecycleScope.async {
+//        for (exercise in exercises)
+//            firestoreClient.getExercisesByIds(exIds).collect { result ->
+//                if (result != null) {
+//                    for (ex in result)
+//                        ex?.let { dataExs.add(it)
+//                        }
+//                    for (i in 0 until dataExs.size) {
+//                        uiExercisesList.add(
+//                            ExerciseListItemModel(
+//                                dataExs[i].id,
+//                                dataExs[i].name,
+//                                dataExs[i].photoUrl,
+//                                dataExs[i].description,
+//                                dataExs[i].technique,
+//                                exReps[i]
+//                            )
+//                        )
+//                    }
+//                }
+//
+//
+//
+//            }
+//
+//
+//        }
+//        //def.join()
+//
+//        return uiExercisesList
+//    }
 
-        lifecycleScope.async {
-        for (exercise in exercises)
-            firestoreClient.getExercisesByIds(exIds).collect { result ->
-                if (result != null) {
-                    for (ex in result)
-                        ex?.let { dataExs.add(it)
-                        }
-                    for (i in 0 until dataExs.size) {
-                        uiExercisesList.add(
-                            ExerciseListItemModel(
-                                dataExs[i].id,
-                                dataExs[i].name,
-                                dataExs[i].photoUrl,
-                                dataExs[i].description,
-                                dataExs[i].technique,
-                                exReps[i]
-                            )
-                        )
+    private suspend fun exercisesToList(
+        exercises: Map<String, String>,
+        firestoreClient: FireStoreClient
+    ): List<ExerciseListItemModel> {
+        val exIds = exercises.keys.toList()
+
+        return firestoreClient.getExercisesByIds(exIds)
+            .first()
+            ?.filterNotNull()
+            ?.mapNotNull { exercise ->
+                exercises[exercise.id]?.let { setsReps ->
+                    val (sets, reps) = setsReps.split("-").let {
+                        it.getOrElse(0) { "" } to it.getOrElse(1) { "" }
                     }
+                    ExerciseListItemModel(
+                        id = exercise.id,
+                        name = exercise.name,
+                        photo = exercise.photoUrl,
+                        description = exercise.description.orEmpty(),
+                        technique = exercise.technique.orEmpty(),
+                        countSets = sets,
+                        countReps = reps
+                    )
                 }
-
-
-
-            }
-
-
-        }
-        //def.join()
-
-        return uiExercisesList
+            } ?: emptyList()
     }
 
     private fun createWorkoutItems(): List<UiWorkout> {
@@ -273,7 +301,7 @@ class WorkoutsFragment : Fragment() {
                         workout?.let {
                             workouts.add(it)
                         }
-                        }
+                    }
                     for (workout in workouts) {
                         uiWorkouts.add(
                             UiWorkout(
@@ -285,8 +313,7 @@ class WorkoutsFragment : Fragment() {
                             )
                         )
                     }
-                }
-                else{
+                } else {
                     println("result is null")
                 }
                 println("SIZE UI LIST:")
@@ -363,6 +390,7 @@ class WorkoutsFragment : Fragment() {
             currentQuery = s?.toString().orEmpty()
             applyFilters()
         }
+
         override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
         override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
     }

@@ -3,6 +3,8 @@ package com.example.trainsmart.firestore
 import com.example.trainsmart.data.Exercise
 import com.example.trainsmart.data.User
 import com.example.trainsmart.data.Workout
+import com.google.firebase.firestore.DocumentSnapshot
+import com.google.firebase.firestore.FieldPath
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -35,7 +37,7 @@ class FireStoreClient {
                     println(tag + "insert user with id: ${user.id}")
 
                     CoroutineScope(Dispatchers.IO).launch {
-                        updateUser(user).collect{}
+                        updateUser(user).collect {}
                     }
                     trySend(user.id)
                 }
@@ -44,7 +46,7 @@ class FireStoreClient {
                     println(tag + "error inserting user: ${e.message}")
                     trySend(null)
                 }
-            awaitClose{}
+            awaitClose {}
         }
     }
 
@@ -64,7 +66,7 @@ class FireStoreClient {
                     println(tag + "error updating user: ${e.message}")
                     trySend(false)
                 }
-            awaitClose{}
+            awaitClose {}
         }
     }
 
@@ -96,7 +98,7 @@ class FireStoreClient {
                     println(tag + "error getting user: ${e.message}")
                     trySend(null)
                 }
-            awaitClose{}
+            awaitClose {}
         }
     }
 
@@ -120,34 +122,57 @@ class FireStoreClient {
      *  only get() methods. It's is a built-in collection.
      */
 
+//    fun getExercisesByIds(
+//        idS: List<String>
+//    ): Flow<List<Exercise?>?> {
+//        return callbackFlow {
+//            db.collection(collectionBasicEx)
+//                .get()
+//                .addOnSuccessListener { result ->
+//
+//                    val exercises = mutableListOf<Exercise>()
+//                    for (document in result) {
+//                        if (idS.contains(document.id)) {
+//
+//                            val exercise = document.data.toExercise()
+//                            exercises.add(exercise)
+//                            println(tag + "found exercise with id: ${document.id}")
+//                        }
+//                    }
+//                    if (exercises.size == 0)
+//                        trySend(null)
+//                    else
+//                        trySend(exercises)
+//                }
+//                .addOnFailureListener { e ->
+//                    e.printStackTrace()
+//                    println(tag + "error getting exercises: ${e.message}")
+//                    trySend(null)
+//                }
+//            awaitClose{}
+//        }
+//    }
+
     fun getExercisesByIds(
         idS: List<String>
     ): Flow<List<Exercise?>?> {
         return callbackFlow {
             db.collection(collectionBasicEx)
+                .whereIn(FieldPath.documentId(), idS)
                 .get()
                 .addOnSuccessListener { result ->
 
-                    val exercises = mutableListOf<Exercise>()
-                    for (document in result) {
-                        if (idS.contains(document.id)) {
-
-                            val exercise = document.data.toExercise()
-                            exercises.add(exercise)
-                            println(tag + "found exercise with id: ${document.id}")
-                        }
+                    val exercises = idS.mapNotNull { id ->
+                        result.documents.find { it.id == id }?.toExercise()
                     }
-                    if (exercises.size == 0)
-                        trySend(null)
-                    else
-                        trySend(exercises)
+                    trySend(exercises)
                 }
                 .addOnFailureListener { e ->
                     e.printStackTrace()
                     println(tag + "error getting exercises: ${e.message}")
-                    trySend(null)
+                    trySend(emptyList())
                 }
-            awaitClose{}
+            awaitClose {}
         }
     }
 
@@ -162,7 +187,7 @@ class FireStoreClient {
 
                     for (document in result) {
 
-                        val exercise = document.data.toExercise()
+                        val exercise = document.toExercise()
                         exercise.id = document.id
                         exercises.add(exercise);
 
@@ -171,8 +196,7 @@ class FireStoreClient {
                     if (exercises.isEmpty()) {
                         println(tag + "exercises list is empty")
                         trySend(emptyList())
-                    }
-                    else {
+                    } else {
                         println(tag + "exercises list not null")
                         trySend(exercises)
                     }
@@ -182,7 +206,7 @@ class FireStoreClient {
                     println(tag + "error getting exercises: ${e.message}")
                     trySend(emptyList())
                 }
-            awaitClose{}
+            awaitClose {}
         }
     }
 
@@ -197,11 +221,21 @@ class FireStoreClient {
 
     private fun Map<String, Any>.toExercise(): Exercise {
         return Exercise(
-            // no id = this["id"] as String,
+            id = this["id"] as String,
             name = this["name"] as String,
             photoUrl = this["photoUrl"] as String,
             description = this["description"] as String,
             technique = this["technique"] as String
+        )
+    }
+
+    private fun DocumentSnapshot.toExercise(): Exercise {
+        return Exercise(
+            id = this.id,
+            name = getString("name") ?: "",
+            photoUrl = getString("photoUrl") ?: "",
+            description = getString("description") ?: "",
+            technique = getString("technique") ?: ""
         )
     }
 
@@ -229,8 +263,7 @@ class FireStoreClient {
                     if (workouts.isEmpty()) {
                         println(tag + "workouts list is empty")
                         trySend(emptyList())
-                    }
-                    else {
+                    } else {
                         println(tag + "workouts list not null")
                         trySend(workouts)
                     }
@@ -240,7 +273,7 @@ class FireStoreClient {
                     println(tag + "error getting workouts: ${e.message}")
                     trySend(emptyList())
                 }
-            awaitClose{}
+            awaitClose {}
         }
     }
 
