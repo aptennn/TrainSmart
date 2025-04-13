@@ -68,7 +68,6 @@ class WorkoutsFragment : Fragment() {
         }
 
         return binding.root*/
-
         return inflater.inflate(R.layout.fragment_workouts, container, false)
     }
 
@@ -92,6 +91,10 @@ class WorkoutsFragment : Fragment() {
             // Start the new activity
             startActivity(intent)
         }
+    }
+
+    private fun setupViews() {
+
     }
 
     override fun onDestroyView() {

@@ -33,11 +33,9 @@ class WorkoutExerciseFragment : Fragment() {
             exerciseIndex = it.getInt(ARGNAME_EXERCISE_INDEX)
             setIndex = it.getInt(ARGNAME_SET_INDEX)
         }
-        println("error here")
 
         exercise = workout?.exercises?.get(exerciseIndex!!)
-        println(exercise?.countReps!!)
-        nSets = parseNumSets(exercise?.countReps!!)
+        nSets = exercise?.countSets?.toInt()
     }
 
     override fun onCreateView(
@@ -50,8 +48,9 @@ class WorkoutExerciseFragment : Fragment() {
         nameTextView.text = exercise.name
         val imageView: ImageView = root.findViewById(R.id.currentExercisePicture)
         imageView.load(exercise.photo)
-        val repetitionCountTextView: TextView = root.findViewById(R.id.currentExerciseRepetitionCount)
-        repetitionCountTextView.text = parseNumReps(exercise.countReps).toString()
+        val repetitionCountTextView: TextView =
+            root.findViewById(R.id.currentExerciseRepetitionCount)
+        repetitionCountTextView.text = exercise.countReps
 
         val buttonStart: Button = root.findViewById(R.id.buttonStart)
         buttonStart.setOnClickListener { (activity as WorkoutActivity).onNextSetClicked() }
@@ -59,22 +58,8 @@ class WorkoutExerciseFragment : Fragment() {
         val progressBar: WorkoutProgressBar = root.findViewById(R.id.workoutProgress)
         progressBar.currentExercise = exerciseIndex!!
         progressBar.currentSet = setIndex!!
-        progressBar.setCounts = workout!!.exercises.map { parseNumSets(it.countReps) }.toTypedArray()
+        progressBar.setCounts = workout!!.exercises.map { it.countSets.toInt() }.toTypedArray()
         return root
-    }
-
-    private fun parseNumReps(s: String): Int {
-        val words = s.split('-')
-        if (words.size != 2)
-            throw IllegalArgumentException("invalid sets+reps string")
-        return words[1].toInt()
-    }
-
-    private fun parseNumSets(s: String): Int {
-        val words = s.split('-')
-        if (words.size != 2)
-            throw IllegalArgumentException("invalid sets+reps string")
-        return words[0].toInt()
     }
 
     companion object {

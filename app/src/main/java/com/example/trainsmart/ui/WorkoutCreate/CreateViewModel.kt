@@ -13,7 +13,7 @@ class CreateViewModel(private val items: List<ExerciseListItemModel>) :
 
     class ItemViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val nameTextView: TextView = itemView.findViewById(R.id.tv_title)
-        val descTextView: TextView = itemView.findViewById(R.id.tv_description)
+        //val descTextView: TextView = itemView.findViewById(R.id.tv_description)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemViewHolder {
@@ -25,7 +25,7 @@ class CreateViewModel(private val items: List<ExerciseListItemModel>) :
     override fun onBindViewHolder(holder: ItemViewHolder, position: Int) {
         val item = items[position]
         holder.nameTextView.text = item.name
-        holder.descTextView.text = item.description
+        //holder.descTextView.text = item.description
     }
 
     override fun getItemCount(): Int = items.size

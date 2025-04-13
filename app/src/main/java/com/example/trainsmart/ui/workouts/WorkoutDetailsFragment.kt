@@ -40,14 +40,16 @@ class WorkoutsDetailsFragment : Fragment() {
         val workoutImage: ImageView = view.findViewById(R.id.iv_exercise)
         val rV: RecyclerView = view.findViewById(R.id.rv_exercises)
         val startButton: Button = view.findViewById(R.id.btnStart)
-        //val backButton: ImageButton = view.findViewById(R.id.ibBack)
         val favoriteButton: ImageButton = view.findViewById(R.id.ibFavorite)
 
 
-        workout?.let{
+        workout?.let {
             workoutTitle.text = it.title
             workoutTime.text = it.type
-            workoutCountExersices.text = "${it.exercises.size} упражнения"
+            workoutCountExersices.text = buildString {
+                append(it.exercises.size)
+                append(getExerciseEnding(it.exercises.size))
+            }
             workoutImage.setImageResource(it.photo)
             rV.layoutManager = LinearLayoutManager(requireContext())
             rV.adapter = ExerciseAdapter(it.exercises)
@@ -61,15 +63,19 @@ class WorkoutsDetailsFragment : Fragment() {
             startActivity(intent)
         }
 
-//        backButton.setOnClickListener {
-//            //getActivity().onBackPressed();
-//            requireActivity().onBackPressedDispatcher.onBackPressed()
-//        }
-
         favoriteButton.setOnClickListener {
 
         }
 
         return view
+    }
+
+    private fun getExerciseEnding(count: Int): String {
+        return when {
+            count % 100 in 11..14 -> " упражнений"
+            count % 10 == 1 -> " упражнение"
+            count % 10 in 2..4 -> " упражнения"
+            else -> " упражнений"
+        }
     }
 }

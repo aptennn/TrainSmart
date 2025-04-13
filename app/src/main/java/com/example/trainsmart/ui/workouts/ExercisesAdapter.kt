@@ -15,7 +15,8 @@ class ExerciseAdapter(private val exercises: List<ExerciseListItemModel>) :
 
     class ExerciseViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val exerciseName: TextView = view.findViewById(R.id.tv_title)
-        val exerciseReps: TextView = view.findViewById(R.id.tv_description)
+        val exerciseSets: TextView = view.findViewById(R.id.tvCountSets)
+        val exerciseReps: TextView = view.findViewById(R.id.tvCountReps)
         val exerciseImage: ImageView = view.findViewById(R.id.imageView)
     }
 
@@ -27,9 +28,19 @@ class ExerciseAdapter(private val exercises: List<ExerciseListItemModel>) :
 
     override fun onBindViewHolder(holder: ExerciseViewHolder, position: Int) {
         val exercise = exercises[position]
-        holder.exerciseName.text = exercise.name
-        holder.exerciseReps.text = exercise.countReps
-        holder.exerciseImage.load(exercise.photo)
+        with(holder) {
+            exerciseName.text = exercise.name
+            exerciseImage.load(exercise.photo)
+            exerciseSets.text = buildString {
+                append("Количество подходов: ")
+                append(exercise.countSets)
+            }
+            exerciseReps.text = buildString {
+                append("Количество повторений: ")
+                append(exercise.countReps)
+            }
+        }
+
     }
 
     override fun getItemCount(): Int = exercises.size
