@@ -1,5 +1,6 @@
 package com.example.trainsmart.ui.workouts
 
+import android.app.AlertDialog
 import com.example.trainsmart.R
 import android.content.Intent
 import android.os.Bundle
@@ -15,21 +16,18 @@ import android.widget.ImageButton
 import android.widget.ProgressBar
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.lifecycleScope
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.trainsmart.firestore.FireStoreClient
 import com.example.trainsmart.ui.WorkoutCreate.WorkoutCreateActivity
-import com.example.trainsmart.ui.exercises.ExerciseListItemModel
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.launch
-import com.example.trainsmart.data.Workout as DataWorkout
 import com.example.trainsmart.ui.workouts.Workout as UiWorkout
 
 
 class WorkoutsFragment : Fragment() {
 
+    private val viewModel: WorkoutsViewModel by viewModels()
+    private var needRefresh = false
     private var progressBar: ProgressBar? = null
     private lateinit var workoutsList: RecyclerView
     private lateinit var buttonCreate: Button
@@ -41,12 +39,10 @@ class WorkoutsFragment : Fragment() {
     private var currentFilter: String? = null
     private var currentQuery: String = ""
     private var isFilterVisible = false
-    private var isDataInitialized = false
     private var searchTextWatcher: TextWatcher? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        initializeData()
     }
 
     override fun onCreateView(
@@ -68,127 +64,42 @@ class WorkoutsFragment : Fragment() {
         workoutsList.visibility = View.GONE
         adapter.submitList(originalItems)
 
-        initializeViews(view)
-        setupFilters(view)
-        setupSearch()
-
-        buttonCreate = view.findViewById<Button>(R.id.button_create)
-        buttonCreate.visibility = View.GONE
-
-        // Set an OnClickListener to the button
-        buttonCreate.setOnClickListener {
-            // Create an Intent to start the new activity
-            val intent = Intent(requireContext(), WorkoutCreateActivity::class.java)
-
-            // Start the new activity
-            startActivity(intent)
-        }
-    }
-
-    override fun onDestroyView() {
-        cleanupResources()
-        super.onDestroyView()
-    }
-
-    override fun onResume() {
-        super.onResume()
-        isDataInitialized = false
-        initializeData()
-    }
-
-
-    private fun initializeData() {
-        if (!isDataInitialized) {
-            progressBar?.visibility = View.VISIBLE
-            val firestoreClient = FireStoreClient()
-            val uiWorkouts = mutableListOf<UiWorkout>()
-            val workouts = mutableListOf<DataWorkout>()
-            lifecycleScope.launch {
-                firestoreClient.getAllWorkouts().collect { result ->
-                    if (result.isNotEmpty()) {
-                        workouts.clear()
-                        uiWorkouts.clear()
-                        originalItems.clear()
-                        adapter.submitList(emptyList())
-
-                        for (workout in result) {
-                            println(workout?.name)
-                            workout?.let {
-                                workouts.add(it)
-                            }
-                        }
-
-                        for (workout in workouts) {
-                            println(workout.duration)
-                            uiWorkouts.add(
-                                UiWorkout(
-                                    title = workout.name,
-                                    photo = R.drawable.exercise3,
-                                    time = workout.duration,
-                                    exercises = exercisesToList(workout.exercises, firestoreClient),
-                                    type = workout.type
-                                )
-                            )
-                        }
-                    } else {
-                        println("result is null")
-                    }
-                    println("SIZE UI LIST 333333333333:")
-                    println(uiWorkouts.size)
-                    originalItems.clear()
-                    originalItems.addAll(uiWorkouts)
-                    println()
-                    isDataInitialized = true
-
-                    progressBar?.visibility = View.GONE
-                    buttonCreate.visibility = View.VISIBLE
-                    workoutsList.visibility = View.VISIBLE
-
-
-                    val recyclerView = view?.findViewById<RecyclerView>(R.id.workoutsRV)
-                    if (recyclerView != null) {
-                        recyclerView.layoutManager = LinearLayoutManager(requireContext())
-                    }
-                    adapter = WorkoutsAdapter { navigateToWorkoutDetails(it) }
-                    if (recyclerView != null) {
-                        recyclerView.adapter = adapter
-                    }
-                    adapter.submitList(originalItems)
-
-                }
-
-            }
-
-        }
-    }
-
-    private fun initializeViews(view: View) {
         filterContainer = view.findViewById(R.id.filterContainer)
         searchField = view.findViewById(R.id.searchField)
         progressBar = view.findViewById(R.id.progressBar)
         view.findViewById<ImageButton>(R.id.btnFilter)
             .setOnClickListener { toggleFiltersVisibility() }
-    }
 
-    private fun setupFilters(view: View) {
         val btnAll = view.findViewById<Button>(R.id.btnAllTypes)
         val btnUpper = view.findViewById<Button>(R.id.btnUpperBody)
         val btnLower = view.findViewById<Button>(R.id.btnLowerBody)
-
         selectedButton = btnAll
         updateButtonStyles(listOf(btnAll, btnUpper, btnLower), btnAll)
-
         listOf(btnAll, btnUpper, btnLower).forEach { button ->
             button?.setOnClickListener { handleFilterClick(button) }
         }
-    }
 
-    private fun setupSearch() {
         searchTextWatcher = createTextWatcher()
         searchField?.addTextChangedListener(searchTextWatcher)
+
+        buttonCreate = view.findViewById<Button>(R.id.button_create)
+        buttonCreate.visibility = View.GONE
+
+        if (viewModel.workouts.isEmpty()) {
+            loadData()
+        } else {
+            updateUI()
+        }
+
+        buttonCreate.setOnClickListener {
+            val intent = Intent(requireContext(), WorkoutCreateActivity::class.java)
+
+            startActivity(intent)
+            needRefresh = true
+        }
     }
 
-    private fun cleanupResources() {
+    override fun onDestroyView() {
         progressBar?.visibility = View.GONE
         searchField?.removeTextChangedListener(searchTextWatcher)
         searchTextWatcher = null
@@ -211,107 +122,46 @@ class WorkoutsFragment : Fragment() {
             )
         }
         adapter.submitList(emptyList())
+        super.onDestroyView()
     }
 
-//    private fun exercisesToList(exercises: Map<String, String>, firestoreClient: FireStoreClient): List<ExerciseListItemModel> {
-//        val uiExercisesList = mutableListOf<ExerciseListItemModel>()
-//        val exIds = exercises.map { it.key }
-//        val exReps = exercises.map { it.value }
-//        val dataExs = mutableListOf<Exercise>()
-//
-//        lifecycleScope.async {
-//        for (exercise in exercises)
-//            firestoreClient.getExercisesByIds(exIds).collect { result ->
-//                if (result != null) {
-//                    for (ex in result)
-//                        ex?.let { dataExs.add(it)
-//                        }
-//                    for (i in 0 until dataExs.size) {
-//                        uiExercisesList.add(
-//                            ExerciseListItemModel(
-//                                dataExs[i].id,
-//                                dataExs[i].name,
-//                                dataExs[i].photoUrl,
-//                                dataExs[i].description,
-//                                dataExs[i].technique,
-//                                exReps[i]
-//                            )
-//                        )
-//                    }
-//                }
-//
-//
-//
-//            }
-//
-//
-//        }
-//        //def.join()
-//
-//        return uiExercisesList
-//    }
-
-    private suspend fun exercisesToList(
-        exercises: Map<String, String>,
-        firestoreClient: FireStoreClient
-    ): List<ExerciseListItemModel> {
-        val exIds = exercises.keys.toList()
-
-        return firestoreClient.getExercisesByIds(exIds)
-            .first()
-            ?.filterNotNull()
-            ?.mapNotNull { exercise ->
-                exercises[exercise.id]?.let { setsReps ->
-                    val (sets, reps) = setsReps.split("-").let {
-                        it.getOrElse(0) { "" } to it.getOrElse(1) { "" }
-                    }
-                    ExerciseListItemModel(
-                        id = exercise.id,
-                        name = exercise.name,
-                        photo = exercise.photoUrl,
-                        description = exercise.description.orEmpty(),
-                        technique = exercise.technique.orEmpty(),
-                        countSets = sets,
-                        countReps = reps
-                    )
-                }
-            } ?: emptyList()
+    override fun onResume() {
+        super.onResume()
+        if (needRefresh) {
+            needRefresh = false
+            loadData()
+        }
     }
 
-    private fun createWorkoutItems(): List<UiWorkout> {
-        val firestoreClient = FireStoreClient()
-        val uiWorkouts = mutableListOf<UiWorkout>()
-        val workouts = mutableListOf<DataWorkout>()
-        lifecycleScope.launch {
-            firestoreClient.getAllWorkouts().collect { result ->
-                if (result.isNotEmpty()) {
-                    for (workout in result) {
-                        println(workout?.name)
-                        workout?.let {
-                            workouts.add(it)
-                        }
-                    }
-                    for (workout in workouts) {
-                        uiWorkouts.add(
-                            UiWorkout(
-                                title = workout.name,
-                                photo = R.drawable.exercise3,
-                                time = workout.duration,
-                                exercises = exercisesToList(workout.exercises, firestoreClient),
-                                type = workout.type
-                            )
-                        )
-                    }
+    private fun loadData() {
+        progressBar?.visibility = View.VISIBLE
+        buttonCreate.visibility = View.GONE
+        workoutsList.visibility = View.GONE
+
+        viewModel.loadWorkouts { success ->
+            activity?.runOnUiThread {
+                progressBar?.visibility = View.GONE
+                if (success) {
+                    updateUI()
                 } else {
-                    println("result is null")
+                    AlertDialog.Builder(requireContext())
+                        .setTitle("Ошибка")
+                        .setMessage("Не удалось загрузить данные")
+                        .setPositiveButton("Повторить") { _, _ -> loadData() }
+                        .setNegativeButton("Отмена", null)
+                        .show()
                 }
-                println("SIZE UI LIST:")
-                println(uiWorkouts.size)
             }
-
         }
 
-        return uiWorkouts
+    }
+
+    private fun updateUI() {
+        originalItems.clear()
+        originalItems.addAll(viewModel.workouts)
+        applyFilters()
+        buttonCreate.visibility = View.VISIBLE
+        workoutsList.visibility = View.VISIBLE
     }
 
     private fun handleFilterClick(button: Button) {
@@ -332,9 +182,11 @@ class WorkoutsFragment : Fragment() {
     }
 
     private fun applyFilters() {
-        val filtered = originalItems.filter {
-            it.matchesQuery(currentQuery) && it.matchesFilter(currentFilter)
-        }
+        val filtered = viewModel.workouts
+            .filter {
+                it.matchesQuery(currentQuery) &&
+                        it.matchesFilter(currentFilter)
+            }
         adapter.submitList(filtered)
     }
 

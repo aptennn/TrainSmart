@@ -1,5 +1,6 @@
 package com.example.trainsmart.ui.WorkoutCreate
 
+import android.app.Activity
 import android.os.Bundle
 import android.widget.Button
 import androidx.appcompat.app.AlertDialog
@@ -147,24 +148,24 @@ class WorkoutCreateActivity : AppCompatActivity() {
         val firestoreClient = FireStoreClient()
         lifecycleScope.launch {
             firestoreClient.getAllExercises().collect { result ->
-                    exerciseModels.clear()
-                    result.filterNotNull().forEach { exercise ->
-                        exerciseModels.add(
-                            ExerciseListItemModel(
-                                id = exercise.id,
-                                name = exercise.name,
-                                photo = exercise.photoUrl,
-                                description = exercise.description,
-                                technique = exercise.technique,
-                                isSelected = false,
-                                countSets = "",
-                                countReps = ""
-                            )
+                exerciseModels.clear()
+                result.filterNotNull().forEach { exercise ->
+                    exerciseModels.add(
+                        ExerciseListItemModel(
+                            id = exercise.id,
+                            name = exercise.name,
+                            photo = exercise.photoUrl,
+                            description = exercise.description,
+                            technique = exercise.technique,
+                            isSelected = false,
+                            countSets = "",
+                            countReps = ""
                         )
-                    }
-                    exerciseListAdapter.notifyDataSetChanged()
-                    setupSaveButton()
+                    )
                 }
+                exerciseListAdapter.notifyDataSetChanged()
+                setupSaveButton()
+            }
         }
     }
 
@@ -200,7 +201,12 @@ class WorkoutCreateActivity : AppCompatActivity() {
 
         lifecycleScope.launch {
             FireStoreClient().saveWorkout(workout).collect { success ->
-                if (success) finish() else showAlertDialog("Ошибка сохранения")
+                if (success) {
+                    setResult(Activity.RESULT_OK)
+                    finish()
+                } else {
+                    showAlertDialog("Ошибка сохранения")
+                }
             }
         }
     }
