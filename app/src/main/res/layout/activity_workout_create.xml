@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    tools:context=".ui.WorkoutCreate.WorkoutCreateActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginBottom="6dp"
+            android:fontFamily="@font/montserrat_light"
+            android:text="Название:"
+            android:textColor="@color/black"
+            android:textSize="14sp" />
+
+        <EditText
+            android:id="@+id/editTextWorkoutName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="6dp"
+            android:background="@drawable/shape_edit_text_background"
+            android:elevation="8dp"
+            android:fontFamily="@font/montserrat_regular"
+            android:hint="Укажите название"
+            android:padding="8dp"
+            android:textSize="16sp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginBottom="6dp"
+            android:fontFamily="@font/montserrat_light"
+            android:text="Описание:"
+            android:textColor="@color/black"
+            android:textSize="14sp" />
+
+        <EditText
+            android:id="@+id/editTextWorkoutDescription"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="6dp"
+            android:background="@drawable/shape_edit_text_background"
+            android:elevation="8dp"
+            android:fontFamily="@font/montserrat_regular"
+            android:hint="Укажите описание"
+            android:inputType="textMultiLine"
+            android:minLines="1"
+            android:padding="8dp"
+            android:textSize="16sp" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginBottom="6dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginBottom="6dp"
+                android:fontFamily="@font/montserrat_light"
+                android:text="Тип тренировки: "
+                android:textColor="@color/black"
+                android:textSize="14sp"/>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/btnUpperBody"
+                    android:layout_width="100dp"
+                    android:layout_height="40dp"
+                    android:background="@drawable/shape_button_unselected"
+                    android:fontFamily="@font/montserrat_semi_bold"
+                    android:text="Верх тела"
+                    android:textAllCaps="false"
+                    android:textColor="@color/black"
+                    android:textSize="14sp" />
+
+                <Space
+                    android:layout_width="8dp"
+                    android:layout_height="0dp"/>
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/btnLowerBody"
+                    android:layout_width="100dp"
+                    android:layout_height="40dp"
+                    android:background="@drawable/shape_button_unselected"
+                    android:fontFamily="@font/montserrat_semi_bold"
+                    android:text="Низ тела"
+                    android:textAllCaps="false"
+                    android:textColor="@color/black"
+                    android:textSize="14sp" />
+            </LinearLayout>
+        </LinearLayout>
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginBottom="6dp"
+            android:text="Выбери упражнения: "
+            android:textColor="@color/black"
+            android:fontFamily="@font/montserrat_light"
+            android:textSize="14sp" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerViewCreate"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:padding="8dp" />
+
+        <Button
+            android:id="@+id/button_create_finish"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Создать Тренировку" />
+    </LinearLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

@@ -1,5 +1,7 @@
 package com.example.trainsmart.ui.workouts
 
+import android.app.AlertDialog
+import com.example.trainsmart.R
 import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
@@ -11,33 +13,36 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.HorizontalScrollView
 import android.widget.ImageButton
+import android.widget.ProgressBar
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.trainsmart.R
-import com.example.trainsmart.ui.exercises.ExerciseListItemModel
+import com.example.trainsmart.ui.WorkoutCreate.WorkoutCreateActivity
+import com.example.trainsmart.ui.workouts.Workout as UiWorkout
+
 
 class WorkoutsFragment : Fragment() {
 
+    private val viewModel: WorkoutsViewModel by viewModels()
+    private var needRefresh = false
+    private var progressBar: ProgressBar? = null
+    private lateinit var workoutsList: RecyclerView
+    private lateinit var buttonCreate: Button
     private var filterContainer: HorizontalScrollView? = null
     private var selectedButton: Button? = null
     private var searchField: EditText? = null
     private lateinit var adapter: WorkoutsAdapter
-    private val originalItems = mutableListOf<Workout>()
-    private var currentFilter: Int? = null
+    private val originalItems = mutableListOf<UiWorkout>()
+    private var currentFilter: String? = null
     private var currentQuery: String = ""
     private var isFilterVisible = false
-    private var isDataInitialized = false
     private var searchTextWatcher: TextWatcher? = null
-    private val toTrainingsBasic: ImageButton? = null
-    private val toTrainingsUser: ImageButton? = null
-    private val toTrainingsFavorite: ImageButton? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        initializeData()
     }
 
     override fun onCreateView(
@@ -49,84 +54,63 @@ class WorkoutsFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+
         super.onViewCreated(view, savedInstanceState)
-        initializeViews(view)
-        setupRecyclerView(view)
-        setupFilters(view)
-        setupSearch()
-    }
 
-    override fun onDestroyView() {
-        cleanupResources()
-        super.onDestroyView()
-    }
+        workoutsList = view.findViewById<RecyclerView>(R.id.workoutsRV)
+        workoutsList.layoutManager = LinearLayoutManager(requireContext())
+        adapter = WorkoutsAdapter { navigateToWorkoutDetails(it) }
+        workoutsList.adapter = adapter
+        workoutsList.visibility = View.GONE
+        adapter.submitList(originalItems)
 
-    private fun initializeData() {
-        if (!isDataInitialized) {
-            originalItems.addAll(createWorkoutItems())
-            isDataInitialized = true
-        }
-    }
-
-    private fun initializeViews(view: View) {
         filterContainer = view.findViewById(R.id.filterContainer)
         searchField = view.findViewById(R.id.searchField)
-        view.findViewById<ImageButton>(R.id.btnFilter).setOnClickListener { toggleFiltersVisibility() }
+        progressBar = view.findViewById(R.id.progressBar)
+        view.findViewById<ImageButton>(R.id.btnFilter)
+            .setOnClickListener { toggleFiltersVisibility() }
 
-        val toTrainingsBasic : ImageButton = view.findViewById(R.id.basic_trainings)
-        val toTrainingsUser : ImageButton = view.findViewById(R.id.user_trainings)
-        val toTrainingsFavorite : ImageButton = view.findViewById(R.id.favorite_trainings)
-
-        toTrainingsBasic.setOnClickListener {
-            findNavController().navigate(R.id.navigation_workouts)
-        }
-
-        toTrainingsUser.setOnClickListener {
-            findNavController().navigate(R.id.navigation_trainings_user)
-        }
-
-        toTrainingsFavorite.setOnClickListener {
-            findNavController().navigate(R.id.navigation_trainings_favorite)
-        }
-    }
-
-    private fun setupRecyclerView(view: View) {
-        val recyclerView = view.findViewById<RecyclerView>(R.id.workoutsRV)
-        recyclerView.layoutManager = LinearLayoutManager(requireContext())
-        adapter = WorkoutsAdapter { navigateToWorkoutDetails(it) }
-        recyclerView.adapter = adapter
-        adapter.submitList(originalItems)
-    }
-
-    private fun setupFilters(view: View) {
         val btnAll = view.findViewById<Button>(R.id.btnAllTypes)
         val btnUpper = view.findViewById<Button>(R.id.btnUpperBody)
         val btnLower = view.findViewById<Button>(R.id.btnLowerBody)
-
         selectedButton = btnAll
         updateButtonStyles(listOf(btnAll, btnUpper, btnLower), btnAll)
-
         listOf(btnAll, btnUpper, btnLower).forEach { button ->
             button?.setOnClickListener { handleFilterClick(button) }
         }
-    }
 
-    private fun setupSearch() {
         searchTextWatcher = createTextWatcher()
         searchField?.addTextChangedListener(searchTextWatcher)
+
+        buttonCreate = view.findViewById<Button>(R.id.button_create)
+        buttonCreate.visibility = View.GONE
+
+        if (viewModel.workouts.isEmpty()) {
+            loadData()
+        } else {
+            updateUI()
+        }
+
+        buttonCreate.setOnClickListener {
+            val intent = Intent(requireContext(), WorkoutCreateActivity::class.java)
+
+            startActivity(intent)
+            needRefresh = true
+        }
     }
 
-    private fun cleanupResources() {
+    override fun onDestroyView() {
+        progressBar?.visibility = View.GONE
         searchField?.removeTextChangedListener(searchTextWatcher)
         searchTextWatcher = null
         searchField?.setText("")
         filterContainer = null
         selectedButton = null
-        // Сброс фильтров и состояния
+
         currentFilter = null
         currentQuery = ""
         isFilterVisible = false
-        // Сброс стилей кнопок
+
         view?.findViewById<Button>(R.id.btnAllTypes)?.let { defaultButton ->
             updateButtonStyles(
                 listOf(
@@ -138,71 +122,52 @@ class WorkoutsFragment : Fragment() {
             )
         }
         adapter.submitList(emptyList())
+        super.onDestroyView()
     }
 
-    private fun createWorkoutItems(): List<Workout> {
-        return listOf(
-            Workout(
-                "Программа для тренировки рук", R.drawable.image_arms_wrkt, 1.5,
-                listOf(
-                    ExerciseListItemModel(
-                        "Жим лёжа", R.drawable.exercise1,
-                        "Базовое упражнение, которое помогает развить мышцы груди, плеч и рук.",
-                        "1. Штанга находится на уровне глаз\n2. Занять такое положение на скамье...",
-                        "3 подхода по 6 повторений"
-                    ),
-                    ExerciseListItemModel(
-                        "Подъем штанги на бицепс", R.drawable.exercise6,
-                        "Cиловое изолированное упражнение, направленное на развитие бицепса плеча.",
-                        "1. Встаньте ровно со штангой в руках...",
-                        "5 подходов по 5 повторений"
-                    )
-                ),
-                1
-            ),
-            Workout(
-                "Программа для тренировки спины", R.drawable.image_back_wrkt, 1.5,
-                listOf(
-                    ExerciseListItemModel(
-                        "Тяга вертикального блока", R.drawable.exercise3,
-                        "Одно из фундаментальных упражнений для развития верхней части туловища",
-                        "1. Сядьте на скамью тренажёра...",
-                        "2 подхода по 10 повторений"
-                    ),
-                    ExerciseListItemModel(
-                        "Тяга горизонтального блока", R.drawable.exercise5,
-                        "Cиловое упражнение на развитие мышц спины...",
-                        "1. Расположитесь на сидении тренажёра...",
-                        "3 подхода по 11 повторений"
-                    )
-                ),
-                1
-            ),
-            Workout(
-                "Программа для тренировки ног", R.drawable.image_leg_wrkt, 1.5,
-                listOf(
-                    ExerciseListItemModel(
-                        "Приседания со штангой", R.drawable.exercise4,
-                        "Эффективное базовое упражнение...",
-                        "1. Плотно зафиксируйте ладони на грифе...",
-                        "4 подхода по 5 повторений"
-                    ),
-                    ExerciseListItemModel(
-                        "Становая тяга", R.drawable.exercise2,
-                        "Базовое упражнение силового тренинга...",
-                        "1. Располагаем ноги на ширине плеч...",
-                        "3 подхода по 8 повторений"
-                    )
-                ),
-                2
-            )
-        )
+    override fun onResume() {
+        super.onResume()
+        if (needRefresh) {
+            needRefresh = false
+            loadData()
+        }
+    }
+
+    private fun loadData() {
+        progressBar?.visibility = View.VISIBLE
+        buttonCreate.visibility = View.GONE
+        workoutsList.visibility = View.GONE
+
+        viewModel.loadWorkouts { success ->
+            activity?.runOnUiThread {
+                progressBar?.visibility = View.GONE
+                if (success) {
+                    updateUI()
+                } else {
+                    AlertDialog.Builder(requireContext())
+                        .setTitle("Ошибка")
+                        .setMessage("Не удалось загрузить данные")
+                        .setPositiveButton("Повторить") { _, _ -> loadData() }
+                        .setNegativeButton("Отмена", null)
+                        .show()
+                }
+            }
+        }
+
+    }
+
+    private fun updateUI() {
+        originalItems.clear()
+        originalItems.addAll(viewModel.workouts)
+        applyFilters()
+        buttonCreate.visibility = View.VISIBLE
+        workoutsList.visibility = View.VISIBLE
     }
 
     private fun handleFilterClick(button: Button) {
         currentFilter = when (button.id) {
-            R.id.btnUpperBody -> 1
-            R.id.btnLowerBody -> 2
+            R.id.btnUpperBody -> "Верх тела"
+            R.id.btnLowerBody -> "Низ тела"
             else -> null
         }
         applyFilters()
@@ -217,21 +182,23 @@ class WorkoutsFragment : Fragment() {
     }
 
     private fun applyFilters() {
-        val filtered = originalItems.filter {
-            it.matchesQuery(currentQuery) && it.matchesFilter(currentFilter)
-        }
+        val filtered = viewModel.workouts
+            .filter {
+                it.matchesQuery(currentQuery) &&
+                        it.matchesFilter(currentFilter)
+            }
         adapter.submitList(filtered)
     }
 
-    private fun Workout.matchesQuery(query: String): Boolean {
+    private fun UiWorkout.matchesQuery(query: String): Boolean {
         return title.lowercase().contains(query.lowercase())
     }
 
-    private fun Workout.matchesFilter(filter: Int?): Boolean {
-        return filter == null || type == filter
+    private fun UiWorkout.matchesFilter(filter: String?): Boolean {
+        return filter == null || type.equals(filter, ignoreCase = true)
     }
 
-    private fun navigateToWorkoutDetails(workout: Workout) {
+    private fun navigateToWorkoutDetails(workout: UiWorkout) {
         findNavController().navigate(
             R.id.navigation_workout_details,
             Bundle().apply { putParcelable("workoutKey", workout) }
@@ -264,6 +231,7 @@ class WorkoutsFragment : Fragment() {
             currentQuery = s?.toString().orEmpty()
             applyFilters()
         }
+
         override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
         override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
     }

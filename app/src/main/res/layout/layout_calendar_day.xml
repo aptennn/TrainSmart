@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:gravity="center_horizontal">
+
+    <!-- Название дня недели -->
+    <TextView
+        android:id="@+id/calendarDayName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="14sp"
+        android:textColor="#8D8D8D"
+        android:layout_marginBottom="16dp"
+        android:fontFamily="@font/montserrat_light"/>
+
+    <!-- Число дня -->
+    <TextView
+        android:id="@+id/calendarDayText"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:gravity="center"
+        android:textSize="18sp"
+        android:textColor="#000614"
+        android:fontFamily="@font/montserrat_bold"
+        android:background="@drawable/shape_background_calendar_days"/>
+</LinearLayout>

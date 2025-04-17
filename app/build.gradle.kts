@@ -13,7 +13,7 @@ android {
 
     defaultConfig {
         applicationId = "com.example.trainsmart"
-        minSdk = 25
+        minSdk = 26
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
@@ -34,11 +34,11 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.VERSION_11
+        targetCompatibility = JavaVersion.VERSION_11
     }
     kotlinOptions {
-        jvmTarget = "1.8"
+        jvmTarget = "11"
     }
     buildFeatures {
         viewBinding = true
@@ -76,6 +76,7 @@ dependencies {
     implementation(libs.androidx.fragment.ktx)
     implementation(libs.firebase.auth)
     implementation(libs.firebase.common.ktx)
+    implementation(libs.firebase.database.ktx)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -84,8 +85,14 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
 
+    implementation(libs.calendar)
+
     implementation(platform(libs.firebase.bom))
+    implementation(libs.firebase.firestore)
     // TODO: Add the dependencies for Firebase products you want to use
+
+    // image load
+    implementation(libs.coil)
 
     // When using the BoM, don't specify versions in Firebase dependencies
     implementation(libs.google.firebase.auth)

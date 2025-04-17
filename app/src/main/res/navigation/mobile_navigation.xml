@@ -9,52 +9,63 @@
     <fragment
         android:id="@+id/navigation_workouts"
         android:name="com.example.trainsmart.ui.workouts.WorkoutsFragment"
-        android:label="@string/title_workouts"
+        android:label="Тренировки"
         tools:layout="@layout/fragment_workouts">
         <action
             android:id="@+id/action_navigationWorkouts_to_navigationWorkoutDetails"
             app:destination="@id/navigation_workout_details"
-            app:popUpTo="@id/navigation_workouts"
-            app:popUpToInclusive="false"/>
+            app:popUpTo="@id/navigation_workouts" />
     </fragment>
     <fragment
         android:id="@+id/navigation_exercises"
         android:name="com.example.trainsmart.ui.exercises.ExercisesFragment"
-        android:label="@string/title_exercises"
+        android:label="Упражнения"
         tools:layout="@layout/fragment_exercises">
         <action
             android:id="@+id/action_navigationExercises_to_navigationExercisesDetails"
             app:destination="@id/navigation_exercise_details"
-            app:popUpTo="@id/navigation_exercises"
-            app:popUpToInclusive="false"/>
+            app:popUpTo="@id/navigation_exercises" />
     </fragment>
     <fragment
         android:id="@+id/navigation_statistics"
         android:name="com.example.trainsmart.ui.statistics.StatisticsFragment"
-        android:label="@string/title_statistics"
-        tools:layout="@layout/fragment_statistics" />
+        android:label="Статистика"
+        tools:layout="@layout/fragment_statistics">
+        <action
+            android:id="@+id/action_navigationStatistics_to_navigationStatisticsHistory"
+            app:destination="@id/navigation_statistics_history"
+            app:popUpTo="@id/navigation_statistics" />
+    </fragment>
     <fragment
         android:id="@+id/navigation_settings"
         android:name="com.example.trainsmart.ui.settings.SettingsFragment"
-        android:label="@string/title_settings"
+        android:label="Настройки"
         tools:layout="@layout/fragment_settings" />
 
     <!-- Дочерние фрагменты -->
     <fragment
         android:id="@+id/navigation_workout_details"
         android:name="com.example.trainsmart.ui.workouts.WorkoutsDetailsFragment"
-        android:label="Workout Description">
-    </fragment>
+        tools:layout="@layout/fragment_workout_details"
+        android:label="Описание тренировки"/>
     <fragment
         android:id="@+id/navigation_exercise_details"
         android:name="com.example.trainsmart.ui.exercises.ExerciseDetailsFragment"
-        tools:layout="@layout/fragment_exercise_details" />
+        tools:layout="@layout/fragment_exercise_details"
+        android:label="Описание упражнения"/>
     <fragment
-        android:id="@+id/navigation_trainings_user"
-        android:name="com.example.trainsmart.ui.workouts.TrainingsUser"
-        tools:layout="@layout/fragment_user_trainings"/>
+        android:id="@+id/navigation_statistics_history"
+        android:name="com.example.trainsmart.ui.statistics.StatisticsHistoryFragment"
+        tools:layout="@layout/fragment_statistics_history"
+        android:label="Статистика месяца">
+        <action
+            android:id="@+id/action_navigationStatisticsHistory_to_navigationStatisticsDayHistory"
+            app:destination="@id/navigation_statistics_day_history"
+            app:popUpTo="@id/navigation_statistics_history" />
+    </fragment>
     <fragment
-        android:id="@+id/navigation_trainings_favorite"
-        android:name="com.example.trainsmart.ui.workouts.TrainingsFavorite"
-        tools:layout="@layout/fragment_favorite_trainings"/>
+        android:id="@+id/navigation_statistics_day_history"
+        android:name="com.example.trainsmart.ui.statistics.StatisticsDayFragment"
+        tools:layout="@layout/fragment_statistics_day"
+        android:label="Статистика дня"/>
 </navigation>

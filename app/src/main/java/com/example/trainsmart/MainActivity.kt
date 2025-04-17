@@ -24,8 +24,8 @@ class MainActivity : AppCompatActivity() {
         navController = findNavController(R.id.nav_host_fragment_activity_main)
         appBarConfiguration = AppBarConfiguration(
             setOf(
-                R.id.navigation_workouts,
                 R.id.navigation_exercises,
+                R.id.navigation_workouts,
                 R.id.navigation_statistics,
                 R.id.navigation_settings
             )
@@ -46,6 +46,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         setupActionBarWithNavController(navController, appBarConfiguration)
+         //supportActionBar?.title = "Тренировки"
         //supportActionBar?.hide()
     }
 
