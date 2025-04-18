@@ -1,6 +1,5 @@
 package com.example.trainsmart.ui.workouts
 
-import com.example.trainsmart.R
 import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
@@ -18,6 +17,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.trainsmart.R
 import com.example.trainsmart.data.Exercise
 import com.example.trainsmart.firestore.FireStoreClient
 import com.example.trainsmart.ui.WorkoutCreate.WorkoutCreateActivity
@@ -26,7 +26,6 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import com.example.trainsmart.data.Workout as DataWorkout
 import com.example.trainsmart.ui.workouts.Workout as UiWorkout
-
 
 
 class WorkoutsFragment : Fragment() {
@@ -110,34 +109,37 @@ class WorkoutsFragment : Fragment() {
         if (!isDataInitialized) {
             val firestoreClient = FireStoreClient()
             val uiWorkouts = mutableListOf<UiWorkout>()
-            val workouts = mutableListOf<DataWorkout>()
+            //val workouts = mutableListOf<DataWorkout>()
             lifecycleScope.launch {
                 firestoreClient.getAllWorkouts().collect { result ->
                     if (result.isNotEmpty()) {
-
-
-                        workouts.clear()
+                        //workouts.clear()
                         uiWorkouts.clear()
                         originalItems.clear()
                         adapter.submitList(emptyList())
 
-                        for (workout in result) {
-                            println(workout?.name)
-                            workout?.let {
-                                workouts.add(it)
-                            }
-                        }
-                        for (workout in workouts) {
-                            println(workout.duration)
-                            uiWorkouts.add(
-                                UiWorkout(
-                                    title = workout.name,
-                                    photo = R.drawable.exercise3,
-                                    time = workout.duration,
-                                    exercises = exercisesToList(workout.exercises, firestoreClient),
-                                    type = workout.type
+                        for (idWorkout in result) {
+                            val workout = idWorkout.value
+                            val idW = idWorkout.key
+                            if (workout != null) {
+                                uiWorkouts.add(
+                                    UiWorkout(
+                                        id = idW,
+                                        title = workout.name,
+                                        photo = R.drawable.exercise3,
+                                        time = workout.duration,
+                                        exercises = exercisesToList(
+                                            workout.exercises,
+                                            firestoreClient
+                                        ),
+                                        type = workout.type,
+                                        likes = workout.likes
+                                    )
                                 )
-                            )
+                                println(workout.name)
+                            }
+                            else
+                                println("ERROR! GOT NULL OR DEFECTED WORKOUT")
                         }
                     } else {
                         println("result is null")
@@ -268,22 +270,23 @@ class WorkoutsFragment : Fragment() {
         lifecycleScope.launch {
             firestoreClient.getAllWorkouts().collect { result ->
                 if (result.isNotEmpty()) {
-                    for (workout in result) {
-                        println(workout?.name)
-                        workout?.let {
-                            workouts.add(it)
-                        }
-                        }
-                    for (workout in workouts) {
-                        uiWorkouts.add(
-                            UiWorkout(
-                                title = workout.name,
-                                photo = R.drawable.exercise3,
-                                time = workout.duration,
-                                exercises = exercisesToList(workout.exercises, firestoreClient),
-                                type = workout.type
+                    for (idWorkout in result) {
+                        val workout = idWorkout.value
+                        val idW = idWorkout.key
+                        if (workout != null)
+                            uiWorkouts.add(
+                                UiWorkout(
+                                    id = idW,
+                                    title = workout.name,
+                                    photo = R.drawable.exercise3,
+                                    time = workout.duration,
+                                    exercises = exercisesToList(workout.exercises, firestoreClient),
+                                    type = workout.type,
+                                    likes = workout.likes
+                                )
                             )
-                        )
+                        else
+                            println("ERROR! GOT NULL OR DEFECTED WORKOUT")
                     }
                 }
                 else{

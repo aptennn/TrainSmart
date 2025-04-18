@@ -75,6 +75,7 @@ class StatisticsHistoryFragment : Fragment() {
                             R.id.navigation_statistics_day_history,
                             Bundle().apply {
                                 val workoutHistory = WorkoutHistory(Workout(
+                                    "id",
                                     "Программа для тренировки спины", R.drawable.image_back_wrkt, 1.5.toString(),
                                     listOf(
                                         ExerciseListItemModel(
@@ -93,7 +94,8 @@ class StatisticsHistoryFragment : Fragment() {
                                             "3 подхода по 11 повторений"
                                         )
                                     ),
-                                    "Верх тела"
+                                    "Верх тела",
+                                    mutableListOf<String>()
                                 ), day.date.toString())
                                 putParcelable("workoutHistoryKey", workoutHistory)
                             }

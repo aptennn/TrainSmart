@@ -1,34 +1,22 @@
 package com.example.trainsmart.ui.WorkoutCreate
 
-import android.content.Context
 import android.os.Bundle
-import android.util.Log
 import android.view.MenuItem
-import android.view.View
 import android.widget.Button
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.trainsmart.R
 import com.example.trainsmart.data.Exercise
+import com.example.trainsmart.data.Workout
 import com.example.trainsmart.databinding.ActivityWorkoutCreateBinding
 import com.example.trainsmart.firestore.FireStoreClient
-import com.example.trainsmart.ui.exercises.ExerciseListAdapter
-import com.example.trainsmart.ui.WorkoutCreate.ExerciseListAdapterCreate
 import com.example.trainsmart.ui.exercises.ExerciseListItemModel
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.database.ValueEventListener
 import kotlinx.coroutines.launch
-import com.example.trainsmart.databinding.FragmentExercisesBinding
-import com.example.trainsmart.data.Workout
 
 
 class WorkoutCreateActivity : AppCompatActivity() {
@@ -134,7 +122,8 @@ class WorkoutCreateActivity : AppCompatActivity() {
                         photoUrl = "",
                         duration = "30 минут",
                         exercises = exercisesMap,
-                        type = selectedWorkoutType // Используем выбранный тип
+                        type = selectedWorkoutType, // Используем выбранный тип
+                        likes = mutableListOf<String>()
                     )
 
                     lifecycleScope.launch {
