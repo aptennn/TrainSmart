@@ -1,5 +1,6 @@
 package com.example.trainsmart.ui.workouts
 
+import android.app.AlertDialog
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -32,12 +33,20 @@ class ExerciseAdapter(private val exercises: List<ExerciseListItemModel>) :
             exerciseName.text = exercise.name
             exerciseImage.load(exercise.photo)
             exerciseSets.text = buildString {
-                append("Количество подходов: ")
+                append("-Подходы: ")
                 append(exercise.countSets)
             }
             exerciseReps.text = buildString {
-                append("Количество повторений: ")
+                append("-Повторения: ")
                 append(exercise.countReps)
+            }
+
+            itemView.setOnClickListener {
+                AlertDialog.Builder(itemView.context)
+                    .setTitle(exercise.name)
+                    .setMessage(exercise.technique)
+                    .setPositiveButton("Закрыть") { dialog, _ -> dialog.dismiss() }
+                    .show()
             }
         }
 

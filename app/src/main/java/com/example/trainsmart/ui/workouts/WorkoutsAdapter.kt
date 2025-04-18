@@ -17,12 +17,10 @@ class WorkoutsAdapter(
     inner class WorkoutViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val background: ImageView = itemView.findViewById(R.id.workoutImage)
         private val title: TextView = itemView.findViewById(R.id.workoutTitleTV)
-        //private val button: TextView = itemView.findViewById(R.id.workoutDescription)
 
         fun bind(workout: Workout) {
             title.text = workout.title
             background.setImageResource(workout.photo)
-            //button.setOnClickListener { onItemClickListener(workout) }
             itemView.setOnClickListener { onItemClickListener(workout) }
         }
     }

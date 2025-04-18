@@ -44,7 +44,7 @@
         android:fontFamily="@font/montserrat_regular"
         android:textSize="14sp"
         android:layout_marginBottom="20dp"
-        android:layout_marginStart="40dp"
+        android:layout_marginStart="20dp"
         app:layout_constraintStart_toEndOf="@+id/cardView"
         app:layout_constraintTop_toBottomOf="@+id/tv_title" />
 
@@ -55,7 +55,7 @@
         android:fontFamily="@font/montserrat_regular"
         android:textSize="14sp"
         android:layout_marginBottom="20dp"
-        android:layout_marginStart="40dp"
+        android:layout_marginStart="20dp"
         app:layout_constraintTop_toBottomOf="@+id/tvCountSets"
         app:layout_constraintStart_toEndOf="@+id/cardView"/>
 

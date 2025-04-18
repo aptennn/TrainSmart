@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.activity.OnBackPressedCallback
 import com.example.trainsmart.R
 import com.example.trainsmart.WorkoutActivity
 import java.util.Locale
@@ -27,8 +28,7 @@ class WorkoutCountdownFragment : Fragment() {
     }
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View? {
         var countdownTimerTask: TimerTask? = null
         countdownTimerTask = object : TimerTask() {
@@ -50,6 +50,17 @@ class WorkoutCountdownFragment : Fragment() {
         return root
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        val backCallback = object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+            }
+        }
+
+        requireActivity().onBackPressedDispatcher.addCallback(
+            viewLifecycleOwner, backCallback
+        )
+    }
+
     fun decreaseCountdown() {
         countdownSecondsLabel?.text = String.format(Locale.getDefault(), "%d", --countdownSeconds)
     }
@@ -61,7 +72,6 @@ class WorkoutCountdownFragment : Fragment() {
          * @return A new instance of fragment WorkoutCountdownFragment.
          */
         @JvmStatic
-        fun newInstance() =
-            WorkoutCountdownFragment()
+        fun newInstance() = WorkoutCountdownFragment()
     }
 }

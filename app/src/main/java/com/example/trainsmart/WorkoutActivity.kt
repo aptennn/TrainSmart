@@ -18,8 +18,6 @@ class WorkoutActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-
-
         enableEdgeToEdge()
         setContentView(layout.activity_workout)
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(id.main)) { v, insets ->
