@@ -38,9 +38,8 @@ class WorkoutActivity : AppCompatActivity() {
             .replace(id.workoutFragment, nextFragment)
             .commit()
     }
-
-    fun onNextSetClicked() {
-        if (currentSetIndex == workout!!.exercises[currentExerciseIndex].countSets.toInt() - 1) {
+    fun goToNextSet() {
+        if (currentSetIndex == extractNumSets(workout!!.exercises[currentExerciseIndex].countReps) - 1) {
             if (currentExerciseIndex == workout!!.exercises.size - 1) {
                 finish()
                 return
@@ -56,5 +55,20 @@ class WorkoutActivity : AppCompatActivity() {
         supportFragmentManager.beginTransaction()
             .replace(id.workoutFragment, nextFragment)
             .commit()
+    }
+    private fun extractNumReps(s: String): Int {
+//        val words = s.split('-')
+//        if (words.size != 2)
+//            throw IllegalArgumentException("invalid sets+reps string")
+//        return words[1].toInt()
+        return s.toInt()
+    }
+
+    private fun extractNumSets(s: String): Int {
+//        val words = s.split('-')
+//        if (words.size != 2)
+//            throw IllegalArgumentException("invalid sets+reps string")
+//        return words[0].toInt()
+        return s.toInt()
     }
 }

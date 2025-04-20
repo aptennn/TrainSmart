@@ -40,7 +40,7 @@
         app:layout_constraintTop_toBottomOf="@id/currentExerciseName" />
 
     <TextView
-        android:id="@+id/textView1"
+        android:id="@+id/labelCurrentExerciseRepetitionCount"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
@@ -64,14 +64,31 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/currentExercisePicture" />
 
-    <Button
-        android:id="@+id/buttonStart"
+    <ImageButton
+        android:id="@+id/buttonStartStop"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="80dp"
-        android:text="|>"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        android:background="@drawable/shape_button_selected"
+        android:paddingHorizontal="5dp"
+        android:paddingVertical="5dp"
+        android:src="@drawable/ic_start_exercise" />
+
+    <TextView
+        android:id="@+id/breakTimer"
+        android:layout_width="0dp"
+        android:layout_height="300dp"
+        android:layout_marginTop="60dp"
+        android:fontFamily="@font/montserrat_light"
+        android:gravity="center_vertical"
+        android:textAlignment="center"
+        android:textSize="96sp"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/currentExerciseName" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

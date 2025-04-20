@@ -1,31 +1,31 @@
 <resources>
     <string name="app_name">ТrainSmart</string>
-    <string name="title_workouts">Workouts</string>
-    <string name="title_exercises">Exercises</string>
-    <string name="title_statistics">Statistics</string>
-    <string name="title_settings">Settings</string>
-    <string name="title_activity_login">ТrainSmart</string>
+    <string name="title_workouts" translatable="false">Workouts</string>
+    <string name="title_exercises" translatable="false">Exercises</string>
+    <string name="title_statistics" translatable="false">Statistics</string>
+    <string name="title_settings" translatable="false">Settings</string>
+    <string name="title_activity_login" translatable="false">ТrainSmart</string>
     <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="wrktDescriptionButton">Подробнее</string>
-    <string name="dislike">Dislike</string>
-    <string name="like">Like</string>
-    <string name="watchBtnWrkt">Смотреть</string>
-    <string name="exercise_technique">Техника выполнения</string>
-    <string name="title_exercise_details">Упражнение</string>
-    <string name="hint_search_exercises">Поиск</string>
-    <string name="button_start_workout">Start</string>
+    <string name="hello_blank_fragment" translatable="false">Hello blank fragment</string>
+    <string name="wrktDescriptionButton" translatable="false">Подробнее</string>
+    <string name="dislike" translatable="false">Dislike</string>
+    <string name="like" translatable="false">Like</string>
+    <string name="watchBtnWrkt" translatable="false">Смотреть</string>
+    <string name="exercise_technique" translatable="false">Техника выполнения</string>
+    <string name="title_exercise_details" translatable="false">Упражнение</string>
+    <string name="hint_search_exercises" translatable="false">Поиск</string>
+    <string name="button_start_workout" translatable="false">Start</string>
     <string name="workout_starts_in">Workout starts in</string>
     <string name="get_ready">Get ready!</string>
     <string name="exercise_repetition_count">Number of repetitions</string>
-    <string name="title_activity_create_workout">CreateWorkoutActivity</string>
+    <string name="title_activity_create_workout" translatable="false">CreateWorkoutActivity</string>
     <!-- Strings used for fragments for navigation -->
-    <string name="first_fragment_label">First Fragment</string>
-    <string name="second_fragment_label">Second Fragment</string>
-    <string name="next">Next</string>
-    <string name="previous">Previous</string>
+    <string name="first_fragment_label" translatable="false">First Fragment</string>
+    <string name="second_fragment_label" translatable="false">Second Fragment</string>
+    <string name="next" translatable="false">Next</string>
+    <string name="previous" translatable="false">Previous</string>
 
-    <string name="lorem_ipsum">
+    <string name="lorem_ipsum" translatable="false">
         Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam in scelerisque sem. Mauris
         volutpat, dolor id interdum ullamcorper, risus dolor egestas lectus, sit amet mattis purus
         dui nec risus. Maecenas non sodales nisi, vel dictum dolor. Class aptent taciti sociosqu ad
@@ -61,4 +61,5 @@
         libero vel nunc consequat, quis tincidunt nisl eleifend. Cras bibendum enim a justo luctus
         vestibulum. Fusce dictum libero quis erat maximus, vitae volutpat diam dignissim.
     </string>
+    <string name="exercise_break">Break</string>
 </resources>
