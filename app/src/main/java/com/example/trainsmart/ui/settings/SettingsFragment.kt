@@ -97,12 +97,7 @@ class SettingsFragment : Fragment() {
                 ?.addOnCompleteListener {
                     val builder = AlertDialog.Builder(requireActivity())
                     builder.setMessage("Please check your e-mail to verify account")
-                    builder.setPositiveButton("OK") { dialog, which ->
-                        Firebase.auth.signOut()
-                        val intent = Intent(this.activity, SignInActivity::class.java)
-                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-                        startActivity(intent)
-                    }
+                    builder.setPositiveButton("OK") { dialog, which -> }
                     val dialog = builder.create()
 
                     dialog.show()
