@@ -1,5 +1,6 @@
 package com.example.trainsmart.firestore
 
+import android.R.attr.id
 import android.util.Log
 import com.example.trainsmart.data.Exercise
 import com.example.trainsmart.data.User
@@ -23,7 +24,7 @@ class FireStoreClient {
     private val db = FirebaseFirestore.getInstance()
     private val collectionUsers = "users"
     private val collectionBasicEx = "basic-exercises"
-    private val collectionBasicWorkouts = "basic-workouts"
+    //private val collectionBasicWorkouts = "basic-workouts"
     private val collectionDebugWorkouts = "published-workouts"
 
     /**
@@ -126,24 +127,51 @@ class FireStoreClient {
      *  only get() methods. It's is a built-in collection.
      */
 
+    private fun Exercise.ToHashMap(): HashMap<String, Any> {
+        return hashMapOf(
+            "name" to name,
+            "photoUrl" to photoUrl,
+            "description" to description,
+            "technique" to technique
+        )
+    }
+
+    private fun Map<String, Any>.toExercise(): Exercise {
+        return Exercise(
+            // no id = this["id"] as String,
+            name = this["name"] as String,
+            photoUrl = this["photoUrl"] as String,
+            description = this["description"] as String,
+            technique = this["technique"] as String
+        )
+    }
+
     fun getExercisesByIds(
         idS: List<String>
     ): Flow<List<Exercise?>?> {
         return callbackFlow {
             db.collection(collectionBasicEx)
-                .whereIn(FieldPath.documentId(), idS)
                 .get()
                 .addOnSuccessListener { result ->
 
-                    val exercises = idS.mapNotNull { id ->
-                        result.documents.find { it.id == id }?.toExercise()
+                    val exercises = mutableListOf<Exercise>()
+                    for (document in result) {
+                        if (idS.contains(document.id)) {
+
+                            val exercise = document.toExercise()
+                            exercises.add(exercise)
+                            println(tag + "found exercise with id: ${document.id}")
+                        }
                     }
-                    trySend(exercises)
+                    if (exercises.isEmpty())
+                        trySend(null)
+                    else
+                        trySend(exercises)
                 }
                 .addOnFailureListener { e ->
                     e.printStackTrace()
                     println(tag + "error getting exercises: ${e.message}")
-                    trySend(emptyList())
+                    trySend(null)
                 }
             awaitClose {}
         }
@@ -183,25 +211,6 @@ class FireStoreClient {
         }
     }
 
-    private fun Exercise.ToHashMap(): HashMap<String, Any> {
-        return hashMapOf(
-            "name" to name,
-            "photoUrl" to photoUrl,
-            "description" to description,
-            "technique" to technique
-        )
-    }
-
-    private fun Map<String, Any>.toExercise(): Exercise {
-        return Exercise(
-            id = this["id"] as String,
-            name = this["name"] as String,
-            photoUrl = this["photoUrl"] as String,
-            description = this["description"] as String,
-            technique = this["technique"] as String
-        )
-    }
-
     private fun DocumentSnapshot.toExercise(): Exercise {
         return Exercise(
             id = this.id,
@@ -220,7 +229,7 @@ class FireStoreClient {
     fun getAllWorkouts(
     ): Flow<Map<String, Workout?>> {
         return callbackFlow {
-            db.collection(collectionBasicWorkouts)
+            db.collection(collectionDebugWorkouts)
                 .get()
                 .addOnSuccessListener { result ->
 
@@ -235,8 +244,7 @@ class FireStoreClient {
                     if (mapW.isEmpty()) {
                         println(tag + "workouts map is empty")
                         trySend(emptyMap())
-                    }
-                    else {
+                    } else {
                         println(tag + "workouts map not null")
                         trySend(mapW)
                     }
@@ -272,35 +280,39 @@ class FireStoreClient {
         return false
     }
 
-    fun updateLikes(workoutId: String, uid: String, isLiked: Boolean): Flow<Boolean> = callbackFlow {
-        val docRef = FirebaseFirestore.getInstance()
-            .collection(collectionDebugWorkouts) // change to your actual collection name
-            .document(workoutId)
+    fun updateLikes(workoutId: String, uid: String, isLiked: Boolean): Flow<Boolean> =
+        callbackFlow {
+            val docRef = FirebaseFirestore.getInstance()
+                .collection(collectionDebugWorkouts) // change to your actual collection name
+                .document(workoutId)
 
-        Log.d("Firestore", "Updating likes for workout: $workoutId | user: $uid | isLiked: $isLiked")
+            Log.d(
+                "Firestore",
+                "Updating likes for workout: $workoutId | user: $uid | isLiked: $isLiked"
+            )
 
-        val updateTask = if (isLiked) {
-            docRef.update("likes", FieldValue.arrayUnion(uid))
-        } else {
-            docRef.update("likes", FieldValue.arrayRemove(uid))
-        }
-
-        updateTask
-            .addOnSuccessListener {
-                Log.d("Firestore", "✅ Firestore update successful")
-                trySend(true).isSuccess
-                close()
-            }
-            .addOnFailureListener { e ->
-                Log.e("Firestore", "❌ Firestore update failed", e)
-                trySend(false).isSuccess
-                close()
+            val updateTask = if (isLiked) {
+                docRef.update("likes", FieldValue.arrayUnion(uid))
+            } else {
+                docRef.update("likes", FieldValue.arrayRemove(uid))
             }
 
-        awaitClose {
-            Log.d("Firestore", "Flow closed for updateLikes()")
+            updateTask
+                .addOnSuccessListener {
+                    Log.d("Firestore", "✅ Firestore update successful")
+                    trySend(true).isSuccess
+                    close()
+                }
+                .addOnFailureListener { e ->
+                    Log.e("Firestore", "❌ Firestore update failed", e)
+                    trySend(false).isSuccess
+                    close()
+                }
+
+            awaitClose {
+                Log.d("Firestore", "Flow closed for updateLikes()")
+            }
         }
-    }
 
 
     private fun Workout.ToHashMap(): HashMap<String, Any> {
