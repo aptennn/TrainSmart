@@ -6,7 +6,7 @@ import kotlinx.parcelize.Parcelize
 import java.util.Objects
 
 @Parcelize
-data class Workout(val title: String, val photo: Int, val time: String, val exercises: List<ExerciseListItemModel>, val type: String) : Parcelable {
+data class Workout(val id: String, val title: String, val photo: Int, val time: String, val exercises: List<ExerciseListItemModel>, val type: String, var likes: List<String>) : Parcelable {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (javaClass != other?.javaClass) return false

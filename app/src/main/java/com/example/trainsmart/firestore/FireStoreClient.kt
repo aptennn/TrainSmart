@@ -1,10 +1,12 @@
 package com.example.trainsmart.firestore
 
+import android.util.Log
 import com.example.trainsmart.data.Exercise
 import com.example.trainsmart.data.User
 import com.example.trainsmart.data.Workout
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FieldPath
+import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -12,6 +14,7 @@ import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.launch
+import com.example.trainsmart.ui.workouts.Workout as UiWorkout
 
 class FireStoreClient {
 
@@ -21,6 +24,7 @@ class FireStoreClient {
     private val collectionUsers = "users"
     private val collectionBasicEx = "basic-exercises"
     private val collectionBasicWorkouts = "basic-workouts"
+    private val collectionDebugWorkouts = "published-workouts"
 
     /**
      *   /users/ collection interface
@@ -122,37 +126,6 @@ class FireStoreClient {
      *  only get() methods. It's is a built-in collection.
      */
 
-//    fun getExercisesByIds(
-//        idS: List<String>
-//    ): Flow<List<Exercise?>?> {
-//        return callbackFlow {
-//            db.collection(collectionBasicEx)
-//                .get()
-//                .addOnSuccessListener { result ->
-//
-//                    val exercises = mutableListOf<Exercise>()
-//                    for (document in result) {
-//                        if (idS.contains(document.id)) {
-//
-//                            val exercise = document.data.toExercise()
-//                            exercises.add(exercise)
-//                            println(tag + "found exercise with id: ${document.id}")
-//                        }
-//                    }
-//                    if (exercises.size == 0)
-//                        trySend(null)
-//                    else
-//                        trySend(exercises)
-//                }
-//                .addOnFailureListener { e ->
-//                    e.printStackTrace()
-//                    println(tag + "error getting exercises: ${e.message}")
-//                    trySend(null)
-//                }
-//            awaitClose{}
-//        }
-//    }
-
     fun getExercisesByIds(
         idS: List<String>
     ): Flow<List<Exercise?>?> {
@@ -245,33 +218,33 @@ class FireStoreClient {
 
 
     fun getAllWorkouts(
-    ): Flow<List<Workout?>> {
+    ): Flow<Map<String, Workout?>> {
         return callbackFlow {
             db.collection(collectionBasicWorkouts)
                 .get()
                 .addOnSuccessListener { result ->
 
-                    val workouts = mutableListOf<Workout>()
+                    val mapW = mutableMapOf<String, Workout?>()
 
                     for (document in result) {
-
+                        val idW = document.id
                         val workout = document.data.toWorkout()
-                        workouts.add(workout);
-
+                        mapW[idW] = workout
                     }
 
-                    if (workouts.isEmpty()) {
-                        println(tag + "workouts list is empty")
-                        trySend(emptyList())
-                    } else {
-                        println(tag + "workouts list not null")
-                        trySend(workouts)
+                    if (mapW.isEmpty()) {
+                        println(tag + "workouts map is empty")
+                        trySend(emptyMap())
+                    }
+                    else {
+                        println(tag + "workouts map not null")
+                        trySend(mapW)
                     }
                 }
                 .addOnFailureListener { e ->
                     e.printStackTrace()
                     println(tag + "error getting workouts: ${e.message}")
-                    trySend(emptyList())
+                    trySend(emptyMap())
                 }
             awaitClose {}
         }
@@ -293,14 +266,51 @@ class FireStoreClient {
         }
     }
 
+    fun isLikedByMe(workout: UiWorkout?, uid: String): Boolean {
+        if (workout != null)
+            return workout.likes.contains(uid)
+        return false
+    }
+
+    fun updateLikes(workoutId: String, uid: String, isLiked: Boolean): Flow<Boolean> = callbackFlow {
+        val docRef = FirebaseFirestore.getInstance()
+            .collection(collectionDebugWorkouts) // change to your actual collection name
+            .document(workoutId)
+
+        Log.d("Firestore", "Updating likes for workout: $workoutId | user: $uid | isLiked: $isLiked")
+
+        val updateTask = if (isLiked) {
+            docRef.update("likes", FieldValue.arrayUnion(uid))
+        } else {
+            docRef.update("likes", FieldValue.arrayRemove(uid))
+        }
+
+        updateTask
+            .addOnSuccessListener {
+                Log.d("Firestore", "✅ Firestore update successful")
+                trySend(true).isSuccess
+                close()
+            }
+            .addOnFailureListener { e ->
+                Log.e("Firestore", "❌ Firestore update failed", e)
+                trySend(false).isSuccess
+                close()
+            }
+
+        awaitClose {
+            Log.d("Firestore", "Flow closed for updateLikes()")
+        }
+    }
+
+
     private fun Workout.ToHashMap(): HashMap<String, Any> {
         return hashMapOf(
-            //"id" to id,
             "name" to name,
             "photoUrl" to photoUrl,
             "duration" to duration,
             "exercises" to exercises,
-            "type" to type
+            "type" to type,
+            "likes" to likes
         )
     }
 
@@ -308,9 +318,10 @@ class FireStoreClient {
         return Workout(
             name = this["name"] as String,
             photoUrl = this["photoUrl"] as String,
-            duration = this["type"] as String,
+            duration = this["duration"] as String,
             exercises = this["exercises"] as Map<String, String>,
-            type = this["type"] as String
+            type = this["type"] as String,
+            likes = this["likes"] as List<String>
         )
     }
 

@@ -2,18 +2,21 @@ package com.example.trainsmart.ui.WorkoutCreate
 
 import android.app.Activity
 import android.os.Bundle
+import android.view.MenuItem
 import android.widget.Button
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.ui.AppBarConfiguration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.trainsmart.R
+import com.example.trainsmart.data.Exercise
+import com.example.trainsmart.data.Workout
 import com.example.trainsmart.databinding.ActivityWorkoutCreateBinding
 import com.example.trainsmart.firestore.FireStoreClient
 import com.example.trainsmart.ui.exercises.ExerciseListItemModel
 import kotlinx.coroutines.launch
-import com.example.trainsmart.data.Workout
 
 
 class WorkoutCreateActivity : AppCompatActivity() {
@@ -191,13 +194,14 @@ class WorkoutCreateActivity : AppCompatActivity() {
             it.id to "${it.countSets}-${it.countReps}"
         }
 
-        val workout = Workout(
-            name = name,
-            photoUrl = "",
-            duration = "30 минут",
-            exercises = exercisesMap,
-            type = selectedWorkoutType
-        )
+                    val workout = Workout(
+                        name = name,
+                        photoUrl = "",
+                        duration = "30 минут",
+                        exercises = exercisesMap,
+                        type = selectedWorkoutType, // Используем выбранный тип
+                        likes = mutableListOf<String>()
+                    )
 
         lifecycleScope.launch {
             FireStoreClient().saveWorkout(workout).collect { success ->
