@@ -6,14 +6,13 @@
         android:title="Упражнения" />
 
     <item
-        android:id="@+id/navigation_workouts"
-        android:icon="@drawable/baseline_fitness_center_24"
-        android:title="Тренировки" />
-
-    <item
         android:id="@+id/navigation_statistics"
         android:icon="@drawable/baseline_trending_up_24"
         android:title="Статистика" />
+    <item
+        android:id="@+id/navigation_workouts"
+        android:icon="@drawable/baseline_fitness_center_24"
+        android:title="Тренировки" />
 
     <item
         android:id="@+id/navigation_settings"
