@@ -6,6 +6,7 @@
         android:title="@string/title_exercises" />
 
     <item
+<<<<<<< Updated upstream
         android:id="@+id/navigation_workouts"
         android:icon="@drawable/baseline_fitness_center_24"
         android:title="@string/title_workouts" />
@@ -14,6 +15,15 @@
         android:id="@+id/navigation_statistics"
         android:icon="@drawable/baseline_trending_up_24"
         android:title="@string/title_statistics" />
+=======
+        android:id="@+id/navigation_statistics"
+        android:icon="@drawable/baseline_trending_up_24"
+        android:title="Статистика" />
+    <item
+        android:id="@+id/navigation_workouts"
+        android:icon="@drawable/baseline_fitness_center_24"
+        android:title="Тренировки" />
+>>>>>>> Stashed changes
 
     <item
         android:id="@+id/navigation_settings"
