@@ -5,6 +5,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.example.trainsmart.ui.workout.WorkoutBreakFragment
 import com.example.trainsmart.ui.workout.WorkoutExerciseFragment
 import com.example.trainsmart.ui.workouts.Workout
 
@@ -33,11 +34,13 @@ class WorkoutActivity : AppCompatActivity() {
             .replace(R.id.workoutFragment, nextFragment)
             .commit()
     }
-    fun goToNextSet() {
-        if (currentSetIndex == extractNumSets(workout!!.exercises[currentExerciseIndex].countReps) - 1) {
+
+    fun startSetBreak() {
+        val lastSet = extractNumSets(workout!!.exercises[currentExerciseIndex].countReps) - 1
+        if (currentSetIndex == lastSet) {
             if (currentExerciseIndex == workout!!.exercises.size - 1) {
-                finish()
-                return
+                currentExerciseIndex = -1
+                currentSetIndex = -1
             } else {
                 currentExerciseIndex++
                 currentSetIndex = 0
@@ -45,6 +48,18 @@ class WorkoutActivity : AppCompatActivity() {
         } else {
             currentSetIndex++
         }
+        val nextFragment = WorkoutBreakFragment.newInstance(workout!!, currentExerciseIndex, currentSetIndex)
+        supportFragmentManager.beginTransaction()
+            .replace(R.id.workoutFragment, nextFragment)
+            .commit()
+    }
+
+    fun goToNextSet() {
+        if (currentExerciseIndex == -1) {
+            finish()
+            return
+        }
+
         val nextFragment = WorkoutExerciseFragment.newInstance(workout!!, currentExerciseIndex, currentSetIndex)
         supportFragmentManager.beginTransaction()
             .replace(R.id.workoutFragment, nextFragment)

@@ -19,7 +19,7 @@ import java.util.TimerTask
 private const val ARGNAME_WORKOUT = "workout"
 private const val ARGNAME_EXERCISE_INDEX = "exerciseIndex"
 private const val ARGNAME_SET_INDEX = "setIndex"
-private const val BREAK_TIME: Int = 120
+private const val SET_TIME = 60
 
 class WorkoutExerciseFragment : Fragment() {
     private var workout: Workout? = null
@@ -27,20 +27,16 @@ class WorkoutExerciseFragment : Fragment() {
     private var setIndex: Int? = null
     private var exercise: ExerciseListItemModel? = null
     private var nSets: Int? = null
-    private var state: ExerciseSetState = ExerciseSetState.NotStarted
     private var title: TextView? = null
     private var repetitionCountView: TextView? = null
     private var repetitionCountLabel: TextView? = null
     private var image: ImageView? = null
-    private var breakTimerView: TextView? = null
-    private var breakTimer: Timer = Timer()
-    private var breakSecondsRemaining: Int = BREAK_TIME
+    private var setTimerView: TextView? = null
+    private var setTimer: Timer = Timer()
+    private var setSecondsRemaining: Int = SET_TIME
     private var buttonStartStop: AppCompatImageButton? = null
     private var progressBar: WorkoutProgressBar? = null
-
-    enum class ExerciseSetState {
-        NotStarted, Started, Finished
-    }
+    private var setStarted: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -49,7 +45,6 @@ class WorkoutExerciseFragment : Fragment() {
             exerciseIndex = it.getInt(ARGNAME_EXERCISE_INDEX)
             setIndex = it.getInt(ARGNAME_SET_INDEX)
         }
-        println("error here")
 
         exercise = workout?.exercises?.get(exerciseIndex!!)
         println(exercise?.countReps!!)
@@ -68,70 +63,63 @@ class WorkoutExerciseFragment : Fragment() {
         val imageView: ImageView = root.findViewById(R.id.currentExercisePicture)
         imageView.setImageResource(exercise.photo)
         this.image = imageView
-        this.breakTimerView = root.findViewById(R.id.breakTimer)
+        this.setTimerView = root.findViewById(R.id.setTimer)
         repetitionCountView = root.findViewById(R.id.currentExerciseRepetitionCount)
         repetitionCountView!!.text = parseNumReps(exercise.countReps).toString()
         repetitionCountLabel = root.findViewById(R.id.labelCurrentExerciseRepetitionCount)
 
         buttonStartStop = root.findViewById(R.id.buttonStartStop)
         buttonStartStop!!.setOnClickListener {
-            when (state) {
-                ExerciseSetState.NotStarted -> startExercise()
-                ExerciseSetState.Started -> finishExercise()
-                ExerciseSetState.Finished -> nextExercise()
+            if (!setStarted) {
+                startSet()
+            } else {
+                finishSet()
             }
         }
+        setTimerView!!.text = String.format("%d:%02d", setSecondsRemaining / 60, setSecondsRemaining % 60)
 
         val progressBar: WorkoutProgressBar = root.findViewById(R.id.workoutProgress)
         progressBar.currentExercise = exerciseIndex!!
         progressBar.currentSet = setIndex!!
         progressBar.setCounts = workout!!.exercises.map { parseNumSets(it.countReps) }.toTypedArray()
         this.progressBar = progressBar
+
         return root
     }
 
-    private fun startExercise() {
+    override fun onDetach() {
+        super.onDetach()
+        setTimer.cancel()
+    }
+
+    private fun startSet() {
         buttonStartStop!!.setImageResource(R.drawable.ic_stop_exercise)
-        state = ExerciseSetState.Started
-        progressBar!!.partialProgress = 0.5f
-        progressBar!!.invalidate()
+        setStarted = true
+        startTimer()
     }
 
-    private fun finishExercise() {
-        if (exerciseIndex != workout!!.exercises.size - 1 || setIndex != nSets!! - 1) {
-            buttonStartStop!!.setImageResource(R.drawable.ic_skip_break)
-            state = ExerciseSetState.Finished
-            image!!.visibility = View.GONE
-            startBreakTimer()
-            breakTimerView!!.visibility = View.VISIBLE
-            progressBar!!.partialProgress = 1.0f
-            progressBar!!.invalidate()
-            repetitionCountView!!.visibility = View.GONE
-            repetitionCountLabel!!.visibility = View.GONE
-            title!!.text = getString(R.string.exercise_break)
-        } else {
-            nextExercise()
-        }
+    private fun finishSet() {
+        setTimer.cancel()
+        (activity as WorkoutActivity).startSetBreak()
     }
 
-    private fun nextExercise() {
-        breakTimer.cancel()
-        (activity as WorkoutActivity).goToNextSet()
-    }
-
-    private fun startBreakTimer() {
+    private fun startTimer() {
         val task = object : TimerTask() {
             override fun run() {
-                if (breakSecondsRemaining > 0) {
-                    breakTimerView!!.text = String.format("%d", breakSecondsRemaining)
-                    breakSecondsRemaining--
+                if (setSecondsRemaining > 0) {
+                    activity!!.runOnUiThread {
+                        setTimerView!!.text = String.format("%d:%02d", setSecondsRemaining / 60, setSecondsRemaining % 60)
+                        progressBar!!.partialProgress = 1f - setSecondsRemaining.toFloat() / SET_TIME
+                        progressBar!!.invalidate()
+                    }
+                    setSecondsRemaining--
                 } else {
-                    breakTimer.cancel()
-                    nextExercise()
+                    setTimer.cancel()
+                    finishSet()
                 }
             }
         }
-        breakTimer!!.schedule(task, 0, 1000)
+        setTimer.schedule(task, 0, 1000)
     }
 
     private fun parseNumReps(s: String): Int {

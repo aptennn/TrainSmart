@@ -19,4 +19,5 @@
     <string name="get_ready">Get ready!</string>
     <string name="exercise_repetition_count">Number of repetitions</string>
     <string name="exercise_break">Break</string>
+    <string name="exercise_next">Next</string>
 </resources>
