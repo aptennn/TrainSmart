@@ -3,7 +3,8 @@
     <item
         android:id="@+id/navigation_exercises"
         android:icon="@drawable/baseline_sports_martial_arts_24"
-        android:title="Упражнения" />
+        android:title="Упражнения"
+        />
 
     <item
         android:id="@+id/navigation_statistics"
