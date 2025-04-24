@@ -5,6 +5,10 @@
     android:id="@+id/constraintLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:paddingStart="31dp"
+    android:paddingTop="51dp"
+    android:paddingEnd="31dp"
+    android:paddingBottom="28dp"
     tools:context=".ui.workout.WorkoutExerciseFragment">
 
     <com.example.trainsmart.ui.workout.view.WorkoutProgressBar
@@ -12,83 +16,79 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="5dp"
-        android:layout_marginTop="5dp"
+        android:layout_marginTop="0dp"
         android:layout_marginEnd="5dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
-        android:id="@+id/currentExerciseName"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="30dp"
-        android:fontFamily="@font/unbounded"
-        android:textColor="@color/black"
-        android:textSize="28sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/workoutProgress" />
-
     <ImageView
         android:id="@+id/currentExercisePicture"
         android:layout_width="0dp"
         android:layout_height="300dp"
-        android:layout_marginTop="60dp"
+        android:layout_marginTop="34dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/currentExerciseName" />
+        app:layout_constraintTop_toBottomOf="@+id/workoutProgress" />
+
+    <TextView
+        android:id="@+id/currentExerciseName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/unbounded"
+        android:textColor="@color/black"
+        android:textSize="28sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/setTimer" />
 
     <TextView
         android:id="@+id/labelCurrentExerciseRepetitionCount"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="40dp"
+        android:layout_marginTop="30dp"
         android:fontFamily="@font/montserrat"
         android:text="@string/exercise_repetition_count"
         android:textColor="@color/black"
         android:textSize="18sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/currentExercisePicture" />
+        app:layout_constraintTop_toBottomOf="@+id/currentExerciseName" />
 
     <TextView
         android:id="@+id/currentExerciseRepetitionCount"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="40dp"
+        android:layout_marginTop="30dp"
         android:layout_marginEnd="20dp"
         android:fontFamily="@font/montserrat"
         android:textColor="@color/black"
         android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/currentExercisePicture" />
+        app:layout_constraintTop_toBottomOf="@+id/currentExerciseName" />
 
     <ImageButton
         android:id="@+id/buttonStartStop"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="80dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginBottom="40dp"
         android:background="@drawable/shape_button_selected"
         android:paddingHorizontal="5dp"
         android:paddingVertical="5dp"
-        android:src="@drawable/ic_start_exercise" />
+        android:src="@drawable/ic_start_exercise"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
-        android:id="@+id/breakTimer"
-        android:layout_width="0dp"
-        android:layout_height="300dp"
-        android:layout_marginTop="60dp"
+        android:id="@+id/setTimer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
         android:fontFamily="@font/montserrat_light"
-        android:gravity="center_vertical"
+        android:gravity="center_horizontal"
         android:textAlignment="center"
-        android:textSize="96sp"
-        android:visibility="gone"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:textSize="64sp"
+        android:visibility="visible"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/currentExerciseName" />
+        app:layout_constraintTop_toBottomOf="@+id/currentExercisePicture" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

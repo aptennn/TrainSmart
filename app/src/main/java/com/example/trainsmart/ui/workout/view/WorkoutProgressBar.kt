@@ -12,15 +12,37 @@ import com.example.trainsmart.R
 import kotlin.math.min
 
 class WorkoutProgressBar @JvmOverloads constructor(
-    context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0, defStyleRes: Int = 0
+    context: Context,
+    attrs: AttributeSet? = null,
+    defStyleAttr: Int = 0,
+    defStyleRes: Int = 0
 ) : View(context, attrs, defStyleAttr) {
-    private val grayPaint = Paint().apply {
-        color = 0xFFC0C0C0.toInt()
-        style = Paint.Style.FILL
-    }
-    private val accentPaint = Paint().apply {
-        color = context.getColor(R.color.blue_main) or (255 shl 24)
-        style = Paint.Style.FILL
+    private val grayPaint: Paint
+    private val accentPaint: Paint
+
+    init {
+        val typedAttrs = context.obtainStyledAttributes(attrs, R.styleable.WorkoutProgressBar, defStyleAttr, defStyleRes)
+
+        try {
+            val grayColor = (255 shl 24) or typedAttrs.getColor(
+                R.styleable.WorkoutProgressBar_color,
+                0xC0C0C0
+            )
+            val accentColor = (255 shl 24) or typedAttrs.getColor(
+                R.styleable.WorkoutProgressBar_accentColor,
+                context.getColor(R.color.blue_main)
+            )
+            grayPaint = Paint().apply {
+                color = grayColor
+                style = Paint.Style.FILL
+            }
+            accentPaint = Paint().apply {
+                color = accentColor
+                style = Paint.Style.FILL
+            }
+        } finally {
+            typedAttrs.recycle()
+        }
     }
 
     var setCounts: Array<Int> = arrayOf()
@@ -48,8 +70,8 @@ class WorkoutProgressBar @JvmOverloads constructor(
         }
         val height = when (heightMode) {
             MeasureSpec.EXACTLY -> heightValue
-            MeasureSpec.AT_MOST -> min(60, heightValue)
-            else -> 60
+            MeasureSpec.AT_MOST -> min(18 + VERTICAL_PADDING.toInt() * 2, heightValue)
+            else -> 18 + VERTICAL_PADDING.toInt() * 2
         }
         setMeasuredDimension(width, height)
     }
