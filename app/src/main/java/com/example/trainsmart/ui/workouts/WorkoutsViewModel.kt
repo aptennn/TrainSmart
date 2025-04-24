@@ -14,67 +14,33 @@ class WorkoutsViewModel : ViewModel() {
     var workouts = mutableListOf<UiWorkout>()
     var isLoading = false
 
-//    private fun createWorkoutItems(): List<UiWorkout> {
-//        val firestoreClient = FireStoreClient()
-//        val uiWorkouts = mutableListOf<UiWorkout>()
-//        val workouts = mutableListOf<DataWorkout>()
-//        lifecycleScope.launch {
-//            firestoreClient.getAllWorkouts().collect { result ->
-//                if (result.isNotEmpty()) {
-//                    for (idWorkout in result) {
-//                        val workout = idWorkout.value
-//                        val idW = idWorkout.key
-//                        if (workout != null)
-//                            uiWorkouts.add(
-//                                UiWorkout(
-//                                    id = idW,
-//                                    title = workout.name,
-//                                    photo = R.drawable.exercise3,
-//                                    time = workout.duration,
-//                                    exercises = exercisesToList(
-//                                        workout.exercises,
-//                                        firestoreClient
-//                                    ),
-//                                    type = workout.type,
-//                                    likes = workout.likes
-//                                )
-//                            )
-//                        else
-//                            println("ERROR! GOT NULL OR DEFECTED WORKOUT")
-//                    }
-//                } else {
-//                    println("result is null")
-//                }
-//                println("SIZE UI LIST:")
-//                println(uiWorkouts.size)
-//            }
-//        }
-//        return uiWorkouts
-//    }
-
     fun loadWorkouts(callback: (Boolean) -> Unit) {
         isLoading = true
         viewModelScope.launch {
             try {
+                workouts.clear()
                 fireStoreClient.getAllWorkouts().collect { result ->
                     if (result.isNotEmpty()) {
                         for (idWorkout in result) {
                             val workout = idWorkout.value
                             val idW = idWorkout.key
-                            if (workout != null)
+                            if (workout != null) {
+                                val exercises = exercisesToList(workout.exercises)
                                 workouts.add(
                                     UiWorkout(
                                         id = idW,
                                         title = workout.name,
                                         photo = R.drawable.exercise3,
                                         time = workout.duration,
-                                        exercises = exercisesToList(workout.exercises),
+                                        exercises = exercises,
                                         type = workout.type,
                                         likes = workout.likes
                                     )
                                 )
+                            }
                         }
                     }
+                    callback(true)
                 }
             } catch (_: Exception) {
                 callback(false)

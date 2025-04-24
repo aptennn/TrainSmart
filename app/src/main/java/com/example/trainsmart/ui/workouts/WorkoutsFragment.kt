@@ -1,7 +1,6 @@
 package com.example.trainsmart.ui.workouts
 
 import android.app.AlertDialog
-import com.example.trainsmart.R
 import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
@@ -20,6 +19,7 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.trainsmart.R
 import com.example.trainsmart.ui.WorkoutCreate.WorkoutCreateActivity
 import com.example.trainsmart.ui.workouts.Workout as UiWorkout
 
@@ -156,8 +156,9 @@ class WorkoutsFragment : Fragment() {
     }
 
     private fun updateUI() {
+        val newList = viewModel.workouts.distinctBy { it.id }
         originalItems.clear()
-        originalItems.addAll(viewModel.workouts)
+        originalItems.addAll(newList)
         applyFilters()
         buttonCreate.visibility = View.VISIBLE
         workoutsList.visibility = View.VISIBLE
