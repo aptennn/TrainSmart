@@ -8,6 +8,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.widget.AppCompatImageButton
 import androidx.fragment.app.Fragment
+import coil.load
 import com.example.trainsmart.R
 import com.example.trainsmart.WorkoutActivity
 import com.example.trainsmart.ui.exercises.ExerciseListItemModel
@@ -57,7 +58,7 @@ class WorkoutBreakFragment : Fragment() {
         if (nextExercise != null) {
             val nextExercise = nextExercise!!
             nameTextView.text = nextExercise.name
-            imageView.setImageResource(nextExercise.photo)
+            imageView.load(nextExercise.photo)
         } else {
             root.findViewById<View>(R.id.labelNextExerciseName).visibility = View.GONE
         }
@@ -74,7 +75,7 @@ class WorkoutBreakFragment : Fragment() {
         val progressBar: WorkoutProgressBar = root.findViewById(R.id.workoutProgress)
         progressBar.currentExercise = nextExerciseIndex!!
         progressBar.currentSet = nextSetIndex!!
-        progressBar.setCounts = workout!!.exercises.map { parseNumSets(it.countReps) }.toTypedArray()
+        progressBar.setCounts = workout!!.exercises.map { it.countSets.toInt() }.toTypedArray()
         this.progressBar = progressBar
 
         startBreakTimer()
@@ -107,20 +108,6 @@ class WorkoutBreakFragment : Fragment() {
             }
         }
         breakTimer.schedule(task, 0, 1000)
-    }
-
-    private fun parseNumReps(s: String): Int {
-        val words = s.split('-')
-        if (words.size != 2)
-            throw IllegalArgumentException("invalid sets+reps string")
-        return words[1].toInt()
-    }
-
-    private fun parseNumSets(s: String): Int {
-        val words = s.split('-')
-        if (words.size != 2)
-            throw IllegalArgumentException("invalid sets+reps string")
-        return words[0].toInt()
     }
 
     companion object {

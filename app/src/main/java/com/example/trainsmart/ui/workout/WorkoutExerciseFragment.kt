@@ -5,7 +5,6 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import coil.load
@@ -77,12 +76,15 @@ class WorkoutExerciseFragment : Fragment() {
                 finishSet()
             }
         }
-        setTimerView!!.text = String.format("%d:%02d", setSecondsRemaining / 60, setSecondsRemaining % 60)
+        setTimerView!!.text =
+            String.format("%d:%02d", setSecondsRemaining / 60, setSecondsRemaining % 60)
 
         val progressBar: WorkoutProgressBar = root.findViewById(R.id.workoutProgress)
         progressBar.currentExercise = exerciseIndex!!
         progressBar.currentSet = setIndex!!
         progressBar.setCounts = workout!!.exercises.map { it.countSets.toInt() }.toTypedArray()
+        this.progressBar = progressBar
+
         return root
     }
 
@@ -103,18 +105,28 @@ class WorkoutExerciseFragment : Fragment() {
     }
 
     private fun startTimer() {
+        setTimer.cancel()
+        setTimer = Timer()
+        setSecondsRemaining = SET_TIME
+
         val task = object : TimerTask() {
             override fun run() {
                 if (setSecondsRemaining > 0) {
-                    activity!!.runOnUiThread {
-                        setTimerView!!.text = String.format("%d:%02d", setSecondsRemaining / 60, setSecondsRemaining % 60)
-                        progressBar!!.partialProgress = 1f - setSecondsRemaining.toFloat() / SET_TIME
-                        progressBar!!.invalidate()
+                    activity?.runOnUiThread {
+                        setTimerView!!.text =
+                            String.format(
+                                "%d:%02d",
+                                setSecondsRemaining / 60,
+                                setSecondsRemaining % 60
+                            )
+                        progressBar?.partialProgress =
+                            1f - setSecondsRemaining.toFloat() / SET_TIME
+                        progressBar?.invalidate()
                     }
                     setSecondsRemaining--
                 } else {
                     setTimer.cancel()
-                    finishSet()
+                    activity?.runOnUiThread { finishSet() }
                 }
             }
         }

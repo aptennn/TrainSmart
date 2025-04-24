@@ -111,10 +111,10 @@ class WorkoutProgressBar @JvmOverloads constructor(
                         this.drawRoundRect(x, VERTICAL_PADDING, x + setWidth, h - VERTICAL_PADDING, cornerRadius, cornerRadius, accentPaint)
                     }
                 }
-                if (i != setCount - 1) {
-                    x += setWidth + setSpacing
+                x += if (i != setCount - 1) {
+                    setWidth + setSpacing
                 } else {
-                    x += setWidth
+                    setWidth
                 }
             }
             if (ex != setCounts.size - 1) {
