@@ -31,7 +31,7 @@ class WorkoutsViewModel : ViewModel() {
                                         id = idW,
                                         title = workout.name,
                                         photo = R.drawable.exercise3,
-                                        time = workout.duration,
+                                        author = workout.author,
                                         exercises = exercises,
                                         type = workout.type,
                                         likes = workout.likes

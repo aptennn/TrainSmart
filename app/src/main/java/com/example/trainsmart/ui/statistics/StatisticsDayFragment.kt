@@ -40,7 +40,7 @@ class StatisticsDayFragment : Fragment() {
         val repeatButton: Button = view.findViewById(R.id.btnRepeat)
 
         workoutHistory?.workout?.let{
-            workoutTime.text = "${it.time} часа"
+            //workoutTime.text = "${it.time} часа"
             workoutCountExersices.text = "${it.exercises.size} упражнения"
             workoutImage.setImageResource(it.photo)
             rV.layoutManager = LinearLayoutManager(requireContext())

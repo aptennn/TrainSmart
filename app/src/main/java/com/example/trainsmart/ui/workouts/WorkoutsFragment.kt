@@ -21,6 +21,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.trainsmart.R
 import com.example.trainsmart.ui.WorkoutCreate.WorkoutCreateActivity
+import com.google.firebase.auth.FirebaseAuth
 import com.example.trainsmart.ui.workouts.Workout as UiWorkout
 
 
@@ -40,6 +41,8 @@ class WorkoutsFragment : Fragment() {
     private var currentQuery: String = ""
     private var isFilterVisible = false
     private var searchTextWatcher: TextWatcher? = null
+    private var selectedAuthorButton: Button? = null
+    private var currentAuthorFilter: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -76,7 +79,16 @@ class WorkoutsFragment : Fragment() {
         selectedButton = btnAll
         updateButtonStyles(listOf(btnAll, btnUpper, btnLower), btnAll)
         listOf(btnAll, btnUpper, btnLower).forEach { button ->
-            button?.setOnClickListener { handleFilterClick(button) }
+            button?.setOnClickListener { handleTypeFilterClick(button) }
+        }
+
+        val btnBasic = view.findViewById<Button>(R.id.btnBasic)
+        val btnUser = view.findViewById<Button>(R.id.btnUser)
+        val btnOwn = view.findViewById<Button>(R.id.btnOwn)
+        selectedAuthorButton = btnAll
+        updateButtonStyles(listOf(btnBasic, btnUser, btnOwn), selectedAuthorButton)
+        listOf(btnBasic, btnUser, btnOwn).forEach { button ->
+            button.setOnClickListener { handleAuthorFilterClick(button) }
         }
 
         searchTextWatcher = createTextWatcher()
@@ -164,13 +176,26 @@ class WorkoutsFragment : Fragment() {
         workoutsList.visibility = View.VISIBLE
     }
 
-    private fun handleFilterClick(button: Button) {
-        currentFilter = when (button.id) {
-            R.id.btnUpperBody -> "Верх тела"
-            R.id.btnLowerBody -> "Низ тела"
-            else -> null
+    private fun handleTypeFilterClick(button: Button) {
+        when (button.id) {
+            R.id.btnAllTypes -> {
+                currentFilter = null
+                currentAuthorFilter = null
+
+                val btnBasic = requireView().findViewById<Button>(R.id.btnBasic)
+                val btnUser = requireView().findViewById<Button>(R.id.btnUser)
+                val btnOwn = requireView().findViewById<Button>(R.id.btnOwn)
+
+                listOf(btnBasic, btnUser, btnOwn).forEach {
+                    it.setBackgroundResource(R.drawable.shape_button_unselected)
+                    it.setTextColor(ContextCompat.getColor(requireContext(), R.color.black))
+                }
+            }
+
+            R.id.btnUpperBody -> currentFilter = "Верх тела"
+            R.id.btnLowerBody -> currentFilter = "Низ тела"
         }
-        applyFilters()
+
         updateButtonStyles(
             listOf(
                 requireView().findViewById(R.id.btnAllTypes),
@@ -179,13 +204,37 @@ class WorkoutsFragment : Fragment() {
             ),
             button
         )
+
+        applyFilters()
+    }
+
+    private fun handleAuthorFilterClick(button: Button) {
+        currentAuthorFilter = when (button.id) {
+            R.id.btnBasic -> "basic"
+            R.id.btnUser -> "users"
+            R.id.btnOwn -> "own"
+            else -> null
+        }
+
+        updateButtonStyles(
+            listOf(
+                requireView().findViewById(R.id.btnAllTypes),
+                requireView().findViewById(R.id.btnBasic),
+                requireView().findViewById(R.id.btnOwn),
+                requireView().findViewById(R.id.btnUser),
+            ),
+            button
+        )
+
+        applyFilters()
     }
 
     private fun applyFilters() {
         val filtered = viewModel.workouts
             .filter {
                 it.matchesQuery(currentQuery) &&
-                        it.matchesFilter(currentFilter)
+                        it.matchesFilter(currentFilter) &&
+                        it.matchesAuthorFilter(currentAuthorFilter)
             }
         adapter.submitList(filtered)
     }
@@ -196,6 +245,16 @@ class WorkoutsFragment : Fragment() {
 
     private fun UiWorkout.matchesFilter(filter: String?): Boolean {
         return filter == null || type.equals(filter, ignoreCase = true)
+    }
+
+    private fun UiWorkout.matchesAuthorFilter(filter: String?): Boolean {
+        val currentUserId = FirebaseAuth.getInstance().currentUser?.uid
+        return when (filter) {
+            "basic" -> author == "basic"
+            "users" -> author != "basic" && author != FirebaseAuth.getInstance().currentUser?.uid
+            "own" -> author == currentUserId
+            else -> true
+        }
     }
 
     private fun navigateToWorkoutDetails(workout: UiWorkout) {
@@ -210,16 +269,21 @@ class WorkoutsFragment : Fragment() {
         isFilterVisible = !isFilterVisible
     }
 
-    private fun updateButtonStyles(buttons: List<Button?>, clickedButton: Button) {
+    private fun updateButtonStyles(buttons: List<Button?>, clickedButton: Button?) {
         buttons.forEach { button ->
             button?.setBackgroundResource(
-                if (button == clickedButton) R.drawable.shape_button_selected
-                else R.drawable.shape_button_unselected
+                if (button == clickedButton)
+                    R.drawable.shape_button_selected
+                else
+                    R.drawable.shape_button_unselected
             )
             button?.setTextColor(
                 ContextCompat.getColor(
                     requireContext(),
-                    if (button == clickedButton) R.color.white else R.color.black
+                    if (button == clickedButton)
+                        R.color.white
+                    else
+                        R.color.black
                 )
             )
         }

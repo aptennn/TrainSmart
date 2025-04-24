@@ -330,7 +330,7 @@ class FireStoreClient {
         return hashMapOf(
             "name" to name,
             "photoUrl" to photoUrl,
-            "duration" to duration,
+            "author" to author,
             "exercises" to exercises,
             "type" to type,
             "likes" to likes
@@ -341,7 +341,7 @@ class FireStoreClient {
         return Workout(
             name = this["name"] as String,
             photoUrl = this["photoUrl"] as String,
-            duration = this["duration"] as String,
+            author = this["author"] as String,
             exercises = this["exercises"] as Map<String, String>,
             type = this["type"] as String,
             likes = this["likes"] as List<String>
