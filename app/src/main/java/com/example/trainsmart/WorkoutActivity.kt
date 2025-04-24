@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.example.trainsmart.R.*
+import com.example.trainsmart.ui.workout.WorkoutBreakFragment
 import com.example.trainsmart.ui.workout.WorkoutExerciseFragment
 import com.example.trainsmart.ui.workouts.Workout
 
@@ -14,10 +15,8 @@ class WorkoutActivity : AppCompatActivity() {
     private var currentExerciseIndex: Int = -1
     private var currentSetIndex: Int = -1
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         enableEdgeToEdge()
         setContentView(layout.activity_workout)
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(id.main)) { v, insets ->
@@ -38,11 +37,13 @@ class WorkoutActivity : AppCompatActivity() {
             .replace(id.workoutFragment, nextFragment)
             .commit()
     }
-    fun goToNextSet() {
-        if (currentSetIndex == extractNumSets(workout!!.exercises[currentExerciseIndex].countReps) - 1) {
+
+    fun startSetBreak() {
+        val lastSet = workout!!.exercises[currentExerciseIndex].countSets.toInt() - 1
+        if (currentSetIndex == lastSet) {
             if (currentExerciseIndex == workout!!.exercises.size - 1) {
-                finish()
-                return
+                currentExerciseIndex = -1
+                currentSetIndex = -1
             } else {
                 currentExerciseIndex++
                 currentSetIndex = 0
@@ -50,25 +51,21 @@ class WorkoutActivity : AppCompatActivity() {
         } else {
             currentSetIndex++
         }
-        val nextFragment =
-            WorkoutExerciseFragment.newInstance(workout!!, currentExerciseIndex, currentSetIndex)
+        val nextFragment = WorkoutBreakFragment.newInstance(workout!!, currentExerciseIndex, currentSetIndex)
         supportFragmentManager.beginTransaction()
             .replace(id.workoutFragment, nextFragment)
             .commit()
     }
-    private fun extractNumReps(s: String): Int {
-//        val words = s.split('-')
-//        if (words.size != 2)
-//            throw IllegalArgumentException("invalid sets+reps string")
-//        return words[1].toInt()
-        return s.toInt()
-    }
 
-    private fun extractNumSets(s: String): Int {
-//        val words = s.split('-')
-//        if (words.size != 2)
-//            throw IllegalArgumentException("invalid sets+reps string")
-//        return words[0].toInt()
-        return s.toInt()
+    fun goToNextSet() {
+        if (currentExerciseIndex == -1) {
+            finish()
+            return
+        }
+
+        val nextFragment = WorkoutExerciseFragment.newInstance(workout!!, currentExerciseIndex, currentSetIndex)
+        supportFragmentManager.beginTransaction()
+            .replace(id.workoutFragment, nextFragment)
+            .commit()
     }
 }
