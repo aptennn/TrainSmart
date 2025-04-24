@@ -1,23 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
+        android:id="@+id/navigation_workouts"
+        android:icon="@drawable/ic_trainings"
+        android:title="Тренировки"/>
+
+    <item
         android:id="@+id/navigation_exercises"
-        android:icon="@drawable/baseline_sports_martial_arts_24"
-        android:title="Упражнения"
-        />
+        android:icon="@drawable/ic_exercises"
+        android:title="Упражнения"/>
 
     <item
         android:id="@+id/navigation_statistics"
-        android:icon="@drawable/baseline_trending_up_24"
-        android:title="Статистика" />
-    <item
-        android:id="@+id/navigation_workouts"
-        android:icon="@drawable/baseline_fitness_center_24"
-        android:title="Тренировки" />
+        android:icon="@drawable/ic_statistics"
+        android:title="Статистика"/>
 
     <item
         android:id="@+id/navigation_settings"
-        android:icon="@drawable/baseline_settings_24"
-        android:title="Настройки" />
+        android:icon="@drawable/ic_settings"
+        android:title="Настройки"/>
 
 </menu>
