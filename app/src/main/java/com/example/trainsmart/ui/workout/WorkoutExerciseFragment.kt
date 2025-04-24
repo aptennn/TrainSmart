@@ -48,7 +48,7 @@ class WorkoutExerciseFragment : Fragment() {
         }
 
         exercise = workout?.exercises?.get(exerciseIndex!!)
-        nSets = exercise?.countSets!!.toInt()
+        nSets = exercise!!.countSets.toInt()
     }
 
     override fun onCreateView(

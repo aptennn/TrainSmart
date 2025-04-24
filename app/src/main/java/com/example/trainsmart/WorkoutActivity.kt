@@ -51,9 +51,10 @@ class WorkoutActivity : AppCompatActivity() {
         } else {
             currentSetIndex++
         }
-        val nextFragment = WorkoutBreakFragment.newInstance(workout!!, currentExerciseIndex, currentSetIndex)
+        val nextFragment =
+            WorkoutBreakFragment.newInstance(workout!!, currentExerciseIndex, currentSetIndex)
         supportFragmentManager.beginTransaction()
-            .replace(id.workoutFragment, nextFragment)
+            .replace(R.id.workoutFragment, nextFragment)
             .commit()
     }
 
