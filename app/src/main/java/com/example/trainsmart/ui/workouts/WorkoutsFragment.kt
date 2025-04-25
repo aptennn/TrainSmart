@@ -91,6 +91,8 @@ class WorkoutsFragment : Fragment() {
             button.setOnClickListener { handleAuthorFilterClick(button) }
         }
 
+        currentQuery = ""
+        searchField?.setText("")
         searchTextWatcher = createTextWatcher()
         searchField?.addTextChangedListener(searchTextWatcher)
 
@@ -118,21 +120,14 @@ class WorkoutsFragment : Fragment() {
         searchField?.setText("")
         filterContainer = null
         selectedButton = null
+        selectedAuthorButton = null
 
         currentFilter = null
+        currentAuthorFilter = null
         currentQuery = ""
         isFilterVisible = false
 
-        view?.findViewById<Button>(R.id.btnAllTypes)?.let { defaultButton ->
-            updateButtonStyles(
-                listOf(
-                    view?.findViewById(R.id.btnAllTypes),
-                    view?.findViewById(R.id.btnUpperBody),
-                    view?.findViewById(R.id.btnLowerBody)
-                ),
-                defaultButton
-            )
-        }
+        applyFilters()
         adapter.submitList(emptyList())
         super.onDestroyView()
     }
@@ -143,6 +138,8 @@ class WorkoutsFragment : Fragment() {
             needRefresh = false
             loadData()
         }
+        searchField?.setText("")
+        applyFilters()
     }
 
     private fun loadData() {
