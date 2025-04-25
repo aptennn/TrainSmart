@@ -4,6 +4,7 @@ import android.util.Log
 import com.example.trainsmart.data.Exercise
 import com.example.trainsmart.data.User
 import com.example.trainsmart.data.Workout
+import com.google.android.gms.tasks.Tasks
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
@@ -295,35 +296,79 @@ class FireStoreClient {
 
     fun updateLikes(workoutId: String, uid: String, isLiked: Boolean): Flow<Boolean> =
         callbackFlow {
-            val docRef = FirebaseFirestore.getInstance()
-                .collection(collectionPublishedWorkouts) // change to your actual collection name
-                .document(workoutId)
+            val db = FirebaseFirestore.getInstance()
+            val docRefPublished = db.collection(collectionPublishedWorkouts).document(workoutId)
+            val docRefBasic = db.collection(collectionBasicWorkouts).document(workoutId)
 
             Log.d(
                 "Firestore",
-                "Updating likes for workout: $workoutId | user: $uid | isLiked: $isLiked"
+                "Updating likes for workout: $workoutId | user: $uid | isLiked: $isLiked in both collections"
             )
 
-            val updateTask = if (isLiked) {
-                docRef.update("likes", FieldValue.arrayUnion(uid))
+            val updatePublishedTask = if (isLiked) {
+                docRefPublished.update("likes", FieldValue.arrayUnion(uid))
             } else {
-                docRef.update("likes", FieldValue.arrayRemove(uid))
+                docRefPublished.update("likes", FieldValue.arrayRemove(uid))
             }
 
-            updateTask.addOnSuccessListener {
-                Log.d("Firestore", "✅ Firestore update successful")
-                trySend(true).isSuccess
-                close()
-            }.addOnFailureListener { e ->
-                Log.e("Firestore", "❌ Firestore update failed", e)
-                trySend(false).isSuccess
-                close()
+            val updateBasicTask = if (isLiked) {
+                docRefBasic.update("likes", FieldValue.arrayUnion(uid))
+            } else {
+                docRefBasic.update("likes", FieldValue.arrayRemove(uid))
             }
+
+            Tasks.whenAllComplete(updatePublishedTask, updateBasicTask)
+                .addOnCompleteListener { task ->
+                    val success = updatePublishedTask.isSuccessful || updateBasicTask.isSuccessful
+                    Log.d(
+                        "Firestore",
+                        "Update result - Published: ${updatePublishedTask.isSuccessful}, Basic: ${updateBasicTask.isSuccessful}"
+                    )
+                    trySend(success)
+                    close()
+                }
+                .addOnFailureListener { e ->
+                    Log.e("Firestore", "Combined task failed", e)
+                    trySend(false)
+                    close()
+                }
 
             awaitClose {
                 Log.d("Firestore", "Flow closed for updateLikes()")
             }
         }
+
+//    fun updateLikes(workoutId: String, uid: String, isLiked: Boolean): Flow<Boolean> =
+//        callbackFlow {
+//            val docRef = FirebaseFirestore.getInstance()
+//                .collection(collectionPublishedWorkouts) // change to your actual collection name
+//                .document(workoutId)
+//
+//            Log.d(
+//                "Firestore",
+//                "Updating likes for workout: $workoutId | user: $uid | isLiked: $isLiked"
+//            )
+//
+//            val updateTask = if (isLiked) {
+//                docRef.update("likes", FieldValue.arrayUnion(uid))
+//            } else {
+//                docRef.update("likes", FieldValue.arrayRemove(uid))
+//            }
+//
+//            updateTask.addOnSuccessListener {
+//                Log.d("Firestore", "✅ Firestore update successful")
+//                trySend(true).isSuccess
+//                close()
+//            }.addOnFailureListener { e ->
+//                Log.e("Firestore", "❌ Firestore update failed", e)
+//                trySend(false).isSuccess
+//                close()
+//            }
+//
+//            awaitClose {
+//                Log.d("Firestore", "Flow closed for updateLikes()")
+//            }
+//        }
 
 
     private fun Workout.ToHashMap(): HashMap<String, Any> {

@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
+import android.view.View.VISIBLE
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageButton
@@ -14,6 +15,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.transition.Visibility
 import com.example.trainsmart.R
 import com.example.trainsmart.WorkoutActivity
 import com.example.trainsmart.firestore.FireStoreClient
@@ -56,9 +58,17 @@ class WorkoutsDetailsFragment : Fragment() {
         auth = Firebase.auth
 
         if (client.isLikedByMe(workout, auth.currentUser!!.uid))
-            favoriteButton.setBackgroundResource(R.drawable.ic_favorite_on)
+        {
+            favoriteButton.setImageResource(R.drawable.ic_favorite_white)
+            favoriteButton.setBackgroundResource(R.drawable.shape_bg_circle_blue)
+        }
+
         else
-            favoriteButton.setBackgroundResource(R.drawable.ic_favorite)
+        {
+            favoriteButton.setImageResource(R.drawable.ic_favorite_black)
+            favoriteButton.setBackgroundResource(R.drawable.shape_bg_circle)
+        }
+
 
         workout?.let {
             workoutTitle.text = it.title
@@ -85,7 +95,8 @@ class WorkoutsDetailsFragment : Fragment() {
             if (workout != null) {
                 val id = workout!!.id
                 if (client.isLikedByMe(workout, auth.currentUser!!.uid)) {
-                    favoriteButton.setBackgroundResource(R.drawable.ic_favorite)
+                    favoriteButton.setImageResource(R.drawable.ic_favorite_black)
+                    favoriteButton.setBackgroundResource(R.drawable.shape_bg_circle)
                     lifecycleScope.launch {
                         client.updateLikes(id, auth.currentUser!!.uid, false).collect { result ->
                             Log.d("Result", "Update success: $result")
@@ -93,7 +104,8 @@ class WorkoutsDetailsFragment : Fragment() {
                         workout!!.likes -= auth.currentUser!!.uid
                     }
                 } else {
-                    favoriteButton.setBackgroundResource(R.drawable.ic_favorite_on)
+                    favoriteButton.setImageResource(R.drawable.ic_favorite_white)
+                    favoriteButton.setBackgroundResource(R.drawable.shape_bg_circle_blue)
                     lifecycleScope.launch {
                         client.updateLikes(id, auth.currentUser!!.uid, true).collect { result ->
                             Log.d("Result", "Update success: $result")

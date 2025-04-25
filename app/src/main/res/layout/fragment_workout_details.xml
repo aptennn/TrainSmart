@@ -29,7 +29,7 @@
             android:background="@drawable/shape_bg_circle"
             android:elevation="4dp"
             android:scaleType="center"
-            android:src="@drawable/ic_favorite"
+            android:src="@drawable/ic_favorite_black"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
