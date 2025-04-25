@@ -76,22 +76,25 @@ class WorkoutsFragment : Fragment() {
 
         val btnFavorites = view.findViewById<Button>(R.id.btnFavorite)
         btnFavorites.setOnClickListener { handleFavoritesFilterClick(btnFavorites) }
-        updateButtonStyles(listOf(btnFavorites), btnFavorites, isFavoritesButton = true)
 
         val btnAll = view.findViewById<Button>(R.id.btnAllTypes)
         val btnUpper = view.findViewById<Button>(R.id.btnUpperBody)
         val btnLower = view.findViewById<Button>(R.id.btnLowerBody)
         selectedButton = btnAll
-        updateButtonStyles(listOf(btnAll, btnUpper, btnLower), selectedButton)
         listOf(btnAll, btnUpper, btnLower).forEach { button ->
             button?.setOnClickListener { handleTypeFilterClick(button) }
         }
 
+        val btnAllAuthors = view.findViewById<Button>(R.id.btnAllAuthors)
+        btnAllAuthors.setOnClickListener {
+            currentAuthorFilter = null
+            applyFilters()
+            updateAllButtonsStyles()
+        }
         val btnBasic = view.findViewById<Button>(R.id.btnBasic)
         val btnUser = view.findViewById<Button>(R.id.btnUser)
         val btnOwn = view.findViewById<Button>(R.id.btnOwn)
         selectedAuthorButton = btnAll
-        updateButtonStyles(listOf(btnBasic, btnUser, btnOwn), selectedAuthorButton)
         listOf(btnBasic, btnUser, btnOwn).forEach { button ->
             button.setOnClickListener { handleAuthorFilterClick(button) }
         }
@@ -183,61 +186,31 @@ class WorkoutsFragment : Fragment() {
         when (button.id) {
             R.id.btnAllTypes -> {
                 currentFilter = null
-                currentAuthorFilter = null
-
-                val btnBasic = requireView().findViewById<Button>(R.id.btnBasic)
-                val btnUser = requireView().findViewById<Button>(R.id.btnUser)
-                val btnOwn = requireView().findViewById<Button>(R.id.btnOwn)
-
-                listOf(btnBasic, btnUser, btnOwn).forEach {
-                    it.setBackgroundResource(R.drawable.shape_button_unselected)
-                    it.setTextColor(ContextCompat.getColor(requireContext(), R.color.black))
-                }
             }
-
             R.id.btnUpperBody -> currentFilter = "Верх тела"
             R.id.btnLowerBody -> currentFilter = "Низ тела"
         }
-
-        updateButtonStyles(
-            listOf(
-                requireView().findViewById(R.id.btnAllTypes),
-                requireView().findViewById(R.id.btnUpperBody),
-                requireView().findViewById(R.id.btnLowerBody)
-            ),
-            button,
-            true
-        )
-
         applyFilters()
+        updateAllButtonsStyles()
     }
+
 
     private fun handleFavoritesFilterClick(button: Button) {
         currentFavoritesFilter = !currentFavoritesFilter
-        updateButtonStyles(listOf(button), button, isFavoritesButton = true)
         applyFilters()
     }
 
     private fun handleAuthorFilterClick(button: Button) {
-        currentAuthorFilter = when (button.id) {
-            R.id.btnBasic -> "basic"
-            R.id.btnUser -> "users"
-            R.id.btnOwn -> "own"
-            else -> null
+        when (button.id) {
+            R.id.btnAllAuthors -> {
+                currentAuthorFilter = null
+            }
+            R.id.btnBasic -> currentAuthorFilter = "basic"
+            R.id.btnUser -> currentAuthorFilter = "users"
+            R.id.btnOwn -> currentAuthorFilter = "own"
         }
-
-        updateButtonStyles(
-            listOf(
-                requireView().findViewById(R.id.btnAllTypes),
-                requireView().findViewById(R.id.btnBasic),
-                requireView().findViewById(R.id.btnOwn),
-                requireView().findViewById(R.id.btnUser),
-            ),
-            button,
-            true
-        )
-
         applyFilters()
+        updateAllButtonsStyles()
     }
 
     private fun applyFilters() {
@@ -245,28 +218,29 @@ class WorkoutsFragment : Fragment() {
         val filtered = viewModel.workouts
             .filter {
                 it.matchesQuery(currentQuery) &&
-                        it.matchesFilter(currentFilter) &&
+                        it.matchesTypeFilter(currentFilter) &&
                         it.matchesAuthorFilter(currentAuthorFilter) &&
                         (!currentFavoritesFilter || (currentUserId != null && it.likes.contains(
                             currentUserId
                         )))
             }
         adapter.submitList(filtered)
+        updateAllButtonsStyles()
+    }
+
+    private fun UiWorkout.matchesTypeFilter(filter: String?): Boolean {
+        return filter == null || type.equals(filter, ignoreCase = true)
     }
 
     private fun UiWorkout.matchesQuery(query: String): Boolean {
         return title.lowercase().contains(query.lowercase())
     }
 
-    private fun UiWorkout.matchesFilter(filter: String?): Boolean {
-        return filter == null || type.equals(filter, ignoreCase = true)
-    }
-
     private fun UiWorkout.matchesAuthorFilter(filter: String?): Boolean {
         val currentUserId = FirebaseAuth.getInstance().currentUser?.uid
         return when (filter) {
             "basic" -> author == "basic"
-            "users" -> author != "basic" && author != FirebaseAuth.getInstance().currentUser?.uid
+            "users" -> author != "basic" && author != currentUserId
             "own" -> author == currentUserId
             else -> true
         }
@@ -286,27 +260,57 @@ class WorkoutsFragment : Fragment() {
 
     private fun updateButtonStyles(
         buttons: List<Button>,
-        clickedButton: Button?,
-        isFavoritesButton: Boolean = false
+        isSelected: (Button) -> Boolean
     ) {
         buttons.forEach { button ->
-            val isSelected = if (isFavoritesButton) {
-                currentFavoritesFilter && button == clickedButton
-            } else {
-                button == clickedButton
-            }
-
+            val selected = isSelected(button)
             button.setBackgroundResource(
-                if (isSelected) R.drawable.shape_button_selected
+                if (selected) R.drawable.shape_button_selected
                 else R.drawable.shape_button_unselected
             )
             button.setTextColor(
                 ContextCompat.getColor(
                     requireContext(),
-                    if (isSelected) R.color.white else R.color.black
+                    if (selected) R.color.white else R.color.black
                 )
             )
         }
+    }
+
+    private fun updateAllButtonsStyles() {
+        val typeButtons = listOf(
+            requireView().findViewById<Button>(R.id.btnAllTypes),
+            requireView().findViewById<Button>(R.id.btnUpperBody),
+            requireView().findViewById<Button>(R.id.btnLowerBody)
+        )
+        updateButtonStyles(typeButtons) { button ->
+            when (button.id) {
+                R.id.btnAllTypes -> currentFilter == null
+                R.id.btnUpperBody -> currentFilter == "Верх тела"
+                R.id.btnLowerBody -> currentFilter == "Низ тела"
+                else -> false
+            }
+        }
+
+        val authorButtons = listOf(
+            requireView().findViewById<Button>(R.id.btnAllAuthors),
+            requireView().findViewById<Button>(R.id.btnBasic),
+            requireView().findViewById<Button>(R.id.btnUser),
+            requireView().findViewById<Button>(R.id.btnOwn)
+        )
+        updateButtonStyles(authorButtons) { button ->
+            when (button.id) {
+                R.id.btnAllAuthors -> currentAuthorFilter == null
+                R.id.btnBasic -> currentAuthorFilter == "basic"
+                R.id.btnUser -> currentAuthorFilter == "users"
+                R.id.btnOwn -> currentAuthorFilter == "own"
+                else -> false
+            }
+        }
+
+        // Обновление кнопки избранного
+        val favoritesButton = requireView().findViewById<Button>(R.id.btnFavorite)
+        updateButtonStyles(listOf(favoritesButton)) { currentFavoritesFilter }
     }
 
     private fun createTextWatcher() = object : TextWatcher {

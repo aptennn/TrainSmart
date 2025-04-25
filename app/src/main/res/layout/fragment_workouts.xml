@@ -54,6 +54,75 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/btnFavorite"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginBottom="8dp"
+                android:background="@drawable/shape_button_unselected"
+                android:fontFamily="@font/montserrat_semi_bold"
+                android:padding="8dp"
+                android:text="Избранные"
+                android:textAllCaps="false"
+                android:textColor="@color/black"
+                android:textSize="14sp" />
+
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:orientation="horizontal">
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/btnAllAuthors"
+                    android:layout_width="wrap_content"
+                    android:layout_height="40dp"
+                    android:layout_marginEnd="8dp"
+                    android:background="@drawable/shape_button_selected"
+                    android:fontFamily="@font/montserrat_semi_bold"
+                    android:padding="8dp"
+                    android:text="Все авторы"
+                    android:textAllCaps="false"
+                    android:textColor="@color/white"
+                    android:textSize="14sp" />
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/btnBasic"
+                    android:layout_width="wrap_content"
+                    android:layout_height="40dp"
+                    android:layout_marginEnd="8dp"
+                    android:padding="8dp"
+                    android:background="@drawable/shape_button_unselected"
+                    android:fontFamily="@font/montserrat_semi_bold"
+                    android:text="от TrainSmart"
+                    android:textAllCaps="false" />
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/btnUser"
+                    android:layout_width="wrap_content"
+                    android:layout_height="40dp"
+                    android:layout_marginEnd="8dp"
+                    android:padding="8dp"
+                    android:background="@drawable/shape_button_unselected"
+                    android:fontFamily="@font/montserrat_semi_bold"
+                    android:text="Пользовательские"
+                    android:textAllCaps="false" />
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/btnOwn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="40dp"
+                    android:padding="8dp"
+                    android:background="@drawable/shape_button_unselected"
+                    android:fontFamily="@font/montserrat_semi_bold"
+                    android:text="Созданные Вами"
+                    android:textAllCaps="false" />
+
+            </LinearLayout>
+
+
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -64,75 +133,12 @@
                     android:layout_width="wrap_content"
                     android:layout_height="40dp"
                     android:layout_marginEnd="8dp"
-                    android:layout_marginBottom="8dp"
                     android:background="@drawable/shape_button_selected"
                     android:fontFamily="@font/montserrat_semi_bold"
                     android:text="Все типы"
                     android:textAllCaps="false"
                     android:textColor="@color/white"
                     android:textSize="14sp" />
-
-                <androidx.appcompat.widget.AppCompatButton
-                    android:id="@+id/btnFavorite"
-                    android:layout_width="wrap_content"
-                    android:layout_height="40dp"
-                    android:layout_marginEnd="8dp"
-                    android:layout_marginBottom="8dp"
-                    android:padding="8dp"
-                    android:background="@drawable/shape_button_unselected"
-                    android:fontFamily="@font/montserrat_semi_bold"
-                    android:text="Избранное"
-                    android:textAllCaps="false"
-                    android:textColor="@color/black"
-                    android:textSize="14sp" />
-
-            </LinearLayout>
-
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <androidx.appcompat.widget.AppCompatButton
-                    android:id="@+id/btnBasic"
-                    android:layout_width="wrap_content"
-                    android:layout_height="40dp"
-                    android:layout_marginEnd="8dp"
-                    android:background="@drawable/shape_button_unselected"
-                    android:fontFamily="@font/montserrat_semi_bold"
-                    android:text="Базовые"
-                    android:textAllCaps="false" />
-
-                <androidx.appcompat.widget.AppCompatButton
-                    android:id="@+id/btnUser"
-                    android:layout_width="wrap_content"
-                    android:layout_height="40dp"
-                    android:layout_marginEnd="8dp"
-                    android:background="@drawable/shape_button_unselected"
-                    android:fontFamily="@font/montserrat_semi_bold"
-                    android:text="Чужие"
-                    android:textAllCaps="false" />
-
-                <androidx.appcompat.widget.AppCompatButton
-                    android:id="@+id/btnOwn"
-                    android:layout_width="wrap_content"
-                    android:layout_height="40dp"
-                    android:background="@drawable/shape_button_unselected"
-                    android:fontFamily="@font/montserrat_semi_bold"
-                    android:text="Мои"
-                    android:textAllCaps="false" />
-
-            </LinearLayout>
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="8dp" />
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
 
                 <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/btnUpperBody"
