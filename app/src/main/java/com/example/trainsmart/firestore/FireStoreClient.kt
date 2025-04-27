@@ -8,6 +8,7 @@ import com.google.android.gms.tasks.Tasks
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.FirebaseFirestoreException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.awaitClose
@@ -98,9 +99,28 @@ class FireStoreClient {
         }
     }
 
+    fun getUserHistory(userId: String): Flow<Map<String, List<String>>?> {
+        return callbackFlow {
+            db.collection(collectionUsers).document(userId).get()
+                .addOnSuccessListener { document ->
+                    val history = document.get("history") as? Map<String, List<String>>
+                    trySend(history ?: emptyMap())
+                }
+                .addOnFailureListener { e ->
+                    Log.e(tag, "Error getting user history", e)
+                    trySend(null)
+                }
+
+            awaitClose {}
+        }
+    }
+
     private fun User.ToHashMap(): HashMap<String, Any> {
         return hashMapOf(
-            "id" to id, "email" to email, "username" to username
+            "id" to id,
+            "email" to email,
+            "username" to username,
+            "history" to history,
         )
     }
 
@@ -108,7 +128,8 @@ class FireStoreClient {
         return User(
             id = this["id"] as String,
             email = this["email"] as String,
-            username = this["username"] as String
+            username = this["username"] as String,
+            history = (this["history"] as? Map<String, List<String>>) ?: emptyMap()
         )
     }
 
@@ -338,38 +359,80 @@ class FireStoreClient {
             }
         }
 
-//    fun updateLikes(workoutId: String, uid: String, isLiked: Boolean): Flow<Boolean> =
-//        callbackFlow {
-//            val docRef = FirebaseFirestore.getInstance()
-//                .collection(collectionPublishedWorkouts) // change to your actual collection name
-//                .document(workoutId)
-//
-//            Log.d(
-//                "Firestore",
-//                "Updating likes for workout: $workoutId | user: $uid | isLiked: $isLiked"
+//    fun addWorkoutToHistory(userId: String, date: String, workoutId: String): Flow<Boolean> {
+//        return callbackFlow {
+//            val userRef = db.collection(collectionUsers).document(userId)
+//            val updates = hashMapOf<String, Any>(
+//                "history.$date" to FieldValue.arrayUnion(workoutId)
 //            )
 //
-//            val updateTask = if (isLiked) {
-//                docRef.update("likes", FieldValue.arrayUnion(uid))
-//            } else {
-//                docRef.update("likes", FieldValue.arrayRemove(uid))
-//            }
+//            userRef.update(updates)
+//                .addOnSuccessListener {
+//                    Log.d(tag, "Workout $workoutId added to history for date $date")
+//                    trySend(true)
+//                }
+//                .addOnFailureListener { e ->
+//                    Log.e(tag, "Error adding workout to history", e)
+//                    trySend(false)
+//                }
 //
-//            updateTask.addOnSuccessListener {
-//                Log.d("Firestore", "✅ Firestore update successful")
-//                trySend(true).isSuccess
-//                close()
-//            }.addOnFailureListener { e ->
-//                Log.e("Firestore", "❌ Firestore update failed", e)
-//                trySend(false).isSuccess
-//                close()
-//            }
-//
-//            awaitClose {
-//                Log.d("Firestore", "Flow closed for updateLikes()")
-//            }
+//            awaitClose {}
 //        }
+//    }
 
+    fun addWorkoutToHistory(userId: String, date: String, workoutId: String): Flow<Boolean> {
+        return callbackFlow {
+            val userRef = db.collection(collectionUsers).document(userId)
+
+            db.runTransaction { transaction ->
+                // Получаем текущие данные пользователя
+                val snapshot = transaction.get(userRef)
+                val history = snapshot.get("history") as? Map<String, List<String>> ?: emptyMap()
+
+                // Проверяем дубликаты для конкретной даты
+                val workoutsForDate = history[date] ?: emptyList()
+                if (workoutsForDate.contains(workoutId)) {
+                    // Дубликат найден, прерываем выполнение
+                    throw FirebaseFirestoreException(
+                        "Workout already exists in history",
+                        FirebaseFirestoreException.Code.ABORTED
+                    )
+                }
+
+                // Обновляем данные
+                val updates = hashMapOf<String, Any>(
+                    "history.$date" to FieldValue.arrayUnion(workoutId)
+                )
+                transaction.update(userRef, updates)
+
+                // Возвращаем результат успешного выполнения
+                true
+            }.addOnSuccessListener { result ->
+                if (result) {
+                    Log.d(tag, "Workout $workoutId added to history for date $date")
+                    trySend(true)
+                }
+            }.addOnFailureListener { e ->
+                when (e) {
+                    is FirebaseFirestoreException
+                        -> if (e.code == FirebaseFirestoreException.Code.ABORTED) {
+                        Log.d(tag, "Duplicate workout: $workoutId")
+                        trySend(false)
+                    } else {
+                        Log.e(tag, "Error adding workout to history", e)
+                        trySend(false)
+                    }
+
+                    else -> {
+                        Log.e(tag, "Unexpected error", e)
+                        trySend(false)
+                    }
+                }
+            }
+
+            awaitClose {}
+        }
+    }
 
     private fun Workout.ToHashMap(): HashMap<String, Any> {
         return hashMapOf(

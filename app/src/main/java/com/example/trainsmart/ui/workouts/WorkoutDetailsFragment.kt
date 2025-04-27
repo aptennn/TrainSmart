@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
-import android.view.View.VISIBLE
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageButton
@@ -15,7 +14,6 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import androidx.transition.Visibility
 import com.example.trainsmart.R
 import com.example.trainsmart.WorkoutActivity
 import com.example.trainsmart.firestore.FireStoreClient
@@ -23,6 +21,9 @@ import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.auth
 import kotlinx.coroutines.launch
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 class WorkoutsDetailsFragment : Fragment() {
 
@@ -57,14 +58,10 @@ class WorkoutsDetailsFragment : Fragment() {
         client = FireStoreClient()
         auth = Firebase.auth
 
-        if (client.isLikedByMe(workout, auth.currentUser!!.uid))
-        {
+        if (client.isLikedByMe(workout, auth.currentUser!!.uid)) {
             favoriteButton.setImageResource(R.drawable.ic_favorite_white)
             favoriteButton.setBackgroundResource(R.drawable.shape_bg_circle_blue)
-        }
-
-        else
-        {
+        } else {
             favoriteButton.setImageResource(R.drawable.ic_favorite_black)
             favoriteButton.setBackgroundResource(R.drawable.shape_bg_circle)
         }
@@ -83,6 +80,25 @@ class WorkoutsDetailsFragment : Fragment() {
         }
 
         startButton.setOnClickListener {
+            workout?.let { currentWorkout ->
+                val userId = auth.currentUser?.uid ?: return@setOnClickListener
+                val currentDate = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date())
+
+                lifecycleScope.launch {
+                    client.addWorkoutToHistory(
+                        userId = userId,
+                        date = currentDate,
+                        workoutId = currentWorkout.id
+                    ).collect { success ->
+                        if (success) {
+                            Log.d("History", "Workout added to history")
+                        } else {
+                            Log.e("History", "Failed to add workout to history")
+                        }
+                    }
+                }
+            }
+
             val intent = Intent(context, WorkoutActivity::class.java)
             intent.putExtras(Bundle().apply {
                 putParcelable("workoutKey", workout)
@@ -116,12 +132,6 @@ class WorkoutsDetailsFragment : Fragment() {
 
             }
         }
-
-//        backButton.setOnClickListener {
-//            //getActivity().onBackPressed();
-//            requireActivity().onBackPressedDispatcher.onBackPressed()
-//        }
-
 
         return view
     }
