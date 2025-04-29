@@ -1,6 +1,5 @@
 package com.example.trainsmart.ui.WorkoutCreate
 
-import android.app.Activity
 import android.os.Bundle
 import android.widget.Button
 import androidx.appcompat.app.AlertDialog
@@ -39,9 +38,8 @@ class WorkoutCreateActivity : AppCompatActivity() {
         binding.recyclerViewCreate.layoutManager = LinearLayoutManager(this)
         exerciseListAdapter = ExerciseListAdapterCreate(
             applicationContext,
-            exerciseModels,
-            { exercise -> }
-        )
+            exerciseModels
+        ) { }
         binding.recyclerViewCreate.adapter = exerciseListAdapter
     }
 
@@ -102,6 +100,7 @@ class WorkoutCreateActivity : AppCompatActivity() {
                     }
 
                     val workout = Workout(
+                        id = "",
                         name = name,
                         photoUrl = "",
                         author = user.id,
@@ -112,7 +111,7 @@ class WorkoutCreateActivity : AppCompatActivity() {
 
                     FireStoreClient().saveWorkout(workout).collect { success ->
                         if (success) {
-                            setResult(Activity.RESULT_OK)
+                            setResult(RESULT_OK)
                             finish()
                         } else {
                             showAlertDialog("Ошибка сохранения")

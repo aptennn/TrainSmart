@@ -75,7 +75,7 @@ class WorkoutsFragment : Fragment() {
             .setOnClickListener { toggleFiltersVisibility() }
 
         val btnFavorites = view.findViewById<Button>(R.id.btnFavorite)
-        btnFavorites.setOnClickListener { handleFavoritesFilterClick(btnFavorites) }
+        btnFavorites.setOnClickListener { handleFavoritesFilterClick() }
 
         val btnAll = view.findViewById<Button>(R.id.btnAllTypes)
         val btnUpper = view.findViewById<Button>(R.id.btnUpperBody)
@@ -187,6 +187,7 @@ class WorkoutsFragment : Fragment() {
             R.id.btnAllTypes -> {
                 currentFilter = null
             }
+
             R.id.btnUpperBody -> currentFilter = "Верх тела"
             R.id.btnLowerBody -> currentFilter = "Низ тела"
         }
@@ -195,7 +196,7 @@ class WorkoutsFragment : Fragment() {
     }
 
 
-    private fun handleFavoritesFilterClick(button: Button) {
+    private fun handleFavoritesFilterClick() {
         currentFavoritesFilter = !currentFavoritesFilter
         applyFilters()
     }
@@ -205,6 +206,7 @@ class WorkoutsFragment : Fragment() {
             R.id.btnAllAuthors -> {
                 currentAuthorFilter = null
             }
+
             R.id.btnBasic -> currentAuthorFilter = "basic"
             R.id.btnUser -> currentAuthorFilter = "users"
             R.id.btnOwn -> currentAuthorFilter = "own"
@@ -308,7 +310,6 @@ class WorkoutsFragment : Fragment() {
             }
         }
 
-        // Обновление кнопки избранного
         val favoritesButton = requireView().findViewById<Button>(R.id.btnFavorite)
         updateButtonStyles(listOf(favoritesButton)) { currentFavoritesFilter }
     }

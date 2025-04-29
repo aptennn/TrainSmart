@@ -21,14 +21,12 @@ class WorkoutsViewModel : ViewModel() {
                 workouts.clear()
                 fireStoreClient.getAllWorkouts().collect { result ->
                     if (result.isNotEmpty()) {
-                        for (idWorkout in result) {
-                            val workout = idWorkout.value
-                            val idW = idWorkout.key
+                        result.values.forEach { workout ->
                             if (workout != null) {
                                 val exercises = exercisesToList(workout.exercises)
                                 workouts.add(
                                     UiWorkout(
-                                        id = idW,
+                                        id = workout.id,
                                         title = workout.name,
                                         photo = R.drawable.exercise3,
                                         author = workout.author,

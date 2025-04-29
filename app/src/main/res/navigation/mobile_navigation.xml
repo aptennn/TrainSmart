@@ -55,7 +55,7 @@
         android:label="Описание упражнения"/>
     <fragment
         android:id="@+id/navigation_statistics_history"
-        android:name="com.example.trainsmart.ui.statistics.StatisticsHistoryFragment"
+        android:name="com.example.trainsmart.ui.statistics.StatisticsMonthlyFragment"
         tools:layout="@layout/fragment_statistics_history"
         android:label="Статистика месяца">
         <action

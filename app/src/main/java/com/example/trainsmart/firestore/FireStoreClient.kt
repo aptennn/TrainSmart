@@ -99,18 +99,23 @@ class FireStoreClient {
         }
     }
 
-    fun getUserHistory(userId: String): Flow<Map<String, List<String>>?> {
+    fun getHistoryByUserId(userId: String): Flow<Map<String, List<String>>?> {
         return callbackFlow {
             db.collection(collectionUsers).document(userId).get()
                 .addOnSuccessListener { document ->
-                    val history = document.get("history") as? Map<String, List<String>>
-                    trySend(history ?: emptyMap())
+                    if (document.exists()) {
+                        val history = document.get("history") as? Map<String, List<String>>
+                        Log.d(tag, "History retrieved for user $userId: ${history?.size} entries")
+                        trySend(history)
+                    } else {
+                        Log.d(tag, "User document not found: $userId")
+                        trySend(null)
+                    }
                 }
                 .addOnFailureListener { e ->
                     Log.e(tag, "Error getting user history", e)
                     trySend(null)
                 }
-
             awaitClose {}
         }
     }
@@ -239,6 +244,18 @@ class FireStoreClient {
         }
     }
 
+    fun getWorkoutsByIds(workoutsIds: List<String>): Flow<List<Workout>> {
+        return combine(
+            getBasicWorkouts(),
+            getPublishedWorkouts()
+        ) { basic, published ->
+            val allWorkouts = basic + published
+            workoutsIds.mapNotNull { id ->
+                allWorkouts[id]?.copy(id = id)
+            }
+        }
+    }
+
     fun getBasicWorkouts(
     ): Flow<Map<String, Workout?>> {
         return callbackFlow {
@@ -247,9 +264,7 @@ class FireStoreClient {
                 val mapW = mutableMapOf<String, Workout?>()
 
                 for (document in result) {
-                    val idW = document.id
-                    val workout = document.data.toWorkout()
-                    mapW[idW] = workout
+                    mapW[document.id] = document.toWorkout()
                 }
 
                 if (mapW.isEmpty()) {
@@ -276,9 +291,7 @@ class FireStoreClient {
                 val mapW = mutableMapOf<String, Workout?>()
 
                 for (document in result) {
-                    val idW = document.id
-                    val workout = document.data.toWorkout()
-                    mapW[idW] = workout
+                    mapW[document.id] = document.toWorkout()
                 }
 
                 if (mapW.isEmpty()) {
@@ -359,53 +372,27 @@ class FireStoreClient {
             }
         }
 
-//    fun addWorkoutToHistory(userId: String, date: String, workoutId: String): Flow<Boolean> {
-//        return callbackFlow {
-//            val userRef = db.collection(collectionUsers).document(userId)
-//            val updates = hashMapOf<String, Any>(
-//                "history.$date" to FieldValue.arrayUnion(workoutId)
-//            )
-//
-//            userRef.update(updates)
-//                .addOnSuccessListener {
-//                    Log.d(tag, "Workout $workoutId added to history for date $date")
-//                    trySend(true)
-//                }
-//                .addOnFailureListener { e ->
-//                    Log.e(tag, "Error adding workout to history", e)
-//                    trySend(false)
-//                }
-//
-//            awaitClose {}
-//        }
-//    }
-
     fun addWorkoutToHistory(userId: String, date: String, workoutId: String): Flow<Boolean> {
         return callbackFlow {
             val userRef = db.collection(collectionUsers).document(userId)
 
             db.runTransaction { transaction ->
-                // Получаем текущие данные пользователя
                 val snapshot = transaction.get(userRef)
                 val history = snapshot.get("history") as? Map<String, List<String>> ?: emptyMap()
 
-                // Проверяем дубликаты для конкретной даты
                 val workoutsForDate = history[date] ?: emptyList()
                 if (workoutsForDate.contains(workoutId)) {
-                    // Дубликат найден, прерываем выполнение
                     throw FirebaseFirestoreException(
                         "Workout already exists in history",
                         FirebaseFirestoreException.Code.ABORTED
                     )
                 }
 
-                // Обновляем данные
                 val updates = hashMapOf<String, Any>(
                     "history.$date" to FieldValue.arrayUnion(workoutId)
                 )
                 transaction.update(userRef, updates)
 
-                // Возвращаем результат успешного выполнения
                 true
             }.addOnSuccessListener { result ->
                 if (result) {
@@ -456,5 +443,15 @@ class FireStoreClient {
         )
     }
 
-
+    private fun DocumentSnapshot.toWorkout(): Workout {
+        return Workout(
+            id = this.id,
+            name = getString("name") ?: "",
+            photoUrl = getString("photoUrl") ?: "",
+            author = getString("author") ?: "",
+            exercises = get("exercises") as? Map<String, String> ?: emptyMap(),
+            type = getString("type") ?: "",
+            likes = get("likes") as? List<String> ?: emptyList()
+        )
+    }
 }

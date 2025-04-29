@@ -1,5 +1,6 @@
 package com.example.trainsmart.ui.statistics
 
+import android.app.AlertDialog
 import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -8,16 +9,16 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.core.view.children
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.example.trainsmart.R
-import com.example.trainsmart.databinding.FragmentStatisticsHistoryBinding
-import com.example.trainsmart.ui.exercises.ExerciseListItemModel
-import com.example.trainsmart.ui.workouts.Workout
+import com.google.firebase.auth.FirebaseAuth
 import com.kizitonwose.calendar.core.CalendarDay
 import com.kizitonwose.calendar.core.CalendarMonth
 import com.kizitonwose.calendar.core.DayPosition
 import com.kizitonwose.calendar.core.daysOfWeek
 import com.kizitonwose.calendar.core.firstDayOfWeekFromLocale
+import com.kizitonwose.calendar.view.CalendarView
 import com.kizitonwose.calendar.view.MonthDayBinder
 import com.kizitonwose.calendar.view.MonthHeaderFooterBinder
 import com.kizitonwose.calendar.view.ViewContainer
@@ -28,29 +29,27 @@ import java.time.format.DateTimeFormatterBuilder
 import java.time.temporal.ChronoField
 import java.util.Locale
 
-class StatisticsHistoryFragment : Fragment() {
+class StatisticsMonthlyFragment : Fragment() {
 
-    private var _binding: FragmentStatisticsHistoryBinding? = null
-    private val binding get() = _binding!!
+    private var calendarView: CalendarView? = null
+    private val viewModel: StatisticsViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentStatisticsHistoryBinding.inflate(inflater, container, false)
-        val root: View = binding.root
-
-//        binding.ibBack.setOnClickListener {
-//            requireActivity().onBackPressedDispatcher.onBackPressed()
-//        }
-
-        return root
+        return inflater.inflate(R.layout.fragment_statistics_history, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        calendarView = view.findViewById(R.id.calendarView)
+        val userId = FirebaseAuth.getInstance().currentUser?.uid.toString()
+        viewModel.loadUserHistory(userId) {
+            calendarView?.notifyCalendarChanged()
+        }
         setupWeekCalendar()
     }
 
@@ -60,51 +59,13 @@ class StatisticsHistoryFragment : Fragment() {
         val endMonth = currentMonth.plusMonths(100)
         val firstDayOfWeek = firstDayOfWeekFromLocale()
 
-        binding.calendarView.setup(startMonth, endMonth, firstDayOfWeek)
-        binding.calendarView.scrollToMonth(currentMonth)
+        calendarView?.setup(startMonth, endMonth, firstDayOfWeek)
+        calendarView?.scrollToMonth(currentMonth)
 
         class DayViewContainer(view: View) : ViewContainer(view) {
-            val textView: TextView = view.findViewById(R.id.calendarDayText)
+            val dayNameText: TextView = view.findViewById(R.id.calendarDayText)
+            val dayNumberView = view.findViewById<TextView>(R.id.calendarDayText)
             lateinit var day: CalendarDay
-
-            init {
-                view.setOnClickListener {
-                    if (day.date == LocalDate.now()) {
-                        // Only use month dates
-                        findNavController().navigate(
-                            R.id.navigation_statistics_day_history,
-                            Bundle().apply {
-                                val workoutHistory = WorkoutHistory(Workout(
-                                    "id",
-                                    "Программа для тренировки спины", R.drawable.image_back_wrkt, 1.5.toString(),
-                                    listOf(
-                                        ExerciseListItemModel(
-                                            "2",
-                                            "Тяга вертикального блока", "https://ksd-images.lt/display/aikido/cache/1298f905f591174c3d942bbe9371f10e.jpeg",
-                                            "Одно из фундаментальных упражнений для развития верхней части туловища",
-                                            "1. Сядьте на скамью тренажёра...",
-                                            "2 подхода по 10 повторений"
-                                        ),
-                                        ExerciseListItemModel(
-
-                                            "2",
-                                            "Тяга горизонтального блока", "https://ksd-images.lt/display/aikido/cache/1298f905f591174c3d942bbe9371f10e.jpeg",
-                                            "Cиловое упражнение на развитие мышц спины...",
-                                            "1. Расположитесь на сидении тренажёра...",
-                                            "3 подхода по 11 повторений"
-                                        )
-                                    ),
-                                    "Верх тела",
-                                    mutableListOf<String>()
-                                ), day.date.toString())
-                                putParcelable("workoutHistoryKey", workoutHistory)
-                            }
-                        )
-                    }
-                    // Use the CalendarDay associated with this container.
-
-                }
-            }
         }
 
         class MonthHeaderContainer(view: View) : ViewContainer(view) {
@@ -112,29 +73,63 @@ class StatisticsHistoryFragment : Fragment() {
             val monthTitle: TextView = view.findViewById(R.id.monthTitle)
         }
 
-        binding.calendarView.dayBinder = object : MonthDayBinder<DayViewContainer> {
+        calendarView?.dayBinder = object : MonthDayBinder<DayViewContainer> {
             override fun create(view: View) = DayViewContainer(view)
             override fun bind(container: DayViewContainer, data: CalendarDay) {
 
                 container.day = data
-                container.textView.text = data.date.dayOfMonth.toString()
+                container.dayNameText.text = data.date.dayOfMonth.toString()
 
                 if (data.position == DayPosition.MonthDate) {
-                    container.textView.setTextColor(Color.BLACK)
+
+                    container.dayNumberView.setOnClickListener {
+                        val selectedDate = data.date
+                        if (viewModel.trainingDates.contains(selectedDate)) {
+                            viewModel.loadWorkoutsForDate(selectedDate.toString()) { success ->
+                                if (success && viewModel.workoutsForDate.isNotEmpty()) {
+                                    val args = Bundle().apply {
+                                        putParcelableArrayList(
+                                            "workoutsKey",
+                                            ArrayList(viewModel.workoutsForDate)
+                                        )
+                                    }
+                                    findNavController().navigate(
+                                        R.id.navigation_statistics_day_history,
+                                        args
+                                    )
+                                }
+                            }
+                        } else {
+                            AlertDialog.Builder(requireContext())
+                                .setMessage("В этот день тренировок не было")
+                                .setPositiveButton("Закрыть") { dialog, _ -> dialog.dismiss() }
+                                .show()
+                        }
+                    }
+
+                    container.dayNameText.setTextColor(Color.BLACK)
+
                     if (data.date == LocalDate.now()) {
-                        container.textView.setBackgroundResource(R.drawable.shape_background_current_day)
-                        container.textView.setTextColor(Color.WHITE)
+                        container.dayNumberView.setBackgroundResource(R.drawable.shape_background_current_day)
+                        container.dayNumberView.setTextColor(Color.WHITE)
                     } else {
-                        container.textView.setBackgroundResource(R.drawable.shape_background_calendar_days)
+                        if (viewModel.trainingDates.contains(data.date)) {
+                            container.dayNumberView.setBackgroundResource(R.drawable.shape_background_trained_day)
+                            container.dayNumberView.setTextColor(Color.BLACK)
+                        } else {
+                            container.dayNumberView.setBackgroundResource(R.drawable.shape_background_calendar_day)
+                        }
                     }
                 } else {
-                    container.textView.setTextColor(Color.TRANSPARENT)
-                    container.textView.setBackgroundColor(Color.TRANSPARENT)
+                    container.dayNameText.setTextColor(Color.TRANSPARENT)
+                    container.dayNameText.setBackgroundColor(Color.TRANSPARENT)
                 }
+
+
             }
         }
 
-        binding.calendarView.monthHeaderBinder = object : MonthHeaderFooterBinder<MonthHeaderContainer> {
+        calendarView?.monthHeaderBinder = object : MonthHeaderFooterBinder<MonthHeaderContainer> {
             override fun create(view: View) = MonthHeaderContainer(view)
             override fun bind(container: MonthHeaderContainer, data: CalendarMonth) {
                 val russianMonthsMap = (1L..12L).associateWith {
@@ -178,7 +173,6 @@ class StatisticsHistoryFragment : Fragment() {
                                     DayOfWeek.FRIDAY -> "Пт"
                                     DayOfWeek.SATURDAY -> "Сб"
                                     DayOfWeek.SUNDAY -> "Вс"
-                                    else -> ""
                                 }.toString()
                         }
                 }

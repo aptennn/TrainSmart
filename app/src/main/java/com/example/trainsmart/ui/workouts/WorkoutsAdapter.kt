@@ -20,8 +20,10 @@ class WorkoutsAdapter(
         private val likes: TextView = itemView.findViewById(R.id.workoutLikesTV)
 
         fun bind(workout: Workout) {
-            likes.text = "В избранных: ${workout.likes.size}"
-
+            likes.text = buildString {
+                append("В избранных: ")
+                append(workout.likes.size)
+            }
             title.text = workout.title
             background.setImageResource(workout.photo)
             itemView.setOnClickListener { onItemClickListener(workout) }
