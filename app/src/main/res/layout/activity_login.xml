@@ -55,7 +55,7 @@
 
         <TextView
             android:layout_width="309dp"
-            android:layout_height="44dp"
+            android:layout_height="50dp"
             android:layout_gravity="center_horizontal"
             android:fontFamily="@font/unbounded"
             android:text="Ваш путь к спортивному телу!"

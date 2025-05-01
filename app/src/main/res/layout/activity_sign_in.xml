@@ -16,6 +16,7 @@
         app:layout_constraintEnd_toEndOf="parent" />
 
     <Button
+        android:id="@+id/ReturnToLoginFromSignIn"
         style="@style/Widget.AppCompat.Button.Borderless"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -30,8 +31,7 @@
         android:textColor="#FAFBFF"
         android:textSize="48dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:id="@+id/ReturnToLoginFromSignIn"/>
+        app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.cardview.widget.CardView
         android:layout_width="375dp"
@@ -89,20 +89,20 @@
                 android:layout_width="320dp"
                 android:layout_height="60dp"
                 android:layout_marginTop="28dp"
-                app:cardCornerRadius="15dp"
-                android:visibility="gone">
+                android:visibility="gone"
+                app:cardCornerRadius="15dp">
 
                 <EditText
                     android:id="@+id/UserEmailNull"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:background="#D8D8D8"
+                    android:fontFamily="@font/montserrat"
                     android:hint="E-mail"
+                    android:paddingStart="23dp"
                     android:textAlignment="viewStart"
                     android:textColor="@color/black"
-                    android:background="#D8D8D8"
-                    android:paddingStart="23dp"
-                    android:fontFamily="@font/montserrat"
-                    android:textSize="18sp"/>
+                    android:textSize="18sp" />
 
             </androidx.cardview.widget.CardView>
 
@@ -136,9 +136,9 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
+                        android:fontFamily="@font/montserrat"
                         android:text="email@example.com"
                         android:textColor="@color/black"
-                        android:fontFamily="@font/montserrat"
                         android:textSize="16sp" />
 
                     <Button
@@ -146,16 +146,16 @@
                         style="@style/Widget.AppCompat.Button.Borderless"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
                         android:backgroundTint="#FAFBFF"
                         android:fontFamily="@font/montserrat"
                         android:minWidth="0dp"
                         android:minHeight="0dp"
+                        android:paddingStart="0dp"
                         android:text="Другой пользователь?"
                         android:textAllCaps="false"
                         android:textColor="#000000"
-                        android:textSize="16sp"
-                        android:paddingStart="0dp"
-                        android:layout_gravity="center_vertical"/>
+                        android:textSize="16sp" />
                 </LinearLayout>
             </LinearLayout>
 
@@ -169,29 +169,29 @@
                     android:id="@+id/SignInPassword"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:background="#D8D8D8"
+                    android:fontFamily="@font/montserrat"
                     android:hint="Пароль"
                     android:inputType="textPassword"
+                    android:paddingStart="23dp"
                     android:textAlignment="viewStart"
                     android:textColor="@color/black"
-                    android:background="#D8D8D8"
-                    android:paddingStart="23dp"
-                    android:fontFamily="@font/montserrat"
-                    android:textSize="18sp"/>
+                    android:textSize="18sp" />
 
             </androidx.cardview.widget.CardView>
 
             <Button
                 android:id="@+id/ForgotPassword"
+                style="@style/Widget.AppCompat.Button.Borderless"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingStart="0dp"
-                android:textSize="18sp"
-                android:textAllCaps="false"
-                android:textColor="#2569ED"
+                android:fontFamily="@font/montserrat"
+                android:paddingStart="4dp"
                 android:text="Забыли пароль?"
                 android:textAlignment="viewStart"
-                android:fontFamily="@font/montserrat"
-                style="@style/Widget.AppCompat.Button.Borderless"/>
+                android:textAllCaps="false"
+                android:textColor="#2569ED"
+                android:textSize="18sp" />
 
 
             <Button
@@ -201,24 +201,24 @@
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="52dp"
                 android:backgroundTint="#2569ED"
+                android:fontFamily="@font/montserrat"
                 android:text="ВОЙТИ"
                 android:textColor="#FAFBFF"
                 android:textSize="18sp"
-                app:cornerRadius="15dp"
-                android:fontFamily="@font/montserrat"/>
+                app:cornerRadius="15dp" />
 
             <Button
                 android:id="@+id/SignInTroubleButton"
+                style="@style/Widget.AppCompat.Button.Borderless"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textSize="18sp"
-                android:textAllCaps="false"
-                android:textColor="#000000"
+                android:fontFamily="@font/montserrat"
+                android:paddingTop="48dp"
                 android:text="Не удается войти?"
                 android:textAlignment="center"
-                android:paddingTop="48dp"
-                android:fontFamily="@font/montserrat"
-                style="@style/Widget.AppCompat.Button.Borderless"/>
+                android:textAllCaps="false"
+                android:textColor="#000000"
+                android:textSize="18sp" />
         </LinearLayout>
 
     </androidx.cardview.widget.CardView>

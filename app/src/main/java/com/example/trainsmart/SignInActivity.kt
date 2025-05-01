@@ -2,10 +2,10 @@ package com.example.trainsmart
 
 import android.annotation.SuppressLint
 import android.content.ContentValues.TAG
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.util.Patterns
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
@@ -17,6 +17,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.cardview.widget.CardView
+import androidx.core.content.edit
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.google.firebase.Firebase
@@ -50,7 +51,9 @@ class SignInActivity : AppCompatActivity() {
 
             val llNotNull: LinearLayout = findViewById(R.id.LLNotNull)
 
-            val otherUserButton : Button = findViewById(R.id.UserChange)
+            val otherUserButton: Button = findViewById(R.id.UserChange)
+
+            val forgotPassword: Button = findViewById(R.id.ForgotPassword)
 
             auth = Firebase.auth
 
@@ -69,16 +72,39 @@ class SignInActivity : AppCompatActivity() {
                         signInUser(emailNull.text.toString(), pass)
 
                         cacheEmail(emailNull.text.toString())
-                    }
-                    else
-                    {
-                        Toast.makeText(this, "Empty email/password label", Toast.LENGTH_SHORT).show()
+                    } else {
+                        if (emailNull.text.toString() == "") {
+                            Toast.makeText(this, "Введите адрес почты", Toast.LENGTH_SHORT).show()
+                        } else if (!Patterns.EMAIL_ADDRESS.matcher(emailNull.text).matches()) {
+                            Toast.makeText(
+                                this,
+                                "Введите корректный адрес почты",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        } else if (password.text.toString() == "") {
+                            Toast.makeText(this, "Введите пароль", Toast.LENGTH_SHORT).show()
+                        }
+
                     }
 
                 }
 
-            }
-            else { // user found in db
+                forgotPassword.setOnClickListener {
+
+                    val email = emailNull.text.toString()
+
+                    if (email.isEmpty()) {
+                        Toast.makeText(this, "Введите адрес почты", Toast.LENGTH_SHORT)
+                            .show()
+                    } else if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+                        Toast.makeText(this, "Введите корректный адрес почты", Toast.LENGTH_SHORT)
+                            .show()
+                    } else {
+                        sendPasswordResetEmail(email)
+                    }
+                }
+
+            } else { // user found in db
                 email.text = cachedEmail
 
                 signInButton.setOnClickListener {
@@ -89,15 +115,21 @@ class SignInActivity : AppCompatActivity() {
 
                         signInUser(email.text.toString(), pass)
 
-                    }
-                    else
-                    {
-                        Toast.makeText(this, "Empty password label", Toast.LENGTH_SHORT).show()
+                    } else {
+                        Toast.makeText(this, "Введите пароль", Toast.LENGTH_SHORT).show()
                     }
 
                 }
+
+                forgotPassword.setOnClickListener {
+                    sendPasswordResetEmail(cachedEmail)
+                }
+
                 // change layout and behaviour to user not found in db case
                 otherUserButton.setOnClickListener {
+
+                    clearCachedEmail()
+
                     cardViewNull.visibility = View.VISIBLE
                     llNotNull.visibility = View.GONE
 
@@ -111,14 +143,17 @@ class SignInActivity : AppCompatActivity() {
                             signInUser(emailNull.text.toString(), pass)
 
                             cacheEmail(emailNull.text.toString())
-                        }
-                        else
-                        {
-                            Toast.makeText(this, "Empty email/password label", Toast.LENGTH_SHORT).show()
+                        } else {
+                            if (emailNull.text.toString() == "") {
+                                Toast.makeText(this, "Введите адрес почты", Toast.LENGTH_SHORT)
+                                    .show()
+                            } else if (password.text.toString() == "") {
+                                Toast.makeText(this, "Введите пароль", Toast.LENGTH_SHORT).show()
+                            }
+
                         }
 
                     }
-
 
                 }
                 // end other user
@@ -141,12 +176,12 @@ class SignInActivity : AppCompatActivity() {
                 if (task.isSuccessful) {
                     // Sign in success, update UI with the signed-in user's information
                     Log.d(TAG, "signInWithEmail:success")
-                    val user = auth.currentUser
+                    auth.currentUser
 
 //                    if (user?.isEmailVerified!!) {
-                        val intent = Intent(this@SignInActivity, MainActivity::class.java)
-                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-                        startActivity(intent)
+                    val intent = Intent(this@SignInActivity, MainActivity::class.java)
+                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                    startActivity(intent)
 //                    }
 //                    else
 //                    {
@@ -158,8 +193,8 @@ class SignInActivity : AppCompatActivity() {
                     // If sign in fails, display a message to the user.
                     Log.w(TAG, "signInWithEmail:failure", task.exception)
                     val builder = AlertDialog.Builder(this)
-                    builder.setMessage("Authentication failed.")
-                    builder.setPositiveButton("OK") { dialog, which ->
+                    builder.setMessage("Ошибка аутентификации.")
+                    builder.setPositiveButton("ОК") { dialog, which ->
                         dialog.dismiss()
                     }
                     val dialog = builder.create()
@@ -169,14 +204,39 @@ class SignInActivity : AppCompatActivity() {
             }
     }
 
+    private fun sendPasswordResetEmail(email: String) {
+        auth.sendPasswordResetEmail(email)
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    Toast.makeText(
+                        this,
+                        "Письмо для сброса пароля отправлено на $email",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                    finish()
+                } else {
+                    Toast.makeText(
+                        this,
+                        "Ошибка: ${task.exception?.message}",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+            }
+    }
+
     private fun getCachedEmail(): String? {
-        val sharedPref = getSharedPreferences("myPref", Context.MODE_PRIVATE)
-        return sharedPref.getString("email",null)
+        val sharedPref = getSharedPreferences("myPref", MODE_PRIVATE)
+        return sharedPref.getString("email", null)
+    }
+
+    private fun clearCachedEmail() {
+        val sharedPref = getSharedPreferences("myPref", MODE_PRIVATE)
+        sharedPref.edit { remove("email") }
     }
 
     @SuppressLint("CommitPrefEdits")
     private fun cacheEmail(email: String) {
-        val sharedPref = getSharedPreferences("myPref", Context.MODE_PRIVATE)
+        val sharedPref = getSharedPreferences("myPref", MODE_PRIVATE)
         val editor = sharedPref.edit()
 
         editor.apply {

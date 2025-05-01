@@ -1,7 +1,6 @@
 package com.example.trainsmart
 
 import android.annotation.SuppressLint
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
@@ -24,9 +23,9 @@ class SignUpActivity : AppCompatActivity() {
 
     private lateinit var auth: FirebaseAuth
 
-    private lateinit var userId : String
-    private lateinit var userEmail : String
-    private lateinit var userName : String
+    private lateinit var userId: String
+    private lateinit var userEmail: String
+    private lateinit var userName: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -55,7 +54,7 @@ class SignUpActivity : AppCompatActivity() {
                     userName = login.text.toString()
                 } else if (password.text.toString() != confirmPassword.text.toString()) {
                     val builder = AlertDialog.Builder(this)
-                    builder.setMessage("The confirmation password does not match the original one")
+                    builder.setMessage("Пароль подтверждения не совпадает с исходным")
                     builder.setPositiveButton("OK") { dialog, which ->
                         dialog.dismiss()
                     }
@@ -84,7 +83,7 @@ class SignUpActivity : AppCompatActivity() {
                     auth.currentUser?.sendEmailVerification()
                         ?.addOnCompleteListener {
                             val builder = AlertDialog.Builder(this)
-                            builder.setMessage("Please check your e-mail to verify account")
+                            builder.setMessage("Пожалуйста, проверьте свою электронную почту, чтобы подтвердить учетную запись.")
                             builder.setPositiveButton("OK") { dialog, which ->
                                 cacheEmail(email)
                                 Firebase.auth.signOut()
@@ -112,7 +111,7 @@ class SignUpActivity : AppCompatActivity() {
                         val firestoreClient = FireStoreClient()
                         userId = Firebase.auth.uid!!
                         lifecycleScope.launch {
-                            firestoreClient.insertUser(User(userId, userEmail, userName)).collect{}
+                            firestoreClient.insertUser(User(userId, userEmail, userName)).collect {}
                         }
                     }
 
@@ -147,7 +146,7 @@ class SignUpActivity : AppCompatActivity() {
 
     @SuppressLint("CommitPrefEdits")
     private fun cacheEmail(email: String) {
-        val sharedPref = getSharedPreferences("myPref", Context.MODE_PRIVATE)
+        val sharedPref = getSharedPreferences("myPref", MODE_PRIVATE)
         val editor = sharedPref.edit()
 
         editor.apply {
