@@ -18,7 +18,9 @@
             android:layout_height="0dp"
             android:scaleType="centerCrop"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.0"
+            tools:layout_editor_absoluteX="130dp" />
 
         <ImageButton
             android:id="@+id/ibFavorite"
@@ -32,6 +34,19 @@
             android:src="@drawable/ic_favorite_black"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageButton
+            android:id="@+id/ibDislike"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="20dp"
+            android:background="@drawable/shape_bg_circle"
+            android:elevation="4dp"
+            android:scaleType="center"
+            android:src="@drawable/ic_favorite_black"
+            app:layout_constraintEnd_toEndOf="@+id/iv_exercise"
+            app:layout_constraintTop_toBottomOf="@+id/ibFavorite" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

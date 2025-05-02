@@ -4,6 +4,7 @@ import android.util.Log
 import com.example.trainsmart.data.Exercise
 import com.example.trainsmart.data.User
 import com.example.trainsmart.data.Workout
+import com.google.android.gms.tasks.Task
 import com.google.android.gms.tasks.Tasks
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FieldValue
@@ -27,6 +28,13 @@ class FireStoreClient {
     private val collectionBasicEx = "basic-exercises"
     private val collectionBasicWorkouts = "basic-workouts"
     private val collectionPublishedWorkouts = "published-workouts"
+
+    enum class LikeType {
+        LIKED,         // Поставить лайк
+        DISLIKED,      // Поставить дизлайк
+        UNLIKED,       // Убрать лайк
+        UNDISLIKED     // Убрать дизлайк
+    }
 
     /**
      *   /users/ collection interface
@@ -323,12 +331,17 @@ class FireStoreClient {
         }
     }
 
-    fun isLikedByMe(workout: UiWorkout?, uid: String): Boolean {
-        if (workout != null) return workout.likes.contains(uid)
-        return false
+    fun isLikedByMe(workout: UiWorkout?, uid: String): String {
+        if (workout != null) {
+            if (workout.likes.contains(uid))
+                return "LIKED"
+            if (workout.dislikes.contains(uid))
+                return "DISLIKED"
+        }
+        return "NONE"
     }
 
-    fun updateLikes(workoutId: String, uid: String, isLiked: Boolean): Flow<Boolean> =
+    fun updateLikes(workoutId: String, uid: String, likeType: LikeType): Flow<Boolean> =
         callbackFlow {
             val db = FirebaseFirestore.getInstance()
             val docRefPublished = db.collection(collectionPublishedWorkouts).document(workoutId)
@@ -336,27 +349,62 @@ class FireStoreClient {
 
             Log.d(
                 "Firestore",
-                "Updating likes for workout: $workoutId | user: $uid | isLiked: $isLiked in both collections"
+                "Updating likeType for workout: $workoutId | user: $uid | likeType: $likeType"
             )
 
-            val updatePublishedTask = if (isLiked) {
-                docRefPublished.update("likes", FieldValue.arrayUnion(uid))
-            } else {
-                docRefPublished.update("likes", FieldValue.arrayRemove(uid))
+            val publishedUpdates = mutableListOf<Task<Void>>()
+            val basicUpdates = mutableListOf<Task<Void>>()
+
+            when (likeType) {
+                LikeType.LIKED -> {
+                    publishedUpdates += docRefPublished.update(
+                        mapOf(
+                            "likes" to FieldValue.arrayUnion(uid),
+                            "dislikes" to FieldValue.arrayRemove(uid)
+                        )
+                    )
+                    basicUpdates += docRefBasic.update(
+                        mapOf(
+                            "likes" to FieldValue.arrayUnion(uid),
+                            "dislikes" to FieldValue.arrayRemove(uid)
+                        )
+                    )
+                }
+
+                LikeType.DISLIKED -> {
+                    publishedUpdates += docRefPublished.update(
+                        mapOf(
+                            "likes" to FieldValue.arrayRemove(uid),
+                            "dislikes" to FieldValue.arrayUnion(uid)
+                        )
+                    )
+                    basicUpdates += docRefBasic.update(
+                        mapOf(
+                            "likes" to FieldValue.arrayRemove(uid),
+                            "dislikes" to FieldValue.arrayUnion(uid)
+                        )
+                    )
+                }
+
+                LikeType.UNLIKED -> {
+                    publishedUpdates += docRefPublished.update("likes", FieldValue.arrayRemove(uid))
+                    basicUpdates += docRefBasic.update("likes", FieldValue.arrayRemove(uid))
+                }
+
+                LikeType.UNDISLIKED -> {
+                    publishedUpdates += docRefPublished.update("dislikes", FieldValue.arrayRemove(uid))
+                    basicUpdates += docRefBasic.update("dislikes", FieldValue.arrayRemove(uid))
+                }
             }
 
-            val updateBasicTask = if (isLiked) {
-                docRefBasic.update("likes", FieldValue.arrayUnion(uid))
-            } else {
-                docRefBasic.update("likes", FieldValue.arrayRemove(uid))
-            }
+            val allUpdates = publishedUpdates + basicUpdates
 
-            Tasks.whenAllComplete(updatePublishedTask, updateBasicTask)
-                .addOnCompleteListener { task ->
-                    val success = updatePublishedTask.isSuccessful || updateBasicTask.isSuccessful
+            Tasks.whenAllComplete(allUpdates)
+                .addOnCompleteListener {
+                    val success = allUpdates.any { it.isSuccessful }
                     Log.d(
                         "Firestore",
-                        "Update result - Published: ${updatePublishedTask.isSuccessful}, Basic: ${updateBasicTask.isSuccessful}"
+                        "Update result - Published: ${publishedUpdates.all { it.isSuccessful }}, Basic: ${basicUpdates.all { it.isSuccessful }}"
                     )
                     trySend(success)
                     close()
@@ -428,7 +476,8 @@ class FireStoreClient {
             "author" to author,
             "exercises" to exercises,
             "type" to type,
-            "likes" to likes
+            "likes" to likes,
+            "dislikes" to dislikes
         )
     }
 
@@ -439,7 +488,8 @@ class FireStoreClient {
             author = this["author"] as String,
             exercises = this["exercises"] as Map<String, String>,
             type = this["type"] as String,
-            likes = this["likes"] as List<String>
+            likes = this["likes"] as List<String>,
+            dislikes = this["dislikes"] as List<String>
         )
     }
 
@@ -451,7 +501,8 @@ class FireStoreClient {
             author = getString("author") ?: "",
             exercises = get("exercises") as? Map<String, String> ?: emptyMap(),
             type = getString("type") ?: "",
-            likes = get("likes") as? List<String> ?: emptyList()
+            likes = get("likes") as? List<String> ?: emptyList(),
+            dislikes = get("likes") as? List<String> ?: emptyList()
         )
     }
 }

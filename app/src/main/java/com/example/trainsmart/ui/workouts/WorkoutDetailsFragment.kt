@@ -54,16 +54,32 @@ class WorkoutsDetailsFragment : Fragment() {
         val rV: RecyclerView = view.findViewById(R.id.rv_exercises)
         val startButton: Button = view.findViewById(R.id.btnStart)
         val favoriteButton: ImageButton = view.findViewById(R.id.ibFavorite)
+        val dislikeButton: ImageButton = view.findViewById(R.id.ibDislike)
 
         client = FireStoreClient()
         auth = Firebase.auth
 
-        if (client.isLikedByMe(workout, auth.currentUser!!.uid)) {
+        if (client.isLikedByMe(workout, auth.currentUser!!.uid) == "LIKED") {
             favoriteButton.setImageResource(R.drawable.ic_favorite_white)
             favoriteButton.setBackgroundResource(R.drawable.shape_bg_circle_blue)
-        } else {
+
+            dislikeButton.setImageResource(R.drawable.ic_favorite_black)
+            dislikeButton.setBackgroundResource(R.drawable.shape_bg_circle)
+
+        }
+        if (client.isLikedByMe(workout, auth.currentUser!!.uid) == "DISLIKED") {
             favoriteButton.setImageResource(R.drawable.ic_favorite_black)
             favoriteButton.setBackgroundResource(R.drawable.shape_bg_circle)
+
+            dislikeButton.setImageResource(R.drawable.ic_favorite_white)
+            dislikeButton.setBackgroundResource(R.drawable.shape_bg_circle_blue)
+        }
+        else {
+            favoriteButton.setImageResource(R.drawable.ic_favorite_black)
+            favoriteButton.setBackgroundResource(R.drawable.shape_bg_circle)
+
+            dislikeButton.setImageResource(R.drawable.ic_favorite_black)
+            dislikeButton.setBackgroundResource(R.drawable.shape_bg_circle)
         }
 
 
@@ -107,31 +123,50 @@ class WorkoutsDetailsFragment : Fragment() {
         }
 
         favoriteButton.setOnClickListener {
-            println("LIKED")
             if (workout != null) {
                 val id = workout!!.id
-                if (client.isLikedByMe(workout, auth.currentUser!!.uid)) {
-                    favoriteButton.setImageResource(R.drawable.ic_favorite_black)
-                    favoriteButton.setBackgroundResource(R.drawable.shape_bg_circle)
-                    lifecycleScope.launch {
-                        client.updateLikes(id, auth.currentUser!!.uid, false).collect { result ->
-                            Log.d("Result", "Update success: $result")
+                val uid = auth.currentUser!!.uid
+                val currentStatus = client.isLikedByMe(workout, uid)
+
+                lifecycleScope.launch {
+                    when (currentStatus) {
+                        "LIKED" -> {
+                            // Снять лайк
+                            favoriteButton.setImageResource(R.drawable.ic_favorite_white)
+                            favoriteButton.setBackgroundResource(R.drawable.shape_bg_circle)
+                            client.updateLikes(id, uid, LikeType.UNLIKED).collect { result ->
+                                Log.d("Result", "UNLIKED success: $result")
+                            }
+                            workout!!.likes -= uid
                         }
-                        workout!!.likes -= auth.currentUser!!.uid
-                    }
-                } else {
-                    favoriteButton.setImageResource(R.drawable.ic_favorite_white)
-                    favoriteButton.setBackgroundResource(R.drawable.shape_bg_circle_blue)
-                    lifecycleScope.launch {
-                        client.updateLikes(id, auth.currentUser!!.uid, true).collect { result ->
-                            Log.d("Result", "Update success: $result")
+
+                        "DISLIKED" -> {
+                            // Снять дизлайк и поставить лайк
+                            favoriteButton.setImageResource(R.drawable.ic_favorite_black)
+                            favoriteButton.setBackgroundResource(R.drawable.shape_bg_circle)
+                            client.updateLikes(id, uid, LikeType.LIKED).collect { result ->
+                                Log.d("Result", "LIKED after DISLIKED success: $result")
+                            }
+                            workout!!.likes += uid
+                            workout!!.dislikes -= uid
                         }
-                        workout!!.likes += auth.currentUser!!.uid
+
+                        else -> {
+                            // Ни лайка, ни дизлайка → ставим лайк
+                            favoriteButton.setImageResource(R.drawable.ic_favorite_black)
+                            favoriteButton.setBackgroundResource(R.drawable.shape_bg_circle)
+                            client.updateLikes(id, uid, LikeType.LIKED).collect { result ->
+                                Log.d("Result", "LIKED success: $result")
+                            }
+                            workout!!.likes += uid
+                        }
                     }
                 }
-
             }
         }
+
+
+
 
         return view
     }
