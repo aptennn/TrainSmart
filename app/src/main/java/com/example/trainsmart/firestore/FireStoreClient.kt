@@ -333,176 +333,185 @@ class FireStoreClient {
 
     fun isLikedByMe(workout: UiWorkout?, uid: String): String {
         if (workout != null) {
-            if (workout.likes.contains(uid))
-                return "LIKED"
-            if (workout.dislikes.contains(uid))
+            if (workout.dislikes.contains(uid)) {
                 return "DISLIKED"
+            }
+            else if (workout.likes.contains(uid)) {
+                return "LIKED"
+            }
         }
         return "NONE"
     }
 
-    fun updateLikes(workoutId: String, uid: String, likeType: LikeType): Flow<Boolean> =
-        callbackFlow {
-            val db = FirebaseFirestore.getInstance()
-            val docRefPublished = db.collection(collectionPublishedWorkouts).document(workoutId)
-            val docRefBasic = db.collection(collectionBasicWorkouts).document(workoutId)
+        fun updateLikes(workoutId: String, uid: String, likeType: LikeType): Flow<Boolean> =
+            callbackFlow {
+                val db = FirebaseFirestore.getInstance()
+                val docRefPublished = db.collection(collectionPublishedWorkouts).document(workoutId)
+                val docRefBasic = db.collection(collectionBasicWorkouts).document(workoutId)
 
-            Log.d(
-                "Firestore",
-                "Updating likeType for workout: $workoutId | user: $uid | likeType: $likeType"
-            )
-
-            val publishedUpdates = mutableListOf<Task<Void>>()
-            val basicUpdates = mutableListOf<Task<Void>>()
-
-            when (likeType) {
-                LikeType.LIKED -> {
-                    publishedUpdates += docRefPublished.update(
-                        mapOf(
-                            "likes" to FieldValue.arrayUnion(uid),
-                            "dislikes" to FieldValue.arrayRemove(uid)
-                        )
-                    )
-                    basicUpdates += docRefBasic.update(
-                        mapOf(
-                            "likes" to FieldValue.arrayUnion(uid),
-                            "dislikes" to FieldValue.arrayRemove(uid)
-                        )
-                    )
-                }
-
-                LikeType.DISLIKED -> {
-                    publishedUpdates += docRefPublished.update(
-                        mapOf(
-                            "likes" to FieldValue.arrayRemove(uid),
-                            "dislikes" to FieldValue.arrayUnion(uid)
-                        )
-                    )
-                    basicUpdates += docRefBasic.update(
-                        mapOf(
-                            "likes" to FieldValue.arrayRemove(uid),
-                            "dislikes" to FieldValue.arrayUnion(uid)
-                        )
-                    )
-                }
-
-                LikeType.UNLIKED -> {
-                    publishedUpdates += docRefPublished.update("likes", FieldValue.arrayRemove(uid))
-                    basicUpdates += docRefBasic.update("likes", FieldValue.arrayRemove(uid))
-                }
-
-                LikeType.UNDISLIKED -> {
-                    publishedUpdates += docRefPublished.update("dislikes", FieldValue.arrayRemove(uid))
-                    basicUpdates += docRefBasic.update("dislikes", FieldValue.arrayRemove(uid))
-                }
-            }
-
-            val allUpdates = publishedUpdates + basicUpdates
-
-            Tasks.whenAllComplete(allUpdates)
-                .addOnCompleteListener {
-                    val success = allUpdates.any { it.isSuccessful }
-                    Log.d(
-                        "Firestore",
-                        "Update result - Published: ${publishedUpdates.all { it.isSuccessful }}, Basic: ${basicUpdates.all { it.isSuccessful }}"
-                    )
-                    trySend(success)
-                    close()
-                }
-                .addOnFailureListener { e ->
-                    Log.e("Firestore", "Combined task failed", e)
-                    trySend(false)
-                    close()
-                }
-
-            awaitClose {
-                Log.d("Firestore", "Flow closed for updateLikes()")
-            }
-        }
-
-    fun addWorkoutToHistory(userId: String, date: String, workoutId: String): Flow<Boolean> {
-        return callbackFlow {
-            val userRef = db.collection(collectionUsers).document(userId)
-
-            db.runTransaction { transaction ->
-                val snapshot = transaction.get(userRef)
-                val history = snapshot.get("history") as? Map<String, List<String>> ?: emptyMap()
-
-                val workoutsForDate = history[date] ?: emptyList()
-                if (workoutsForDate.contains(workoutId)) {
-                    throw FirebaseFirestoreException(
-                        "Workout already exists in history",
-                        FirebaseFirestoreException.Code.ABORTED
-                    )
-                }
-
-                val updates = hashMapOf<String, Any>(
-                    "history.$date" to FieldValue.arrayUnion(workoutId)
+                Log.d(
+                    "Firestore",
+                    "Updating likeType for workout: $workoutId | user: $uid | likeType: $likeType"
                 )
-                transaction.update(userRef, updates)
 
-                true
-            }.addOnSuccessListener { result ->
-                if (result) {
-                    Log.d(tag, "Workout $workoutId added to history for date $date")
-                    trySend(true)
+                val publishedUpdates = mutableListOf<Task<Void>>()
+                val basicUpdates = mutableListOf<Task<Void>>()
+
+                when (likeType) {
+                    LikeType.LIKED -> {
+                        publishedUpdates += docRefPublished.update(
+                            mapOf(
+                                "likes" to FieldValue.arrayUnion(uid),
+                                "dislikes" to FieldValue.arrayRemove(uid)
+                            )
+                        )
+                        basicUpdates += docRefBasic.update(
+                            mapOf(
+                                "likes" to FieldValue.arrayUnion(uid),
+                                "dislikes" to FieldValue.arrayRemove(uid)
+                            )
+                        )
+                    }
+
+                    LikeType.DISLIKED -> {
+                        publishedUpdates += docRefPublished.update(
+                            mapOf(
+                                "likes" to FieldValue.arrayRemove(uid),
+                                "dislikes" to FieldValue.arrayUnion(uid)
+                            )
+                        )
+                        basicUpdates += docRefBasic.update(
+                            mapOf(
+                                "likes" to FieldValue.arrayRemove(uid),
+                                "dislikes" to FieldValue.arrayUnion(uid)
+                            )
+                        )
+                    }
+
+                    LikeType.UNLIKED -> {
+                        publishedUpdates += docRefPublished.update(
+                            "likes",
+                            FieldValue.arrayRemove(uid)
+                        )
+                        basicUpdates += docRefBasic.update("likes", FieldValue.arrayRemove(uid))
+                    }
+
+                    LikeType.UNDISLIKED -> {
+                        publishedUpdates += docRefPublished.update(
+                            "dislikes",
+                            FieldValue.arrayRemove(uid)
+                        )
+                        basicUpdates += docRefBasic.update("dislikes", FieldValue.arrayRemove(uid))
+                    }
                 }
-            }.addOnFailureListener { e ->
-                when (e) {
-                    is FirebaseFirestoreException
-                        -> if (e.code == FirebaseFirestoreException.Code.ABORTED) {
-                        Log.d(tag, "Duplicate workout: $workoutId")
+
+                val allUpdates = publishedUpdates + basicUpdates
+
+                Tasks.whenAllComplete(allUpdates)
+                    .addOnCompleteListener {
+                        val success = allUpdates.any { it.isSuccessful }
+                        Log.d(
+                            "Firestore",
+                            "Update result - Published: ${publishedUpdates.all { it.isSuccessful }}, Basic: ${basicUpdates.all { it.isSuccessful }}"
+                        )
+                        trySend(success)
+                        close()
+                    }
+                    .addOnFailureListener { e ->
+                        Log.e("Firestore", "Combined task failed", e)
                         trySend(false)
-                    } else {
-                        Log.e(tag, "Error adding workout to history", e)
-                        trySend(false)
+                        close()
                     }
 
-                    else -> {
-                        Log.e(tag, "Unexpected error", e)
-                        trySend(false)
-                    }
+                awaitClose {
+                    Log.d("Firestore", "Flow closed for updateLikes()")
                 }
             }
 
-            awaitClose {}
+        fun addWorkoutToHistory(userId: String, date: String, workoutId: String): Flow<Boolean> {
+            return callbackFlow {
+                val userRef = db.collection(collectionUsers).document(userId)
+
+                db.runTransaction { transaction ->
+                    val snapshot = transaction.get(userRef)
+                    val history =
+                        snapshot.get("history") as? Map<String, List<String>> ?: emptyMap()
+
+                    val workoutsForDate = history[date] ?: emptyList()
+                    if (workoutsForDate.contains(workoutId)) {
+                        throw FirebaseFirestoreException(
+                            "Workout already exists in history",
+                            FirebaseFirestoreException.Code.ABORTED
+                        )
+                    }
+
+                    val updates = hashMapOf<String, Any>(
+                        "history.$date" to FieldValue.arrayUnion(workoutId)
+                    )
+                    transaction.update(userRef, updates)
+
+                    true
+                }.addOnSuccessListener { result ->
+                    if (result) {
+                        Log.d(tag, "Workout $workoutId added to history for date $date")
+                        trySend(true)
+                    }
+                }.addOnFailureListener { e ->
+                    when (e) {
+                        is FirebaseFirestoreException
+                            -> if (e.code == FirebaseFirestoreException.Code.ABORTED) {
+                            Log.d(tag, "Duplicate workout: $workoutId")
+                            trySend(false)
+                        } else {
+                            Log.e(tag, "Error adding workout to history", e)
+                            trySend(false)
+                        }
+
+                        else -> {
+                            Log.e(tag, "Unexpected error", e)
+                            trySend(false)
+                        }
+                    }
+                }
+
+                awaitClose {}
+            }
+        }
+
+        private fun Workout.ToHashMap(): HashMap<String, Any> {
+            return hashMapOf(
+                "name" to name,
+                "photoUrl" to photoUrl,
+                "author" to author,
+                "exercises" to exercises,
+                "type" to type,
+                "likes" to likes,
+                "dislikes" to dislikes
+            )
+        }
+
+        private fun Map<String, Any>.toWorkout(): Workout {
+            return Workout(
+                name = this["name"] as String,
+                photoUrl = this["photoUrl"] as String,
+                author = this["author"] as String,
+                exercises = this["exercises"] as Map<String, String>,
+                type = this["type"] as String,
+                likes = this["likes"] as List<String>,
+                dislikes = this["dislikes"] as List<String>
+            )
+        }
+
+        private fun DocumentSnapshot.toWorkout(): Workout {
+            return Workout(
+                id = this.id,
+                name = getString("name") ?: "",
+                photoUrl = getString("photoUrl") ?: "",
+                author = getString("author") ?: "",
+                exercises = get("exercises") as? Map<String, String> ?: emptyMap(),
+                type = getString("type") ?: "",
+                likes = get("likes") as? List<String> ?: emptyList(),
+                dislikes = get("likes") as? List<String> ?: emptyList()
+            )
         }
     }
-
-    private fun Workout.ToHashMap(): HashMap<String, Any> {
-        return hashMapOf(
-            "name" to name,
-            "photoUrl" to photoUrl,
-            "author" to author,
-            "exercises" to exercises,
-            "type" to type,
-            "likes" to likes,
-            "dislikes" to dislikes
-        )
-    }
-
-    private fun Map<String, Any>.toWorkout(): Workout {
-        return Workout(
-            name = this["name"] as String,
-            photoUrl = this["photoUrl"] as String,
-            author = this["author"] as String,
-            exercises = this["exercises"] as Map<String, String>,
-            type = this["type"] as String,
-            likes = this["likes"] as List<String>,
-            dislikes = this["dislikes"] as List<String>
-        )
-    }
-
-    private fun DocumentSnapshot.toWorkout(): Workout {
-        return Workout(
-            id = this.id,
-            name = getString("name") ?: "",
-            photoUrl = getString("photoUrl") ?: "",
-            author = getString("author") ?: "",
-            exercises = get("exercises") as? Map<String, String> ?: emptyMap(),
-            type = getString("type") ?: "",
-            likes = get("likes") as? List<String> ?: emptyList(),
-            dislikes = get("likes") as? List<String> ?: emptyList()
-        )
-    }
-}

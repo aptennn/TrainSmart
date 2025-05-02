@@ -32,7 +32,8 @@ class WorkoutsViewModel : ViewModel() {
                                         author = workout.author,
                                         exercises = exercises,
                                         type = workout.type,
-                                        likes = workout.likes
+                                        likes = workout.likes,
+                                        dislikes = workout.dislikes
                                     )
                                 )
                             }

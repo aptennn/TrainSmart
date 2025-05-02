@@ -13,7 +13,8 @@ data class Workout(
     val author: String,
     val exercises: List<ExerciseListItemModel>,
     val type: String,
-    var likes: List<String>
+    var likes: List<String>,
+    var dislikes: List<String>
 ) : Parcelable {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
