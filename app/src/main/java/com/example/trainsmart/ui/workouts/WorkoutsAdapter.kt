@@ -18,11 +18,17 @@ class WorkoutsAdapter(
         private val background: ImageView = itemView.findViewById(R.id.workoutImage)
         private val title: TextView = itemView.findViewById(R.id.workoutTitleTV)
         private val likes: TextView = itemView.findViewById(R.id.workoutLikesTV)
+        private val author: TextView = itemView.findViewById(R.id.workoutAuthorTV)
 
         fun bind(workout: Workout) {
             likes.text = buildString {
-                append("В избранных: ")
+                append("Like: ")
                 append(workout.likes.size)
+            }
+
+            author.text = buildString {
+                append("Автор: ")
+                append(workout.author)
             }
             title.text = workout.title
             background.setImageResource(workout.photo)
