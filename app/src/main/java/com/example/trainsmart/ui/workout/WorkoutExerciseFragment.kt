@@ -14,6 +14,7 @@ import com.example.trainsmart.WorkoutActivity
 import com.example.trainsmart.ui.exercises.ExerciseListItemModel
 import com.example.trainsmart.ui.workout.view.WorkoutProgressBar
 import com.example.trainsmart.ui.workouts.Workout
+import org.w3c.dom.Text
 import java.util.Timer
 import java.util.TimerTask
 
@@ -59,9 +60,14 @@ class WorkoutExerciseFragment : Fragment() {
         val root = inflater.inflate(R.layout.fragment_workout_exercise, container, false)
         val nameTextView: TextView = root.findViewById(R.id.currentExerciseName)
         nameTextView.text = exercise.name
+
         this.title = nameTextView
         val imageView: ImageView = root.findViewById(R.id.currentExercisePicture)
         imageView.load(exercise.photo)
+
+        val exDec: TextView = root.findViewById(R.id.exerciseDescription)
+        exDec.text = exercise.technique
+
         this.image = imageView
         this.setTimerView = root.findViewById(R.id.setTimer)
         repetitionCountView = root.findViewById(R.id.currentExerciseRepetitionCount)

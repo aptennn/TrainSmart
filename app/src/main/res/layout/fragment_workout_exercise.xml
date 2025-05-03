@@ -5,9 +5,9 @@
     android:id="@+id/constraintLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingStart="31dp"
-    android:paddingTop="31dp"
-    android:paddingEnd="31dp"
+    android:paddingStart="20dp"
+    android:paddingTop="20dp"
+    android:paddingEnd="20dp"
     android:paddingBottom="28dp"
     tools:context=".ui.workout.WorkoutExerciseFragment">
 
@@ -22,14 +22,32 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <TextView
+        android:id="@+id/setTimer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:fontFamily="@font/montserrat_light"
+        android:gravity="center_horizontal"
+        android:textAlignment="center"
+        android:textSize="54sp"
+        android:visibility="visible"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/workoutProgress"
+
+         />
+
     <ImageView
         android:id="@+id/currentExercisePicture"
         android:layout_width="0dp"
         android:layout_height="300dp"
-        android:layout_marginTop="34dp"
+        android:layout_marginTop="30dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/workoutProgress" />
+        app:layout_constraintTop_toTopOf="@+id/setTimer"
+        app:layout_constraintTop_toBottomOf="@+id/workoutProgress"
+        />
 
     <TextView
         android:id="@+id/currentExerciseName"
@@ -45,7 +63,7 @@
         android:id="@+id/exerciseDescriptionScroll"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="8dp"
         android:fillViewport="true"
         app:layout_constraintBottom_toTopOf="@+id/labelCurrentExerciseRepetitionCount"
         app:layout_constraintEnd_toEndOf="parent"
@@ -67,7 +85,7 @@
         android:id="@+id/labelCurrentExerciseRepetitionCount"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="40dp"
+        android:layout_marginBottom="20dp"
         android:fontFamily="@font/montserrat"
         android:text="@string/exercise_repetition_count"
         android:textColor="@color/black"
@@ -79,19 +97,19 @@
         android:id="@+id/currentExerciseRepetitionCount"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="112dp"
-        android:layout_marginEnd="4dp"
         android:fontFamily="@font/montserrat"
         android:textColor="@color/black"
         android:textSize="18sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/currentExerciseName" />
+        android:layout_marginStart="20dp"
+        app:layout_constraintStart_toEndOf="@+id/labelCurrentExerciseRepetitionCount"
+        app:layout_constraintBaseline_toBaselineOf="@+id/labelCurrentExerciseRepetitionCount"
+        />
 
     <ImageButton
         android:id="@+id/buttonStartStop"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="20dp"
+        android:layout_marginBottom="5dp"
         android:background="@drawable/shape_button_selected"
         android:paddingHorizontal="5dp"
         android:paddingVertical="5dp"
@@ -100,17 +118,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
-    <TextView
-        android:id="@+id/setTimer"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="36dp"
-        android:fontFamily="@font/montserrat_light"
-        android:gravity="center_horizontal"
-        android:textAlignment="center"
-        android:textSize="64sp"
-        android:visibility="visible"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/currentExercisePicture" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
