@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.trainsmart.R
+import com.example.trainsmart.firestore.FireStoreClient
 
 class WorkoutsAdapter(
     private val onItemClickListener: (Workout) -> Unit
@@ -22,14 +23,26 @@ class WorkoutsAdapter(
 
         fun bind(workout: Workout) {
             likes.text = buildString {
-                append("Like: ")
                 append(workout.likes.size)
             }
 
-            author.text = buildString {
-                append("Автор: ")
-                append(workout.author)
-            }
+            var nick = ""
+            FireStoreClient().getUserNew(workout.author){ user ->
+
+                    nick = user?.username.toString()
+                    println("Username: $nick")
+
+                    author.text = buildString {
+                        append("Автор: ")
+
+                        if(nick == "null")
+                            append("TrainSmart")
+                        else
+                            append(nick)
+
+                    }
+
+                }
             title.text = workout.title
             background.setImageResource(workout.photo)
             itemView.setOnClickListener { onItemClickListener(workout) }

@@ -12,6 +12,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.FirebaseFirestoreException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
@@ -31,6 +32,7 @@ class FireStoreClient {
     private val collectionBasicEx = "basic-exercises"
     private val collectionBasicWorkouts = "basic-workouts"
     private val collectionPublishedWorkouts = "published-workouts"
+    val likeScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
 
     enum class LikeType {
         LIKED,         // Поставить лайк
@@ -108,6 +110,29 @@ class FireStoreClient {
             }
             awaitClose {}
         }
+    }
+
+    fun getUserNew(id: String, onResult: (User?) -> Unit) {
+        db.collection(collectionUsers).get()
+            .addOnSuccessListener { result ->
+                var foundUser: User? = null
+                for (document in result) {
+                    if (document.data["id"] == id) {
+                        foundUser = document.data.toUser()
+                        println(tag + "found user with id: ${foundUser.id}")
+                        break
+                    }
+                }
+                if (foundUser == null) {
+                    println(tag + "user not found: $id")
+                }
+                onResult(foundUser)
+            }
+            .addOnFailureListener { e ->
+                e.printStackTrace()
+                println(tag + "error getting user: ${e.message}")
+                onResult(null)
+            }
     }
 
     fun getHistoryByUserId(userId: String): Flow<Map<String, List<String>>?> {
@@ -346,52 +371,84 @@ class FireStoreClient {
         return "NONE"
     }
 
+
+
+
+    fun updateLikesFireAndForget(
+        workoutId: String,
+        uid: String,
+        likeType: LikeType
+    ) {
+        likeScope.launch {
+            val success = updateLikes(workoutId, uid, likeType)
+            Log.d("Firestore", "updateLikes complete: $success")
+            // Здесь нельзя обновлять UI напрямую, так что просто логируем
+        }
+    }
+
     suspend fun updateLikes(workoutId: String, uid: String, likeType: LikeType): Boolean =
-        suspendCoroutine { cont ->
+        suspendCancellableCoroutine { cont ->
+
+            cont.invokeOnCancellation {
+                // ничего не делаем — просто игнорируем
+            }
             val db = FirebaseFirestore.getInstance()
             val docRefPublished = db.collection(collectionPublishedWorkouts).document(workoutId)
             val docRefBasic = db.collection(collectionBasicWorkouts).document(workoutId)
 
-            val batch = db.batch()
+            val publishedUpdates = mutableListOf<Task<Void>>()
+            val basicUpdates = mutableListOf<Task<Void>>()
 
             when (likeType) {
                 LikeType.LIKED -> {
-                    batch.update(docRefPublished, mapOf(
-                        "likes" to FieldValue.arrayUnion(uid),
-                        "dislikes" to FieldValue.arrayRemove(uid)
-                    ))
-                    batch.update(docRefBasic, mapOf(
-                        "likes" to FieldValue.arrayUnion(uid),
-                        "dislikes" to FieldValue.arrayRemove(uid)
-                    ))
+                    publishedUpdates += docRefPublished.update(
+                        mapOf(
+                            "likes" to FieldValue.arrayUnion(uid),
+                            "dislikes" to FieldValue.arrayRemove(uid)
+                        )
+                    )
+                    basicUpdates += docRefBasic.update(
+                        mapOf(
+                            "likes" to FieldValue.arrayUnion(uid),
+                            "dislikes" to FieldValue.arrayRemove(uid)
+                        )
+                    )
                 }
 
                 LikeType.DISLIKED -> {
-                    batch.update(docRefPublished, mapOf(
-                        "likes" to FieldValue.arrayRemove(uid),
-                        "dislikes" to FieldValue.arrayUnion(uid)
-                    ))
-                    batch.update(docRefBasic, mapOf(
-                        "likes" to FieldValue.arrayRemove(uid),
-                        "dislikes" to FieldValue.arrayUnion(uid)
-                    ))
+                    publishedUpdates += docRefPublished.update(
+                        mapOf(
+                            "likes" to FieldValue.arrayRemove(uid),
+                            "dislikes" to FieldValue.arrayUnion(uid)
+                        )
+                    )
+                    basicUpdates += docRefBasic.update(
+                        mapOf(
+                            "likes" to FieldValue.arrayRemove(uid),
+                            "dislikes" to FieldValue.arrayUnion(uid)
+                        )
+                    )
                 }
 
                 LikeType.UNLIKED -> {
-                    batch.update(docRefPublished, "likes", FieldValue.arrayRemove(uid))
-                    batch.update(docRefBasic, "likes", FieldValue.arrayRemove(uid))
+                    publishedUpdates += docRefPublished.update("likes", FieldValue.arrayRemove(uid))
+                    basicUpdates += docRefBasic.update("likes", FieldValue.arrayRemove(uid))
                 }
 
                 LikeType.UNDISLIKED -> {
-                    batch.update(docRefPublished, "dislikes", FieldValue.arrayRemove(uid))
-                    batch.update(docRefBasic, "dislikes", FieldValue.arrayRemove(uid))
+                    publishedUpdates += docRefPublished.update("dislikes", FieldValue.arrayRemove(uid))
+                    basicUpdates += docRefBasic.update("dislikes", FieldValue.arrayRemove(uid))
                 }
             }
 
-            batch.commit()
-                .addOnSuccessListener { cont.resume(true) }
+            val allUpdates = publishedUpdates + basicUpdates
+
+            Tasks.whenAllComplete(allUpdates)
+                .addOnCompleteListener {
+                    val success = allUpdates.any { it.isSuccessful }
+                    cont.resume(success)
+                }
                 .addOnFailureListener { e ->
-                    Log.e("Firestore", "Batch commit failed", e)
                     cont.resume(false)
                 }
         }

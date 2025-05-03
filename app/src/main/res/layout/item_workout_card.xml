@@ -28,7 +28,7 @@
             android:layout_height="20sp"
             android:layout_marginStart="10dp"
             android:layout_marginTop="5dp"
-            android:layout_marginBottom="95dp"
+            android:layout_marginBottom="125dp"
             android:fontFamily="@font/unbounded"
             android:gravity="bottom"
             android:textColor="@color/white"
@@ -50,6 +50,19 @@
             android:textSize="18sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/workoutLikesImageTV"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="45dp"
+            android:fontFamily="@font/unbounded"
+            android:textColor="@color/white"
+            android:textSize="18sp"
+            android:src="@drawable/ic_thumb_up"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView

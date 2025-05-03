@@ -60,29 +60,29 @@ class WorkoutsDetailsFragment : Fragment() {
         auth = Firebase.auth
 
         if (client.isLikedByMe(workout, auth.currentUser!!.uid) == "LIKED") {
-            favoriteButton.setImageResource(R.drawable.ic_favorite_white)
+            favoriteButton.setImageResource(R.drawable.ic_thumb_up)
             favoriteButton.setBackgroundResource(R.drawable.shape_bg_circle_blue)
 
-            dislikeButton.setImageResource(R.drawable.ic_favorite_black)
+            dislikeButton.setImageResource(R.drawable.ic_thumb_down)
             dislikeButton.setBackgroundResource(R.drawable.shape_bg_circle)
 
             println("LIKED !!!")
 
         }
         if (client.isLikedByMe(workout, auth.currentUser!!.uid) == "DISLIKED") {
-            favoriteButton.setImageResource(R.drawable.ic_favorite_black)
+            favoriteButton.setImageResource(R.drawable.ic_thumb_up)
             favoriteButton.setBackgroundResource(R.drawable.shape_bg_circle)
 
-            dislikeButton.setImageResource(R.drawable.ic_favorite_white)
+            dislikeButton.setImageResource(R.drawable.ic_thumb_down)
             dislikeButton.setBackgroundResource(R.drawable.shape_bg_circle_blue)
 
             println("DISLIKED !!!")
         }
         if (client.isLikedByMe(workout, auth.currentUser!!.uid) == "NONE") {
-            favoriteButton.setImageResource(R.drawable.ic_favorite_black)
+            favoriteButton.setImageResource(R.drawable.ic_thumb_up)
             favoriteButton.setBackgroundResource(R.drawable.shape_bg_circle)
 
-            dislikeButton.setImageResource(R.drawable.ic_favorite_black)
+            dislikeButton.setImageResource(R.drawable.ic_thumb_down)
             dislikeButton.setBackgroundResource(R.drawable.shape_bg_circle)
 
             println("NONE !!!")
@@ -135,36 +135,37 @@ class WorkoutsDetailsFragment : Fragment() {
             if (workout != null) {
                 val id = workout!!.id
                 if (client.isLikedByMe(workout, auth.currentUser!!.uid) == "LIKED") { // был лайк, снимаем его
-                    favoriteButton.setImageResource(R.drawable.ic_favorite_black)
+                    favoriteButton.setImageResource(R.drawable.ic_thumb_up)
                     favoriteButton.setBackgroundResource(R.drawable.shape_bg_circle)
                     lifecycleScope.launch {
                         //client.updateLikes(id, auth.currentUser!!.uid, FireStoreClient.LikeType.UNLIKED).collect { result ->
                         //    Log.d("Result", "Update success: $result")
                         //}
                         Log.d("Result", "Start update likes")
-                        val ss = client.updateLikes(id, auth.currentUser!!.uid, FireStoreClient.LikeType.UNLIKED)
+                            //updateLikesFireAndForget(workoutId, uid, likeType)
+                        val ss = client.updateLikesFireAndForget(id, auth.currentUser!!.uid, FireStoreClient.LikeType.UNLIKED)
                         Log.d("Result", "Finish update likes" + ss)
                         workout!!.likes -= auth.currentUser!!.uid
                     }
                 } else if (client.isLikedByMe(workout, auth.currentUser!!.uid) == "DISLIKED") { // был дизлайк, снимаем его, ставим лайк
-                        favoriteButton.setImageResource(R.drawable.ic_favorite_white)
+                        favoriteButton.setImageResource(R.drawable.ic_thumb_up)
                         favoriteButton.setBackgroundResource(R.drawable.shape_bg_circle_blue)
 
-                        dislikeButton.setImageResource(R.drawable.ic_favorite_black)
+                        dislikeButton.setImageResource(R.drawable.ic_thumb_down)
                         dislikeButton.setBackgroundResource(R.drawable.shape_bg_circle)
                         lifecycleScope.launch {
 //                            client.updateLikes(id, auth.currentUser!!.uid, FireStoreClient.LikeType.LIKED).collect { result ->
 //                                Log.d("Result", "Update success: $result")
 //                            }
                             Log.d("Result", "Start update likes")
-                            val ss = client.updateLikes(id, auth.currentUser!!.uid, FireStoreClient.LikeType.LIKED)
+                            val ss = client.updateLikesFireAndForget(id, auth.currentUser!!.uid, FireStoreClient.LikeType.LIKED)
                             Log.d("Result", "Finish update likes" + ss)
                             workout!!.likes += auth.currentUser!!.uid
                             workout!!.dislikes -= auth.currentUser!!.uid
                         }
                     }
                 else if (client.isLikedByMe(workout, auth.currentUser!!.uid) == "NONE") {
-                    favoriteButton.setImageResource(R.drawable.ic_favorite_white)
+                    favoriteButton.setImageResource(R.drawable.ic_thumb_up)
                     favoriteButton.setBackgroundResource(R.drawable.shape_bg_circle_blue)
 
                     lifecycleScope.launch {
@@ -172,7 +173,7 @@ class WorkoutsDetailsFragment : Fragment() {
 //                            Log.d("Result", "Update success: $result")
 //                        }
                         Log.d("Result", "Start update likes")
-                        val ss = client.updateLikes(id, auth.currentUser!!.uid, FireStoreClient.LikeType.LIKED)
+                        val ss = client.updateLikesFireAndForget(id, auth.currentUser!!.uid, FireStoreClient.LikeType.LIKED)
                         Log.d("Result", "Finish update likes" + ss)
                         workout!!.likes += auth.currentUser!!.uid
                     }
@@ -186,10 +187,10 @@ class WorkoutsDetailsFragment : Fragment() {
             if (workout != null) {
                 val id = workout!!.id
                 if (client.isLikedByMe(workout, auth.currentUser!!.uid) == "LIKED") { // был лайк, снимаем его, ставим дизлайк
-                    dislikeButton.setImageResource(R.drawable.ic_favorite_white)
+                    dislikeButton.setImageResource(R.drawable.ic_thumb_down)
                     dislikeButton.setBackgroundResource(R.drawable.shape_bg_circle_blue)
 
-                    favoriteButton.setImageResource(R.drawable.ic_favorite_black)
+                    favoriteButton.setImageResource(R.drawable.ic_thumb_up)
                     favoriteButton.setBackgroundResource(R.drawable.shape_bg_circle)
                     lifecycleScope.launch {
 //                        client.updateLikes(id, auth.currentUser!!.uid, FireStoreClient.LikeType.DISLIKED).collect { result ->
@@ -197,13 +198,13 @@ class WorkoutsDetailsFragment : Fragment() {
 //                        }
 
                         Log.d("Result", "Start update likes")
-                        val ss = client.updateLikes(id, auth.currentUser!!.uid, FireStoreClient.LikeType.DISLIKED)
+                        val ss = client.updateLikesFireAndForget(id, auth.currentUser!!.uid, FireStoreClient.LikeType.DISLIKED)
                         Log.d("Result", "Finish update likes" + ss)
                         workout!!.likes -= auth.currentUser!!.uid
                         workout!!.dislikes += auth.currentUser!!.uid
                     }
                 } else if (client.isLikedByMe(workout, auth.currentUser!!.uid) == "DISLIKED") { // был дизлайк, снимаем его
-                    dislikeButton.setImageResource(R.drawable.ic_favorite_black)
+                    dislikeButton.setImageResource(R.drawable.ic_thumb_down)
                     dislikeButton.setBackgroundResource(R.drawable.shape_bg_circle)
 
                     lifecycleScope.launch {
@@ -211,13 +212,13 @@ class WorkoutsDetailsFragment : Fragment() {
 //                            Log.d("Result", "Update success: $result")
 //                        }
                         Log.d("Result", "Start update likes")
-                        val ss = client.updateLikes(id, auth.currentUser!!.uid, FireStoreClient.LikeType.UNDISLIKED)
+                        val ss = client.updateLikesFireAndForget(id, auth.currentUser!!.uid, FireStoreClient.LikeType.UNDISLIKED)
                         Log.d("Result", "Finish update likes" + ss)
                         workout!!.dislikes -= auth.currentUser!!.uid
                     }
                 }
                 else if (client.isLikedByMe(workout, auth.currentUser!!.uid) == "NONE") {
-                    dislikeButton.setImageResource(R.drawable.ic_favorite_white)
+                    dislikeButton.setImageResource(R.drawable.ic_thumb_down)
                     dislikeButton.setBackgroundResource(R.drawable.shape_bg_circle_blue)
 
                     lifecycleScope.launch {
@@ -225,7 +226,7 @@ class WorkoutsDetailsFragment : Fragment() {
 //                            Log.d("Result", "Update success: $result")
 //                        }
                         Log.d("Result", "Start update likes")
-                        val ss = client.updateLikes(id, auth.currentUser!!.uid, FireStoreClient.LikeType.DISLIKED)
+                        val ss = client.updateLikesFireAndForget(id, auth.currentUser!!.uid, FireStoreClient.LikeType.DISLIKED)
                         Log.d("Result", "Finish update likes" + ss)
                         workout!!.dislikes += auth.currentUser!!.uid
                     }

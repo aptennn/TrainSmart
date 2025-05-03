@@ -31,7 +31,7 @@
             android:background="@drawable/shape_bg_circle"
             android:elevation="4dp"
             android:scaleType="center"
-            android:src="@drawable/ic_favorite_black"
+            android:src="@drawable/ic_thumb_up"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -44,7 +44,7 @@
             android:background="@drawable/shape_bg_circle"
             android:elevation="4dp"
             android:scaleType="center"
-            android:src="@drawable/ic_favorite_black"
+            android:src="@drawable/ic_thumb_down"
             app:layout_constraintEnd_toEndOf="@+id/iv_exercise"
             app:layout_constraintTop_toBottomOf="@+id/ibFavorite" />
 
