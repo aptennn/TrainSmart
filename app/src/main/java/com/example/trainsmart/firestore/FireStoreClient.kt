@@ -362,6 +362,7 @@ class FireStoreClient {
     fun isLikedByMe(workout: UiWorkout?, uid: String): String {
         if (workout != null) {
             if (workout.dislikes.contains(uid)) {
+                println(uid + ": id:" + workout.dislikes.contains(uid) + " : " + workout.title + " " + workout.likes)
                 return "DISLIKED"
             }
             else if (workout.likes.contains(uid)) {
@@ -670,7 +671,7 @@ class FireStoreClient {
                 exercises = get("exercises") as? Map<String, String> ?: emptyMap(),
                 type = getString("type") ?: "",
                 likes = get("likes") as? List<String> ?: emptyList(),
-                dislikes = get("likes") as? List<String> ?: emptyList()
+                dislikes = get("dislikes") as? List<String> ?: emptyList()
             )
         }
     }
