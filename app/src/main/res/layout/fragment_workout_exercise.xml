@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:paddingStart="31dp"
-    android:paddingTop="51dp"
+    android:paddingTop="31dp"
     android:paddingEnd="31dp"
     android:paddingBottom="28dp"
     tools:context=".ui.workout.WorkoutExerciseFragment">
@@ -16,9 +16,9 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="5dp"
-        android:layout_marginTop="0dp"
         android:layout_marginEnd="5dp"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -37,28 +37,50 @@
         android:layout_height="wrap_content"
         android:fontFamily="@font/unbounded"
         android:textColor="@color/black"
-        android:textSize="28sp"
+        android:textSize="20sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/setTimer" />
+        app:layout_constraintTop_toBottomOf="@+id/currentExercisePicture" />
+
+    <ScrollView
+        android:id="@+id/exerciseDescriptionScroll"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="16dp"
+        android:fillViewport="true"
+        app:layout_constraintBottom_toTopOf="@+id/labelCurrentExerciseRepetitionCount"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/currentExerciseName">
+
+        <TextView
+            android:id="@+id/exerciseDescription"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/montserrat"
+            android:lineSpacingExtra="8sp"
+            android:padding="8dp"
+            android:textColor="@color/black"
+            android:textSize="16sp" />
+    </ScrollView>
 
     <TextView
         android:id="@+id/labelCurrentExerciseRepetitionCount"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="30dp"
+        android:layout_marginBottom="40dp"
         android:fontFamily="@font/montserrat"
         android:text="@string/exercise_repetition_count"
         android:textColor="@color/black"
         android:textSize="18sp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/currentExerciseName" />
+        app:layout_constraintBottom_toTopOf="@+id/buttonStartStop"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
         android:id="@+id/currentExerciseRepetitionCount"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="30dp"
-        android:layout_marginEnd="20dp"
+        android:layout_marginTop="112dp"
+        android:layout_marginEnd="4dp"
         android:fontFamily="@font/montserrat"
         android:textColor="@color/black"
         android:textSize="18sp"
@@ -69,7 +91,7 @@
         android:id="@+id/buttonStartStop"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="40dp"
+        android:layout_marginBottom="20dp"
         android:background="@drawable/shape_button_selected"
         android:paddingHorizontal="5dp"
         android:paddingVertical="5dp"
@@ -82,7 +104,7 @@
         android:id="@+id/setTimer"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="36dp"
         android:fontFamily="@font/montserrat_light"
         android:gravity="center_horizontal"
         android:textAlignment="center"
