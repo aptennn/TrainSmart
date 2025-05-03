@@ -9,7 +9,6 @@
         android:id="@+id/cvExerciseImage"
         android:layout_width="100dp"
         android:layout_height="100dp"
-        android:layout_centerHorizontal="true"
         app:cardCornerRadius="100dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -20,29 +19,41 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:scaleType="centerCrop" />
-
     </androidx.cardview.widget.CardView>
 
-    <TextView
-        android:id="@+id/twExersiceName"
-        android:layout_width="150dp"
-        android:layout_height="wrap_content"
+
+    <HorizontalScrollView
+        android:id="@+id/hsvExerciseName"
+        android:layout_width="0dp"
+        android:layout_height="24dp"
         android:layout_marginStart="16dp"
-        android:fontFamily="@font/montserrat_bold"
-        android:textColor="@color/black"
-        android:textSize="18sp"
-        app:layout_constraintStart_toEndOf="@+id/cvExerciseImage"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:scrollbars="none"
+        app:layout_constraintEnd_toEndOf="@+id/ivSelect"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toEndOf="@id/cvExerciseImage"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintWidth_default="wrap">
+
+        <TextView
+            android:id="@+id/twExersiceName"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:ellipsize="none"
+            android:fontFamily="@font/montserrat_medium"
+            android:singleLine="true"
+            android:textColor="@color/black"
+            android:textSize="18sp" />
+    </HorizontalScrollView>
 
     <LinearLayout
         android:id="@+id/llReps"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="6dp"
         android:gravity="center"
-        app:layout_constraintStart_toEndOf="@+id/cvExerciseImage"
-        app:layout_constraintTop_toBottomOf="@+id/twExersiceName">
+        app:layout_constraintStart_toEndOf="@id/cvExerciseImage"
+        app:layout_constraintTop_toBottomOf="@id/hsvExerciseName">
 
         <EditText
             android:id="@+id/etExerciseReps"
@@ -59,11 +70,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
-            android:fontFamily="@font/montserrat_medium"
+            android:fontFamily="@font/montserrat_regular"
             android:text="Повторы"
             android:textColor="@color/black"
             android:textSize="16sp" />
-
     </LinearLayout>
 
     <LinearLayout
@@ -73,8 +83,8 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"
         android:gravity="center"
-        app:layout_constraintStart_toEndOf="@+id/cvExerciseImage"
-        app:layout_constraintTop_toBottomOf="@+id/llReps">
+        app:layout_constraintStart_toEndOf="@id/cvExerciseImage"
+        app:layout_constraintTop_toBottomOf="@id/llReps">
 
         <EditText
             android:id="@+id/etExerciseApps"
@@ -91,18 +101,17 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
-            android:fontFamily="@font/montserrat_medium"
+            android:fontFamily="@font/montserrat_regular"
             android:text="Подходы"
             android:textColor="@color/black"
             android:textSize="16sp" />
-
     </LinearLayout>
 
     <ImageView
         android:id="@+id/ivSelect"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="20dp"
+        android:layout_marginEnd="60dp"
         android:background="@drawable/ic_unselected"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
