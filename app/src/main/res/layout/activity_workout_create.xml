@@ -268,7 +268,8 @@
                     android:text="Верх тела"
                     android:textAllCaps="false"
                     android:textColor="@color/black"
-                    android:textSize="14sp" />
+                    android:textSize="14sp"
+                    android:layout_marginBottom="6dp"/>
 
                 <Space
                     android:layout_width="8dp"
@@ -283,7 +284,8 @@
                     android:text="Низ тела"
                     android:textAllCaps="false"
                     android:textColor="@color/black"
-                    android:textSize="14sp" />
+                    android:textSize="14sp"
+                    android:layout_marginBottom="6dp"/>
             </LinearLayout>
         </LinearLayout>
 
