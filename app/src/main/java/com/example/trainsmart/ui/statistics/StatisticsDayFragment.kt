@@ -9,13 +9,14 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.trainsmart.R
-import com.example.trainsmart.ui.workouts.WorkoutsAdapter
+import com.example.trainsmart.ui.workouts.WorkoutWithTime
+import com.example.trainsmart.ui.workouts.WorkoutsWithTimeAdapter
 import com.example.trainsmart.ui.workouts.Workout as UiWorkout
 
 class StatisticsDayFragment : Fragment() {
 
     private lateinit var recyclerView: RecyclerView
-    private lateinit var adapter: WorkoutsAdapter
+    private lateinit var adapter: WorkoutsWithTimeAdapter // новый адаптер
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -30,10 +31,10 @@ class StatisticsDayFragment : Fragment() {
 
         recyclerView = view.findViewById(R.id.workoutsRV)
 
-        val workouts = arguments?.getParcelableArrayList<UiWorkout>("workoutsKey")
+        val workouts = arguments?.getParcelableArrayList<WorkoutWithTime>("workoutsKey")
 
-        adapter = WorkoutsAdapter { workout ->
-            navigateToWorkoutDetails(workout)
+        adapter = WorkoutsWithTimeAdapter { workoutWithTime ->
+            navigateToWorkoutDetails(workoutWithTime.workout) // ок
         }
 
         recyclerView.layoutManager = LinearLayoutManager(requireContext())

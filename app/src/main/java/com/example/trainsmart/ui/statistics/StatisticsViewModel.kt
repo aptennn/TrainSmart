@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.trainsmart.R
 import com.example.trainsmart.firestore.FireStoreClient
 import com.example.trainsmart.ui.exercises.ExerciseListItemModel
+import com.example.trainsmart.ui.workouts.WorkoutWithTime
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import java.time.LocalDate
@@ -13,8 +14,8 @@ import com.example.trainsmart.ui.workouts.Workout as UiWorkout
 class StatisticsViewModel : ViewModel() {
     private val fireStoreClient = FireStoreClient()
     var isLoading = false
-    var history = mutableMapOf<String, List<String>>()
-    var workoutsForDate = mutableListOf<UiWorkout>()
+    val history: MutableMap<String, MutableMap<String, MutableList<String>>> = mutableMapOf()
+    var workoutsForDate = mutableListOf<WorkoutWithTime>()
     val trainingDates = mutableSetOf<LocalDate>()
     var totalTrainings = 0
     var recordStreak = 0
@@ -27,7 +28,13 @@ class StatisticsViewModel : ViewModel() {
                     trainingDates.clear()
 
                     historyMap?.let {
-                        history.putAll(it)
+                        // Копируем новую вложенную структуру
+                        history.putAll(it.mapValues { entry ->
+                            entry.value.mapValues { it.value.toMutableList() }.toMutableMap()
+                        }.toMutableMap())
+
+                        println(history)
+
                         processTrainingDates()
                         calculateStats()
                         callback(true)
@@ -75,26 +82,35 @@ class StatisticsViewModel : ViewModel() {
     }
 
     fun loadWorkoutsForDate(date: String, callback: (Boolean) -> Unit) {
-        val workoutIds = history[date] ?: emptyList()
+        val workoutsMap = history[date] ?: emptyMap()
+        val workoutIds = workoutsMap.keys.toList()
         isLoading = true
+
         viewModelScope.launch {
             try {
                 workoutsForDate.clear()
                 fireStoreClient.getWorkoutsByIds(workoutIds).collect { workouts ->
                     workouts.forEach { workout ->
-                        val exercises = exercisesToList(workout.exercises)
-                        workoutsForDate.add(
-                            UiWorkout(
-                                id = workout.id,
-                                title = workout.name,
-                                photo = R.drawable.exercise3,
-                                author = workout.author,
-                                exercises = exercises,
-                                type = workout.type,
-                                likes = workout.likes,
-                                dislikes = workout.dislikes
+                        val durations = workoutsMap[workout.id] ?: emptyList()
+
+                        durations.forEach { duration ->
+                            val exercises = exercisesToList(workout.exercises)
+                            workoutsForDate.add(
+                                WorkoutWithTime(
+                                    workout = UiWorkout(
+                                        id = workout.id,
+                                        title = workout.name,
+                                        photo = R.drawable.exercise3,
+                                        author = workout.author,
+                                        exercises = exercises,
+                                        type = workout.type,
+                                        likes = workout.likes,
+                                        dislikes = workout.dislikes
+                                    ),
+                                    duration = duration
+                                )
                             )
-                        )
+                        }
                     }
                     callback(true)
                 }
@@ -105,6 +121,7 @@ class StatisticsViewModel : ViewModel() {
             }
         }
     }
+
 
     private suspend fun exercisesToList(exercises: Map<String, String>) =
         fireStoreClient.getExercisesByIds(exercises.keys.toList())
