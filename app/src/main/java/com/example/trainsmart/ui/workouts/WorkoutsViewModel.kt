@@ -28,7 +28,7 @@ class WorkoutsViewModel : ViewModel() {
                                     UiWorkout(
                                         id = workout.id,
                                         title = workout.name,
-                                        photo = R.drawable.exercise3,
+                                        photo = workout.photoUrl.toInt(),
                                         author = workout.author,
                                         exercises = exercises,
                                         type = workout.type,
