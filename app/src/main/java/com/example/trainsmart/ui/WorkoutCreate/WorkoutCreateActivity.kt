@@ -66,7 +66,7 @@ class WorkoutCreateActivity : AppCompatActivity() {
 
                 // Показываем галочку для текущего элемента
                 checkMarks[index].visibility = View.VISIBLE
-                selectedImage = index.toString()
+                selectedImage = (index+1).toString()
             }
         }
     }

@@ -96,7 +96,52 @@ class WorkoutsDetailsFragment : Fragment() {
                 append(it.exercises.size)
                 append(getExerciseEnding(it.exercises.size))
             }
-            workoutImage.setImageResource(it.photo)
+            workoutImage.setImageResource(R.drawable.exercise3)
+
+            val imageNumber = it.photo
+
+
+            if (imageNumber != null && imageNumber in 1..6) {
+                // Используем конструкцию when, чтобы обработать разные случаи
+                when (imageNumber) {
+                    1 -> {
+                        println("Вы выбрали первое изображение.")
+                        // Добавь действия для первого изображения
+                        workoutImage.setImageResource(R.drawable.exercise1)
+                    }
+                    2 -> {
+                        println("Вы выбрали второе изображение.")
+                        // Добавь действия для второго изображения
+                        workoutImage.setImageResource(R.drawable.exercise2)
+                    }
+                    3 -> {
+                        println("Вы выбрали третье изображение.")
+                        // Добавь действия для третьего изображения
+                        workoutImage.setImageResource(R.drawable.exercise3)
+                    }
+                    4 -> {
+                        println("Вы выбрали четвёртое изображение.")
+                        // Добавь действия для четвёртого изображения
+                        workoutImage.setImageResource(R.drawable.exercise4)
+                    }
+                    5 -> {
+                        println("Вы выбрали пятое изображение.")
+                        // Добавь действия для пятого изображения
+                        workoutImage.setImageResource(R.drawable.exercise5)
+                    }
+                    6 -> {
+                        println("Вы выбрали шестое изображение.")
+                        // Добавь действия для шестого изображения
+                        workoutImage.setImageResource(R.drawable.exercise6)
+                    }
+                    else -> {
+                        println("Неверный выбор.")
+                    }
+                }
+            } else {
+                println("Неверное значение: строка не может быть преобразована в число от 1 до 6.")
+            }
+
             rV.layoutManager = LinearLayoutManager(requireContext())
             rV.adapter = ExerciseAdapter(it.exercises)
         }
