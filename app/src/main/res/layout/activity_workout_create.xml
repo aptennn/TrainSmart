@@ -29,21 +29,22 @@
 
         <GridLayout
             android:id="@+id/imageGrid"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:alignmentMode="alignMargins"
             android:columnCount="3"
             android:rowCount="2"
             android:layout_gravity="center"
+            android:gravity="center"
             android:layout_marginBottom="16dp"
             android:layout_marginTop="8dp"
             android:useDefaultMargins="true">
 
-            <!-- FrameLayout для image1 с галочкой -->
+            <!-- image1 -->
             <FrameLayout
                 android:layout_width="100dp"
                 android:layout_height="100dp"
-                android:layout_gravity="center">
+                android:gravity="center">
 
                 <ImageView
                     android:id="@+id/image1"
@@ -61,14 +62,14 @@
                     android:layout_height="50dp"
                     android:src="@drawable/ic_check"
                     android:layout_gravity="top|end"
-                    android:visibility="gone" /> <!-- Скрыта по умолчанию -->
+                    android:visibility="gone" />
             </FrameLayout>
 
-            <!-- FrameLayout для image2 с галочкой -->
+            <!-- image2 -->
             <FrameLayout
                 android:layout_width="100dp"
                 android:layout_height="100dp"
-                android:layout_gravity="center">
+                android:gravity="center">
 
                 <ImageView
                     android:id="@+id/image2"
@@ -89,11 +90,11 @@
                     android:visibility="gone" />
             </FrameLayout>
 
-            <!-- FrameLayout для image3 с галочкой -->
+            <!-- image3 -->
             <FrameLayout
                 android:layout_width="100dp"
                 android:layout_height="100dp"
-                android:layout_gravity="center">
+                android:gravity="center">
 
                 <ImageView
                     android:id="@+id/image3"
@@ -114,7 +115,7 @@
                     android:visibility="gone" />
             </FrameLayout>
 
-            <!-- FrameLayout для image4 с галочкой -->
+            <!-- image4 -->
             <FrameLayout
                 android:layout_width="100dp"
                 android:layout_height="100dp"
@@ -139,7 +140,7 @@
                     android:visibility="gone" />
             </FrameLayout>
 
-            <!-- FrameLayout для image5 с галочкой -->
+            <!-- image5 -->
             <FrameLayout
                 android:layout_width="100dp"
                 android:layout_height="100dp"
@@ -164,11 +165,11 @@
                     android:visibility="gone" />
             </FrameLayout>
 
-            <!-- FrameLayout для image6 с галочкой -->
+            <!-- image6 -->
             <FrameLayout
                 android:layout_width="100dp"
                 android:layout_height="100dp"
-                android:layout_gravity="center">
+                android:gravity="center">
 
                 <ImageView
                     android:id="@+id/image6"
@@ -302,7 +303,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:padding="8dp" />
+            android:padding="4dp" />
 
         <Button
             android:id="@+id/button_create_finish"
