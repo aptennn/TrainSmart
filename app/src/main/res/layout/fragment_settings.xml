@@ -54,6 +54,23 @@
         android:visibility="gone"/>
 
     <Button
+        android:id="@+id/BtnCheckVerification"
+        android:layout_width="320dp"
+        android:layout_height="60dp"
+        android:layout_gravity="center_horizontal"
+        android:backgroundTint="#1976D2"
+        android:fontFamily="@font/montserrat"
+        android:text="Я подтвердил"
+        android:textColor="#FAFBFF"
+        android:textSize="18sp"
+        app:cornerRadius="15dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toTopOf="@+id/BtnLogOut"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+
+    <Button
         android:id="@+id/BtnLogOut"
         android:layout_width="320dp"
         android:layout_height="60dp"

@@ -14,7 +14,6 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.example.trainsmart.LoginActivity
 import com.example.trainsmart.R
-import com.example.trainsmart.SignInActivity
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.auth
@@ -48,75 +47,87 @@ class SettingsFragment : Fragment() {
     /** WARNING!
      * THE CODE BELOW IS JUST FOR TEST PURPOSES.
      * DO NOT WORK WITH FRAGMENTS LIKE THAT ! */
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         auth = Firebase.auth
 
-        (requireActivity() as AppCompatActivity).supportActionBar?.title = "Настройки"
-        val cachedEmail = getCachedEmail()
+        val tvEmail: TextView = view.findViewById(R.id.UserEmailSettings)
+        val tvIsVerified: TextView = view.findViewById(R.id.TvIsVerified)
+        val btnLogOut: Button = view.findViewById(R.id.BtnLogOut)
+        val btnVerify: Button = view.findViewById(R.id.Verify)
+        val btnCheckVerification: Button = view.findViewById(R.id.BtnCheckVerification)
 
-        val v: View? = getView()
-        val btnLogOut: Button? = v?.findViewById(R.id.BtnLogOut)
-        val btnVerify: Button? = v?.findViewById(R.id.Verify)
+        tvEmail.text = getCachedEmail()
 
-        val tvEmail: TextView? = v?.findViewById(R.id.UserEmailSettings)
-        val tvIsVerified: TextView? = v?.findViewById(R.id.TvIsVerified)
+        updateVerificationStatus(tvIsVerified, btnVerify)
 
-        if (tvEmail != null) {
-            tvEmail.text = getCachedEmail()
-        }
-
-        if (auth.currentUser?.isEmailVerified!!) {
-            if (tvIsVerified != null) {
-                tvIsVerified.text = "Подтвержден"
-            }
-        }
-        else
-            {
-                if (tvIsVerified != null) {
-                    tvIsVerified.text = "Не подтвержден"
-                }
-                if (btnVerify != null) {
-                    btnVerify.visibility = View.VISIBLE
-                }
-            }
-
-        btnLogOut?.setOnClickListener {
-            Firebase.auth.signOut()
-            val intent = Intent(activity, LoginActivity::class.java)
-            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-            startActivity(intent)
-        }
-
-        btnVerify?.setOnClickListener {
-            // Send email verification
-
+        btnVerify.setOnClickListener {
             auth.currentUser?.sendEmailVerification()
                 ?.addOnCompleteListener {
-                    val builder = AlertDialog.Builder(requireActivity())
-                    builder.setMessage("Please check your e-mail to verify account")
-                    builder.setPositiveButton("OK") { dialog, which -> }
-                    val dialog = builder.create()
+                    AlertDialog.Builder(requireContext())
+                        .setMessage("Письмо отправлено! После подтверждения нажмите 'Я подтвердил'")
+                        .setPositiveButton("OK", null)
+                        .show()
 
-                    dialog.show()
-
-                }?.addOnFailureListener {
-                    val builder = AlertDialog.Builder(requireActivity())
-                    builder.setMessage(it.localizedMessage)
-                    builder.setPositiveButton("OK") { dialog, which ->
-                        dialog.dismiss()
-                    }
-                    val dialog = builder.create()
-
-                    dialog.show()
+                    btnCheckVerification.visibility = View.VISIBLE
+                }
+                ?.addOnFailureListener {
+                    AlertDialog.Builder(requireContext())
+                        .setMessage("Ошибка отправки письма: ${it.localizedMessage}")
+                        .setPositiveButton("OK", null)
+                        .show()
                 }
         }
 
+        btnCheckVerification.setOnClickListener {
+            auth.currentUser?.reload()?.addOnCompleteListener { reloadTask ->
+                if (reloadTask.isSuccessful) {
+                    if (auth.currentUser?.isEmailVerified == true) {
+                        tvIsVerified.text = "Подтвержден"
+                        btnVerify.visibility = View.GONE
+                        btnCheckVerification.visibility = View.GONE
+
+                        AlertDialog.Builder(requireContext())
+                            .setMessage("Email подтвержден!")
+                            .setPositiveButton("OK", null)
+                            .show()
+                    } else {
+                        AlertDialog.Builder(requireContext())
+                            .setMessage("Почта все еще не подтверждена.")
+                            .setPositiveButton("OK", null)
+                            .show()
+                    }
+                } else {
+                    AlertDialog.Builder(requireContext())
+                        .setMessage("Не удалось обновить статус пользователя.")
+                        .setPositiveButton("OK", null)
+                        .show()
+                }
+            }
+        }
 
 
+        btnLogOut.setOnClickListener {
+            auth.signOut()
+            val intent = Intent(activity, LoginActivity::class.java)
+            intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
+            startActivity(intent)
+            requireActivity().finish()
+        }
     }
+
+    private fun updateVerificationStatus(tv: TextView, btnVerify: Button) {
+        val user = auth.currentUser
+        if (user != null && user.isEmailVerified) {
+            tv.text = "Подтвержден"
+            btnVerify.visibility = View.GONE
+        } else {
+            tv.text = "Не подтвержден"
+            btnVerify.visibility = View.VISIBLE
+        }
+    }
+
 
     private fun getCachedEmail(): String? {
         val sharedPref = this.activity?.getSharedPreferences("myPref", Context.MODE_PRIVATE)
