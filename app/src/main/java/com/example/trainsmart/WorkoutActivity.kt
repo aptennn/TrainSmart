@@ -5,7 +5,8 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import com.example.trainsmart.R.*
+import com.example.trainsmart.R.id
+import com.example.trainsmart.R.layout
 import com.example.trainsmart.ui.workout.WorkoutBreakFragment
 import com.example.trainsmart.ui.workout.WorkoutExerciseFragment
 import com.example.trainsmart.ui.workouts.Workout
@@ -61,6 +62,7 @@ class WorkoutActivity : AppCompatActivity() {
     fun goToNextSet() {
         if (currentExerciseIndex == -1) {
             finish()
+            //addWorkoutCompleteTime()
             return
         }
 

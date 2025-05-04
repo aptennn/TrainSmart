@@ -121,11 +121,10 @@ class StatisticsFragment : Fragment() {
                         viewModel.loadWorkoutsForDate(selectedDate.toString()) { success ->
                             if (success && viewModel.workoutsForDate.isNotEmpty()) {
                                 val args = Bundle().apply {
-                                    putParcelableArrayList(
-                                        "workoutsKey",
-                                        ArrayList(viewModel.workoutsForDate)
-                                    )
+                                    putParcelableArrayList("workoutsKey", ArrayList(viewModel.workoutsForDate))
                                 }
+
+
                                 findNavController().navigate(
                                     R.id.navigation_statistics_day_history,
                                     args
@@ -139,6 +138,7 @@ class StatisticsFragment : Fragment() {
                             .show()
                     }
                 }
+
             }
         }
     }

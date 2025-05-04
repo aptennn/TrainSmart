@@ -9,7 +9,6 @@ import com.google.android.gms.tasks.Tasks
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.FirebaseFirestoreException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -20,7 +19,6 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlin.coroutines.resume
-import kotlin.coroutines.suspendCoroutine
 import com.example.trainsmart.ui.workouts.Workout as UiWorkout
 
 class FireStoreClient {
@@ -135,13 +133,13 @@ class FireStoreClient {
             }
     }
 
-    fun getHistoryByUserId(userId: String): Flow<Map<String, List<String>>?> {
+    fun getHistoryByUserId(userId: String): Flow<Map<String, Map<String, List<String>>>?> {
         return callbackFlow {
             db.collection(collectionUsers).document(userId).get()
                 .addOnSuccessListener { document ->
                     if (document.exists()) {
-                        val history = document.get("history") as? Map<String, List<String>>
-                        Log.d(tag, "History retrieved for user $userId: ${history?.size} entries")
+                        val history = document.get("history") as? Map<String, Map<String, List<String>>>
+                        Log.d(tag, "History retrieved for user $userId: ${history?.size} dates")
                         trySend(history)
                     } else {
                         Log.d(tag, "User document not found: $userId")
@@ -364,15 +362,12 @@ class FireStoreClient {
             if (workout.dislikes.contains(uid)) {
                 println(uid + ": id:" + workout.dislikes.contains(uid) + " : " + workout.title + " " + workout.likes)
                 return "DISLIKED"
-            }
-            else if (workout.likes.contains(uid)) {
+            } else if (workout.likes.contains(uid)) {
                 return "LIKED"
             }
         }
         return "NONE"
     }
-
-
 
 
     fun updateLikesFireAndForget(
@@ -437,7 +432,10 @@ class FireStoreClient {
                 }
 
                 LikeType.UNDISLIKED -> {
-                    publishedUpdates += docRefPublished.update("dislikes", FieldValue.arrayRemove(uid))
+                    publishedUpdates += docRefPublished.update(
+                        "dislikes",
+                        FieldValue.arrayRemove(uid)
+                    )
                     basicUpdates += docRefBasic.update("dislikes", FieldValue.arrayRemove(uid))
                 }
             }
@@ -588,90 +586,108 @@ class FireStoreClient {
         }
     }*/
 
-        fun addWorkoutToHistory(userId: String, date: String, workoutId: String): Flow<Boolean> {
-            return callbackFlow {
-                val userRef = db.collection(collectionUsers).document(userId)
+    fun addWorkoutToHistory(
+        userId: String,
+        date: String,
+        workoutId: String
+    ): Flow<Boolean> {
+        return callbackFlow {
+            val userRef = db.collection(collectionUsers).document(userId)
 
-                db.runTransaction { transaction ->
-                    val snapshot = transaction.get(userRef)
-                    val history =
-                        snapshot.get("history") as? Map<String, List<String>> ?: emptyMap()
+            db.runTransaction { transaction ->
+                val snapshot = transaction.get(userRef)
 
-                    val workoutsForDate = history[date] ?: emptyList()
-                    if (workoutsForDate.contains(workoutId)) {
-                        throw FirebaseFirestoreException(
-                            "Workout already exists in history",
-                            FirebaseFirestoreException.Code.ABORTED
-                        )
-                    }
+                val history =
+                    snapshot.get("history") as? Map<String, Map<String, List<String>>> ?: emptyMap()
+                val workoutsForDate = history[date] ?: emptyMap()
 
-                    val updates = hashMapOf<String, Any>(
-                        "history.$date" to FieldValue.arrayUnion(workoutId)
-                    )
-                    transaction.update(userRef, updates)
-
-                    true
-                }.addOnSuccessListener { result ->
-                    if (result) {
-                        Log.d(tag, "Workout $workoutId added to history for date $date")
-                        trySend(true)
-                    }
-                }.addOnFailureListener { e ->
-                    when (e) {
-                        is FirebaseFirestoreException
-                            -> if (e.code == FirebaseFirestoreException.Code.ABORTED) {
-                            Log.d(tag, "Duplicate workout: $workoutId")
-                            trySend(false)
-                        } else {
-                            Log.e(tag, "Error adding workout to history", e)
-                            trySend(false)
-                        }
-
-                        else -> {
-                            Log.e(tag, "Unexpected error", e)
-                            trySend(false)
-                        }
-                    }
+                // Если уже есть такая тренировка — ничего не делаем
+                if (workoutsForDate.containsKey(workoutId)) {
+                    return@runTransaction true
                 }
 
-                awaitClose {}
+                val updatePath = "history.$date.$workoutId"
+                transaction.update(userRef, mapOf(updatePath to listOf<String>()))
+
+                true
+            }.addOnSuccessListener {
+                Log.d(tag, "Workout $workoutId added to history for $date with empty list")
+                trySend(true)
+            }.addOnFailureListener { e ->
+                Log.e(tag, "Failed to add workout to history", e)
+                trySend(false)
             }
-        }
 
-        private fun Workout.ToHashMap(): HashMap<String, Any> {
-            return hashMapOf(
-                "name" to name,
-                "photoUrl" to photoUrl,
-                "author" to author,
-                "exercises" to exercises,
-                "type" to type,
-                "likes" to likes,
-                "dislikes" to dislikes
-            )
-        }
-
-        private fun Map<String, Any>.toWorkout(): Workout {
-            return Workout(
-                name = this["name"] as String,
-                photoUrl = this["photoUrl"] as String,
-                author = this["author"] as String,
-                exercises = this["exercises"] as Map<String, String>,
-                type = this["type"] as String,
-                likes = this["likes"] as List<String>,
-                dislikes = this["dislikes"] as List<String>
-            )
-        }
-
-        private fun DocumentSnapshot.toWorkout(): Workout {
-            return Workout(
-                id = this.id,
-                name = getString("name") ?: "",
-                photoUrl = getString("photoUrl") ?: "",
-                author = getString("author") ?: "",
-                exercises = get("exercises") as? Map<String, String> ?: emptyMap(),
-                type = getString("type") ?: "",
-                likes = get("likes") as? List<String> ?: emptyList(),
-                dislikes = get("dislikes") as? List<String> ?: emptyList()
-            )
+            awaitClose {}
         }
     }
+
+
+    fun addWorkoutCompleteTime(
+        userId: String,
+        date: String,
+        workoutId: String,
+        completeTime: String
+    ): Flow<Boolean> {
+        return callbackFlow {
+            val userRef = db.collection(collectionUsers).document(userId)
+
+            db.runTransaction { transaction ->
+                val snapshot = transaction.get(userRef)
+
+                // Поддержка истории как: дата → id тренировки → список длительностей
+                val path = "history.$date.$workoutId"
+                transaction.update(userRef, mapOf(path to FieldValue.arrayUnion(completeTime)))
+
+                true
+            }.addOnSuccessListener {
+                Log.d(tag, "Workout $workoutId updated with time $completeTime for date $date")
+                trySend(true)
+            }.addOnFailureListener { e ->
+                Log.e(tag, "Error adding workout time", e)
+                trySend(false)
+            }
+
+            awaitClose {}
+        }
+    }
+
+
+
+    private fun Workout.ToHashMap(): HashMap<String, Any> {
+        return hashMapOf(
+            "name" to name,
+            "photoUrl" to photoUrl,
+            "author" to author,
+            "exercises" to exercises,
+            "type" to type,
+            "likes" to likes,
+            "dislikes" to dislikes
+        )
+    }
+
+    private fun Map<String, Any>.toWorkout(): Workout {
+        return Workout(
+            name = this["name"] as String,
+            photoUrl = this["photoUrl"] as String,
+            author = this["author"] as String,
+            exercises = this["exercises"] as Map<String, String>,
+            type = this["type"] as String,
+            likes = this["likes"] as List<String>,
+            dislikes = this["dislikes"] as List<String>
+        )
+    }
+
+    private fun DocumentSnapshot.toWorkout(): Workout {
+        return Workout(
+            id = this.id,
+            name = getString("name") ?: "",
+            photoUrl = getString("photoUrl") ?: "",
+            author = getString("author") ?: "",
+            exercises = get("exercises") as? Map<String, String> ?: emptyMap(),
+            type = getString("type") ?: "",
+            likes = get("likes") as? List<String> ?: emptyList(),
+            dislikes = get("dislikes") as? List<String> ?: emptyList()
+        )
+    }
+}
