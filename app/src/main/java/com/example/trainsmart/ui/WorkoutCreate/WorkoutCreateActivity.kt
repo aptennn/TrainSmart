@@ -1,7 +1,10 @@
 package com.example.trainsmart.ui.WorkoutCreate
 
+import android.graphics.Color
 import android.os.Bundle
+import android.view.View
 import android.widget.Button
+import android.widget.ImageView
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
@@ -16,22 +19,56 @@ import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.launch
 
 
+
 class WorkoutCreateActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityWorkoutCreateBinding
     private var selectedWorkoutType: String = ""
     private val exerciseModels = mutableListOf<ExerciseListItemModel>()
     private lateinit var exerciseListAdapter: ExerciseListAdapterCreate
-
+    private lateinit var imageViews: List<ImageView>
+    private var selectedImageView: ImageView? = null
+    private var selectedImage: String = "0"
+    private lateinit var checkMarks: List<ImageView>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityWorkoutCreateBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        binding.recyclerViewCreate.isNestedScrollingEnabled = false
 
         setupTypeButtons()
         setupRecyclerView()
         loadExercises()
+
+        imageViews = listOf(
+            findViewById(R.id.image1),
+            findViewById(R.id.image2),
+            findViewById(R.id.image3),
+            findViewById(R.id.image4),
+            findViewById(R.id.image5),
+            findViewById(R.id.image6)
+        )
+
+        checkMarks = listOf(
+            findViewById(R.id.checkmark1),
+            findViewById(R.id.checkmark2),
+            findViewById(R.id.checkmark3),
+            findViewById(R.id.checkmark4),
+            findViewById(R.id.checkmark5),
+            findViewById(R.id.checkmark6)
+        )
+
+        imageViews.forEachIndexed { index, imageView ->
+            imageView.setOnClickListener {
+                // Скрываем все галочки
+                checkMarks.forEach { it.visibility = View.GONE }
+
+                // Показываем галочку для текущего элемента
+                checkMarks[index].visibility = View.VISIBLE
+                selectedImage = index.toString()
+            }
+        }
     }
 
     private fun setupRecyclerView() {
@@ -75,6 +112,7 @@ class WorkoutCreateActivity : AppCompatActivity() {
 
             when {
                 workoutName.isEmpty() -> showAlertDialog("Введите название тренировки")
+                selectedImage.equals("0") -> showAlertDialog("Выберите картинку")
                 selectedExercises.isEmpty() -> showAlertDialog("Выберите минимум 1 упражнение")
                 selectedWorkoutType.isEmpty() -> showAlertDialog("Выберите тип тренировки")
                 selectedExercises.any { it.countSets.isBlank() || it.countReps.isBlank() } ->
@@ -102,7 +140,7 @@ class WorkoutCreateActivity : AppCompatActivity() {
                     val workout = Workout(
                         id = "",
                         name = name,
-                        photoUrl = "",
+                        photoUrl = selectedImage,
                         author = user.id,
                         exercises = exercisesMap,
                         type = selectedWorkoutType,

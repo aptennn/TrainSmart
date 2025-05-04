@@ -6,11 +6,190 @@
     android:fitsSystemWindows="true"
     tools:context=".ui.WorkoutCreate.WorkoutCreateActivity">
 
-    <LinearLayout
+    <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:fillViewport="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:orientation="vertical"
         android:padding="16dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginBottom="6dp"
+            android:fontFamily="@font/montserrat_light"
+            android:text="Выберите картинку:"
+            android:textColor="@color/black"
+            android:textSize="14sp" />
+
+        <GridLayout
+            android:id="@+id/imageGrid"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:alignmentMode="alignMargins"
+            android:columnCount="3"
+            android:rowCount="2"
+            android:layout_gravity="center"
+            android:layout_marginBottom="16dp"
+            android:layout_marginTop="8dp"
+            android:useDefaultMargins="true">
+
+            <!-- FrameLayout для image1 с галочкой -->
+            <FrameLayout
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_gravity="center">
+
+                <ImageView
+                    android:id="@+id/image1"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:src="@drawable/exercise1"
+                    android:scaleType="centerCrop"
+                    android:background="@drawable/image_selector_background"
+                    android:clickable="true"
+                    android:focusable="true"/>
+
+                <ImageView
+                    android:id="@+id/checkmark1"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:src="@drawable/ic_check"
+                    android:layout_gravity="top|end"
+                    android:visibility="gone" /> <!-- Скрыта по умолчанию -->
+            </FrameLayout>
+
+            <!-- FrameLayout для image2 с галочкой -->
+            <FrameLayout
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_gravity="center">
+
+                <ImageView
+                    android:id="@+id/image2"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:src="@drawable/exercise2"
+                    android:scaleType="centerCrop"
+                    android:background="@drawable/image_selector_background"
+                    android:clickable="true"
+                    android:focusable="true"/>
+
+                <ImageView
+                    android:id="@+id/checkmark2"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:src="@drawable/ic_check"
+                    android:layout_gravity="top|end"
+                    android:visibility="gone" />
+            </FrameLayout>
+
+            <!-- FrameLayout для image3 с галочкой -->
+            <FrameLayout
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_gravity="center">
+
+                <ImageView
+                    android:id="@+id/image3"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:src="@drawable/exercise3"
+                    android:scaleType="centerCrop"
+                    android:background="@drawable/image_selector_background"
+                    android:clickable="true"
+                    android:focusable="true"/>
+
+                <ImageView
+                    android:id="@+id/checkmark3"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:src="@drawable/ic_check"
+                    android:layout_gravity="top|end"
+                    android:visibility="gone" />
+            </FrameLayout>
+
+            <!-- FrameLayout для image4 с галочкой -->
+            <FrameLayout
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_gravity="center">
+
+                <ImageView
+                    android:id="@+id/image4"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:src="@drawable/exercise4"
+                    android:scaleType="centerCrop"
+                    android:background="@drawable/image_selector_background"
+                    android:clickable="true"
+                    android:focusable="true"/>
+
+                <ImageView
+                    android:id="@+id/checkmark4"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:src="@drawable/ic_check"
+                    android:layout_gravity="top|end"
+                    android:visibility="gone" />
+            </FrameLayout>
+
+            <!-- FrameLayout для image5 с галочкой -->
+            <FrameLayout
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_gravity="center">
+
+                <ImageView
+                    android:id="@+id/image5"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:src="@drawable/exercise5"
+                    android:scaleType="centerCrop"
+                    android:background="@drawable/image_selector_background"
+                    android:clickable="true"
+                    android:focusable="true"/>
+
+                <ImageView
+                    android:id="@+id/checkmark5"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:src="@drawable/ic_check"
+                    android:layout_gravity="top|end"
+                    android:visibility="gone" />
+            </FrameLayout>
+
+            <!-- FrameLayout для image6 с галочкой -->
+            <FrameLayout
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_gravity="center">
+
+                <ImageView
+                    android:id="@+id/image6"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:src="@drawable/exercise6"
+                    android:scaleType="centerCrop"
+                    android:background="@drawable/image_selector_background"
+                    android:clickable="true"
+                    android:focusable="true"/>
+
+                <ImageView
+                    android:id="@+id/checkmark6"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:src="@drawable/ic_check"
+                    android:layout_gravity="top|end"
+                    android:visibility="gone" />
+            </FrameLayout>
+
+        </GridLayout>
 
         <TextView
             android:layout_width="wrap_content"
@@ -131,4 +310,6 @@
             android:layout_height="wrap_content"
             android:text="Создать Тренировку" />
     </LinearLayout>
+
+    </ScrollView>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
